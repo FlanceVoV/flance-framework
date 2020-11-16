@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.2.5.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
+    <groupId>com.flance</groupId>
+    <artifactId>flance-parent</artifactId>
+    <version>1.0</version>
+    <packaging>pom</packaging>
+
+    <properties>
+        <alibaba-cloud.version>2.2.3.RELEASE</alibaba-cloud.version>
+        <spring-cloud.version>Hoxton.SR8</spring-cloud.version>
+        <jjwt.version>0.9.1</jjwt.version>
+        <hutool.version>5.4.4</hutool.version>
+        <google-guava.version>19.0</google-guava.version>
+        <ojdbc.version>10.2.0.4.0</ojdbc.version>
+        <mysql-jdbc.version>8.0.15</mysql-jdbc.version>
+        <lombok.version>1.16.20</lombok.version>
+        <fastjson.version>1.2.73</fastjson.version>
+        <gson.version>2.8.6</gson.version>
+        <commons-lang.version>3.1</commons-lang.version>
+        <flance-jdbc-jpa.version>1.0</flance-jdbc-jpa.version>
+        <flance-web-common.version>1.0</flance-web-common.version>
+        <flance-jdbc-jpa-web.version>1.0</flance-jdbc-jpa-web.version>
+        <flance-web-auth.version>1.0</flance-web-auth.version>
+        <flance-web-gateway.version>1.0</flance-web-gateway.version>
+        <flance-web-oauth-security.version>1.0</flance-web-oauth-security.version>
+        <flance-web-utils.version>1.0</flance-web-utils.version>
+        <flance-components-fastdfs.version>1.0</flance-components-fastdfs.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- alibaba Spring Cloud -->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${alibaba-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- spring cloud -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- jwt -->
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+
+            <!-- hutool utils -->
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+            <!-- lombok -->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+            </dependency>
+            <!-- google guava -->
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${google-guava.version}</version>
+            </dependency>
+            <!-- oracle jdbc -->
+            <dependency>
+                <groupId>com.oracle</groupId>
+                <artifactId>ojdbc14</artifactId>
+                <version>${ojdbc.version}</version>
+            </dependency>
+            <!-- mysql jdbc -->
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql-jdbc.version}</version>
+            </dependency>
+            <!-- alibaba fastjson -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
+            <!-- gson -->
+            <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>${gson.version}</version>
+            </dependency>
+
+            <!-- flance start -->
+            <dependency>
+                <groupId>com.flance</groupId>
+                <artifactId>flance-jdbc-jpa</artifactId>
+                <version>${flance-jdbc-jpa.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.flance</groupId>
+                <artifactId>flance-web-common</artifactId>
+                <version>${flance-web-common.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.flance</groupId>
+                <artifactId>flance-jdbc-jpa-web</artifactId>
+                <version>${flance-jdbc-jpa-web.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.flance</groupId>
+                <artifactId>flance-web-auth</artifactId>
+                <version>${flance-web-auth.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.flance</groupId>
+                <artifactId>flance-web-gateway</artifactId>
+                <version>${flance-web-gateway.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.flance</groupId>
+                <artifactId>flance-web-oauth-security</artifactId>
+                <version>${flance-web-oauth-security.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.flance</groupId>
+                <artifactId>flance-web-utils</artifactId>
+                <version>${flance-web-utils.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.flance</groupId>
+                <artifactId>flance-components-fastdfs</artifactId>
+                <version>${flance-components-fastdfs.version}</version>
+            </dependency>
+
+            <!-- flance end -->
+
+            <!-- common -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons-lang.version}</version>
+            </dependency>
+
+
+
+        </dependencies>
+    </dependencyManagement>
+
+
+</project>
