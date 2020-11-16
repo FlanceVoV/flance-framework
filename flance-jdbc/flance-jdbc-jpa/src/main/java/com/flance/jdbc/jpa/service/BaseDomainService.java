@@ -222,6 +222,13 @@ public abstract class BaseDomainService<PO, DTO, VO, DO, ID extends Serializable
     }
 
     @Override
+    public DTO findOneByProps(Map<String, String> params) {
+        Specification specification = propertySpec(params);
+        Optional<PO> po = baseDao.findOne(specification);
+        return po.isPresent() ? baseParser.parsePo2Dto(po.get()) : null;
+    }
+
+    @Override
     public List<DTO> findByIds(List<ID> ids) {
         return baseParser.parseListPo2Dto(this.baseDao.findAllById(ids));
     }
@@ -259,6 +266,31 @@ public abstract class BaseDomainService<PO, DTO, VO, DO, ID extends Serializable
         page = page == null ? 0 : page - 1;
         rows = rows == null ? 10 : rows;
         return PageRequest.of(page, rows);
+    }
+
+    private Specification<PO> propertySpec(Map<String, String> params) {
+        return (root, criteriaQuery, criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList();
+            params.forEach((key, value) -> {
+                Path path = root;
+
+                String[] keys = StringUtils.split(key, ".");
+                String[] keyArr = keys;
+                int keyLength = keys.length;
+
+                for(int i = 0; i < keyLength; ++i) {
+                    String k = keyArr[i];
+                    path = path.get(k);
+                }
+
+                if (null != value) {
+                    predicates.add(criteriaBuilder.equal(path, value));
+                } else {
+                    predicates.add(path.isNull());
+                }
+            });
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        };
     }
 
     private Specification<PO> propertySpec(String propertyName, Object propertyValue) {

@@ -74,6 +74,13 @@ public interface IBaseWebDomainService<PO, DTO, ID extends Serializable> extends
     List<DTO> findAll(Table<String, Operator, Object> table);
 
     /**
+     * 根据属性查询单条结果
+     * @param params    参数 key-value
+     * @return  返回结果
+     */
+    DTO findOneByProps(Map<String, String> params);
+
+    /**
      * 分页查询
      * @param searchMap  查询条件
      * @return  返回结果

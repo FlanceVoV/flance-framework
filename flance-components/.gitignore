@@ -3,3 +3,6 @@ target
 *.iml
 out
 **/target
+*.iml
+*.ipr
+*.iws

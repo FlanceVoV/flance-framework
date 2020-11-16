@@ -103,6 +103,12 @@ public interface IBaseDomainService<PO, DTO, ID extends Serializable> {
     DTO findOneByProp(String key, String value);
 
     /**
+     * 根据属性查询单条结果
+     * @param params    参数 key-value
+     * @return  返回结果
+     */
+    DTO findOneByProps(Map<String, String> params);
+    /**
      * 根据主键集合返回列表
      * @param ids  主键集合
      * @return      返回列表
