@@ -11,5 +11,16 @@
 
     <artifactId>flance-components-activiti</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.activiti</groupId>
+            <artifactId>activiti-spring-boot-starter</artifactId>
+        </dependency>
+        <!-- Activiti生成流程图 -->
+        <dependency>
+            <groupId>org.activiti</groupId>
+            <artifactId>activiti-image-generator</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>
