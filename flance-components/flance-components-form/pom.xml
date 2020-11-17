@@ -11,10 +11,16 @@
 
     <artifactId>flance-components-form</artifactId>
 
-    <dependencyManagement>
-        <dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
 
-        </dependencies>
-    </dependencyManagement>
+        <dependency>
+            <groupId>com.flance</groupId>
+            <artifactId>flance-jdbc-jpa-web</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>

@@ -11,7 +11,7 @@ import java.util.Date;
  */
 @Data
 @Entity
-@Table(name = "FLANCE_COMPOENTS_FASTDFS_FILE")
+@Table(name = "F_COMP_FASTDFS_FILE")
 public class FastDfsFile {
 
     @Id

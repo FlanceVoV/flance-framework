@@ -12,7 +12,7 @@ import java.util.Date;
  */
 @Data
 @Entity
-@Table(name = "FLANCE_COMPOENTS_FASTDFS_APP")
+@Table(name = "F_COMP_FASTDFS_APP")
 public class AppClient {
 
     @Id
