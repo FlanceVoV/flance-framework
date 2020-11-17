@@ -167,7 +167,7 @@ public class FlanceFormServiceFormSyncServiceImpl implements FlanceFormServiceFo
                 case 12:
                 case 9:
                     flanceFormTmpDic.setParentId(tmpField.getDicId());
-//                    flanceFormTmpDic.setChildren(flanceFormTmpDicServicel.queryAllByCode(flanceFormTmpDic));
+// TODO                    flanceFormTmpDic.setChildren(flanceFormTmpDicServicel.queryAllByCode(flanceFormTmpDic));
                     serviceFormFieldModel.setFlanceFormTmpDic(flanceFormTmpDic);
                     break;
                 case 11:
