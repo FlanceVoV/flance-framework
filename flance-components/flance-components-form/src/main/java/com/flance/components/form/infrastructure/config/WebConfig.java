@@ -17,7 +17,7 @@ import java.util.Properties;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-    @Value("${flance.comp.form.ignore}")
+    @Value("${flance.comp.form.ignore:#{null}}")
     private String[] ignoreUrls;
 
     @Resource
