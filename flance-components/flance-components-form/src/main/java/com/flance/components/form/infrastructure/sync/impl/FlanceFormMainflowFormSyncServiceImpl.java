@@ -100,7 +100,7 @@ public class FlanceFormMainflowFormSyncServiceImpl implements FlanceFormMainflow
         }
 
         List<FlanceFormBizGroup> bizGroups = flanceFormBizGroupService.findAll(new HashMap<String, Object>(1){{
-            put("SERVICE_FORM_FK", flanceFormBizMainflow.getServiceformPk());
+            put("serviceFormFk", flanceFormBizMainflow.getServiceformPk());
         }});
 
         List<MainflowFormGroupVo> formGroupModels = Lists.newArrayList();
@@ -143,9 +143,9 @@ public class FlanceFormMainflowFormSyncServiceImpl implements FlanceFormMainflow
 
             // 查询业务记录
             FlanceFormBizBusiness flanceFormBizBusiness = flanceFormBizBusinessService.findOneByProps(new HashMap<String, String>(){{
-                put("", mainflowId);
-                put("", groupId);
-                put("", tmpTemplate.getId());
+                put("mainflowFk", mainflowId);
+                put("groupFk", groupId);
+                put("templateFk", tmpTemplate.getId());
             }});
 
             // 设置模板动态字段的值
@@ -190,7 +190,7 @@ public class FlanceFormMainflowFormSyncServiceImpl implements FlanceFormMainflow
             // 字典类型，如果是字典类型则去字典字段关联表里面查询
             if (!StringUtils.isEmpty(flanceFormTmpField.getDicId())) {
                 List<FlanceFormTmpFielddvalue> flanceFormTmpFielddvalues = flanceFormTmpFielddvalueService.findAll(new HashMap<String, Object>(){{
-                    put("FIELDVALUE_FK", fieldValue.getId());
+                    put("fieldvalueFk", fieldValue.getId());
                 }});
                 fieldValue.setFlanceFormTmpFielddvalues(flanceFormTmpFielddvalues);
             }
@@ -204,7 +204,7 @@ public class FlanceFormMainflowFormSyncServiceImpl implements FlanceFormMainflow
             // 文件类型
             if (flanceFormTmpField.getFieldType().equals(Constent.SHORT_TYPE_7)) {
                 List<FlanceFormSdbFile> flanceFormSdbFiles = flanceFormSdbFileService.findAll(new HashMap<String, Object>(){{
-                    put("FIELDVALUE_FK", fieldValue.getId());
+                    put("fieldvalueFk", fieldValue.getId());
                 }});
                 fieldValue.setFlanceFormSdbFiles(flanceFormSdbFiles);
             }
@@ -229,8 +229,8 @@ public class FlanceFormMainflowFormSyncServiceImpl implements FlanceFormMainflow
         staticFields.forEach(staticField -> {
             // 查询处模板字段的关联关系(里面有字段排序等信息)
             FlanceFormTmpTmpfield tmpTmpfield = flanceFormTmpTmpfieldService.findOneByProps(new HashMap<String, String>(){{
-                put("FIELD_FK", staticField.getId());
-                put("TEMPLATE_FK", template.getId());
+                put("fieldFk", staticField.getId());
+                put("templateFk", template.getId());
             }});
             String tableCode = staticField.getTableCode();
 

@@ -86,9 +86,9 @@ public class FlanceFormReflectServiceImpl implements FlanceFormReflectService {
 
         // 查询初始化的业务信息
         FlanceFormBizBusiness flanceFormBizBusiness = flanceFormBizBusinessService.findOneByProps(new HashMap<String, String>(3){{
-            put("MAINFORM_FK", mainformId);
-            put("GROUP_FK", groupId);
-            put("TEMPLATE_FK", tmpTemplate.getId());
+            put("mainformFk", mainformId);
+            put("groupFk", groupId);
+            put("templateFk", tmpTemplate.getId());
         }});
 
         if (null == flanceFormBizBusiness) {
@@ -306,11 +306,11 @@ public class FlanceFormReflectServiceImpl implements FlanceFormReflectService {
         if (flanceFormTmpField.getIsBigText() == 1) {
             FlanceFormTmpFieldbvalue flanceFormTmpFieldbvalue = flanceFormTmpFieldvalue.getFlanceFormTmpFieldbvalue();
             flanceFormTmpFieldbvalue.setFieldvalueFk(flanceFormTmpFieldvalue.getId());
-            flanceFormTmpFieldbvalueService.deleteByProperty("FIELDVALUE_FK", flanceFormTmpFieldvalue.getId());
+            flanceFormTmpFieldbvalueService.deleteByProperty("fieldvalueFk", flanceFormTmpFieldvalue.getId());
             flanceFormTmpFieldbvalueService.save(flanceFormTmpFieldbvalue);
         } else if(!StringUtils.isEmpty(flanceFormTmpField.getDicId())) {
             List<FlanceFormTmpFielddvalue> fielddvalues = flanceFormTmpFieldvalue.getFlanceFormTmpFielddvalues();
-            flanceFormTmpFielddvalueService.deleteByProperty("FIELDVALUE_FK", flanceFormTmpFieldvalue.getId());
+            flanceFormTmpFielddvalueService.deleteByProperty("fieldvalueFk", flanceFormTmpFieldvalue.getId());
             fielddvalues.forEach(flanceFormTmpFielddvalue -> {
                 flanceFormTmpFielddvalue.setFieldvalueFk(flanceFormTmpFieldvalue.getId());
                 flanceFormTmpFielddvalueService.save(flanceFormTmpFielddvalue);

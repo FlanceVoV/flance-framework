@@ -69,7 +69,7 @@ public class FlanceFormServiceFormSyncServiceImpl implements FlanceFormServiceFo
 
         // 查询所有业务组列表，重新组装到vo对象
         List<FlanceFormBizGroup> flanceFormBizGroups = flanceFormBizGroupService.findAll(new HashMap<String, Object>(){{
-            put("SERVICE_FORM_FK", serviceFormId);
+            put("serviceFormFk", serviceFormId);
         }});
         List<ServiceFormGroupVo> groupModels = Lists.newArrayList();
         flanceFormBizGroups.forEach(bizGroup -> {
@@ -95,7 +95,7 @@ public class FlanceFormServiceFormSyncServiceImpl implements FlanceFormServiceFo
         flanceFormRecServiceform.setRecordValue(jsonFormObj);
         flanceFormRecServiceform.setServiceFormFk(serviceFormId);
 
-        flanceFormRecServiceformService.deleteByProperty("SERVICE_FORM_FK", serviceFormId);
+        flanceFormRecServiceformService.deleteByProperty("serviceFormFk", serviceFormId);
         flanceFormRecServiceformService.save(flanceFormRecServiceform);
     }
 
@@ -141,8 +141,8 @@ public class FlanceFormServiceFormSyncServiceImpl implements FlanceFormServiceFo
 
         tmpFields.forEach(tmpField -> {
             FlanceFormTmpTmpfield flanceFormTmpTmpfield = flanceFormTmpTmpfieldService.findOneByProps(new HashMap<String, String>(){{
-                put("FIELD_FK", tmpField.getId());
-                put("TEMPLATE_FK", tempId);
+                put("fieldFk", tmpField.getId());
+                put("templateFk", tempId);
             }});
             ServiceFormFieldVo serviceFormFieldModel = new ServiceFormFieldVo();
             serviceFormFieldModel.setFieldId(tmpField.getId());

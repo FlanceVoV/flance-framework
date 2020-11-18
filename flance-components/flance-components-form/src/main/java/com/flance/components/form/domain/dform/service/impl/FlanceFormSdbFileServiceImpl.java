@@ -14,7 +14,7 @@ public class FlanceFormSdbFileServiceImpl extends BaseWebDomainService<FlanceFor
     @Override
     public List<FlanceFormSdbFile> findAllByMainformFk(String mainformFk) {
         return super.findAll(new HashMap<String, Object>(){{
-            put("MAINFORM_FK", mainformFk);
+            put("mainformFk", mainformFk);
         }});
     }
 }

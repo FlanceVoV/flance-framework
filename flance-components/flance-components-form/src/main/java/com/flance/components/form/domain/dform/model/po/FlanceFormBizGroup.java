@@ -37,6 +37,9 @@ public class FlanceFormBizGroup {
     */
     private Short stepIndex;
 
+    @Column(name = "SERVICE_FORM_FK", updatable = false, insertable = false)
+    private String serviceFormFk;
+
     /**
      * 该组下面的所有模板
      */
