@@ -24,5 +24,6 @@ public class FlanceFormTmpFielddvalueServiceImpl extends BaseWebDomainService<Fl
     @Autowired
     public void setFlanceFormTmpFielddvalueParser(FlanceFormTmpFielddvalueParser flanceFormTmpFielddvalueParser) {
         this.flanceFormTmpFielddvalueParser = flanceFormTmpFielddvalueParser;
+        super.setBaseParser(flanceFormTmpFielddvalueParser);
     }
 }
