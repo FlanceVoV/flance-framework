@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 
 @Data
@@ -12,7 +13,7 @@ import javax.persistence.Table;
 public class FlanceFormTmpFieldbvalue {
 
     @Id
-    private Long id;
+    private String id;
 
     /**
      * 主键
@@ -22,5 +23,6 @@ public class FlanceFormTmpFieldbvalue {
     /**
      * 大值
      */
+    @Lob
     private String bigValue;
 }

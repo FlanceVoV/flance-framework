@@ -19,12 +19,8 @@ public class FlanceFormBizGroup {
     /**
     * 主键
     */
+    @Id
     private String id;
-
-    /**
-    * 业务表单外键
-    */
-    private String serviceFormFk;
 
     /**
     * 组名

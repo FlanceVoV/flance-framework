@@ -20,6 +20,7 @@
         <dependency>
             <groupId>com.flance</groupId>
             <artifactId>flance-jdbc-jpa-web</artifactId>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 

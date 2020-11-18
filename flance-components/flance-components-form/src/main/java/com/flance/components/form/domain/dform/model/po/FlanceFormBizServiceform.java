@@ -22,11 +22,6 @@ public class FlanceFormBizServiceform {
     private String id;
 
     /**
-     * 业务外键
-     */
-    private String serviceFk;
-
-    /**
      * 表单名
      */
     private String formName;

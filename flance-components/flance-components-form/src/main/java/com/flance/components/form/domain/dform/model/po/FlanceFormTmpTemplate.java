@@ -15,6 +15,7 @@ public class FlanceFormTmpTemplate {
     /**
     * 主表
     */
+    @Id
     private String id;
 
     /**
@@ -38,7 +39,7 @@ public class FlanceFormTmpTemplate {
     /**
      * 限制条数
      */
-    private Integer limit;
+    private Integer limits;
 
     /**
      * 备注

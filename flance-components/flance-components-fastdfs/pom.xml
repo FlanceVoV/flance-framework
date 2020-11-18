@@ -15,6 +15,7 @@
         <dependency>
             <groupId>com.flance</groupId>
             <artifactId>flance-jdbc-jpa-web</artifactId>
+            <optional>true</optional>
         </dependency>
 
         <dependency>
@@ -30,6 +31,7 @@
         <dependency>
             <groupId>com.flance</groupId>
             <artifactId>flance-web-utils</artifactId>
+            <optional>true</optional>
         </dependency>
 
         <dependency>

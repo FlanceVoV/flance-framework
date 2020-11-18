@@ -12,16 +12,18 @@ import javax.persistence.*;
 public class FlanceFormTmpTmpfield {
 
     @Id
-    private Long id;
+    private String id;
 
     /**
      * 模板id
      */
+    @Column(name = "TEMPLATE_FK")
     private String templateFk;
 
     /**
      * 字段外键
      */
+    @Column(name = "FIELD_FK", updatable = false, insertable = false)
     private String fieldFk;
 
     /**

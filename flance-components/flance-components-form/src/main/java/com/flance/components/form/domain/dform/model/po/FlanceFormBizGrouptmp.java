@@ -2,6 +2,7 @@ package com.flance.components.form.domain.dform.model.po;
 
 import lombok.Data;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -16,16 +17,18 @@ import javax.persistence.Table;
 public class FlanceFormBizGrouptmp {
 
     @Id
-    private Long id;
+    private String id;
 
     /**
      * 组别外键
      */
+    @Column(name = "GROUP_KF")
     private String groupFk;
 
     /**
      * 模板外键
      */
+    @Column(name = "TEMPLATE_FK")
     private String templateFk;
 
     /**

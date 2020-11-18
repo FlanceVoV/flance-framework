@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface FlanceFormTmpTemplateDao extends BaseDao<FlanceFormTmpTemplate, String> {
 
-    @Query(" select self.id, self.name, self.code, self.createBy, self.createDate, self.deleted, self.isList, self.limit, self.remark " +
+    @Query(" select self.id, self.name, self.code, self.createBy, self.createDate, self.deleted, self.isList, self.limits, self.remark " +
             " from FlanceFormTmpTemplate self " +
             " left join FlanceFormBizGrouptmp tmpGroup on (self.id = tmpGroup.groupFk and self.deleted = 0 ) " +
             " where tmpGroup.groupFk = :groupId " +

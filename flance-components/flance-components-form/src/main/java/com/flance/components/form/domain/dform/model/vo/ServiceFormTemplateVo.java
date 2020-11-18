@@ -31,7 +31,7 @@ public class ServiceFormTemplateVo {
     /**
      * 限制条数
      */
-    private Integer limit;
+    private Integer limits;
 
     /**
      * 备注

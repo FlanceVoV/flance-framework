@@ -37,6 +37,7 @@
         <flance-web-oauth-security.version>1.0</flance-web-oauth-security.version>
         <flance-web-utils.version>1.0</flance-web-utils.version>
         <flance-components-fastdfs.version>1.0</flance-components-fastdfs.version>
+        <flance-components-form.version>1.0</flance-components-form.version>
     </properties>
 
     <dependencyManagement>
@@ -60,13 +61,13 @@
             </dependency>
 
             <!-- activiti -->
-            <dependency>
+            <!--<dependency>
                 <groupId>org.activiti.dependencies</groupId>
                 <artifactId>activiti-dependencies</artifactId>
                 <version>${activiti.version}</version>
                 <scope>import</scope>
                 <type>pom</type>
-            </dependency>
+            </dependency>-->
 
             <!-- jwt -->
             <dependency>
@@ -178,6 +179,12 @@
                 <groupId>com.flance</groupId>
                 <artifactId>flance-components-fastdfs</artifactId>
                 <version>${flance-components-fastdfs.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.flance</groupId>
+                <artifactId>flance-components-form</artifactId>
+                <version>${flance-components-form.version}</version>
             </dependency>
 
             <!-- flance end -->

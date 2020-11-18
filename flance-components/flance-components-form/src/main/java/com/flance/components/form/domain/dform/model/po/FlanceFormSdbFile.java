@@ -2,6 +2,7 @@ package com.flance.components.form.domain.dform.model.po;
 
 import lombok.Data;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -77,5 +78,6 @@ public class FlanceFormSdbFile {
     /**
      * 属性表外键
      */
+    @Column(name = "FIELDVALUE_FK")
     private String fieldvalueFk;
 }

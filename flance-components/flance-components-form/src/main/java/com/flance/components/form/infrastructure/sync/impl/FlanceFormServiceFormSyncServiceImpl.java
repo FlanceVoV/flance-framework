@@ -114,7 +114,7 @@ public class FlanceFormServiceFormSyncServiceImpl implements FlanceFormServiceFo
             templateModel.setTemplateId(tmpTemplate.getId());
             templateModel.setCode(tmpTemplate.getCode());
             templateModel.setIsList(tmpTemplate.getIsList());
-            templateModel.setLimit(tmpTemplate.getLimit());
+            templateModel.setLimits(tmpTemplate.getLimits());
             templateModel.setTemplateName(tmpTemplate.getName());
             templateModel.setRemark(tmpTemplate.getRemark());
             templateModel.setServiceFormFieldVos(packageFields(tmpTemplate.getId(), tmpFields));

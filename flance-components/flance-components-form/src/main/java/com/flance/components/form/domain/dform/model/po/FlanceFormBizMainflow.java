@@ -3,6 +3,7 @@ package com.flance.components.form.domain.dform.model.po;
 import lombok.Data;
 
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Date;
 
@@ -18,6 +19,7 @@ public class FlanceFormBizMainflow {
     /**
      * 主键
      */
+    @Id
     private String id;
 
     /**

@@ -2,6 +2,7 @@ package com.flance.components.form.domain.dform.model.po;
 
 import lombok.Data;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -24,16 +25,19 @@ public class FlanceFormBizBusiness {
     /**
     * 流程主表外键
     */
+    @Column(name = "MAINFLOW_FK")
     private String mainflowFk;
 
     /**
     * 分组外键
     */
+    @Column(name = "GROUP_FK")
     private String groupFk;
 
     /**
     * 模板外键
     */
+    @Column(name = "TEMPLATE_FK")
     private String templateFk;
 
     /**

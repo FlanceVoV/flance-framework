@@ -14,21 +14,25 @@ public class FlanceFormTmpFieldvalue {
     /**
      * 主键
      */
+    @Id
     private String id;
 
     /**
      * 字段外键
      */
+    @Column(name = "FIELD_FK")
     private String fieldFk;
 
     /**
      * 业务表外键
      */
+    @Column(name = "BUSINESS_FK")
     private String businessFk;
 
     /**
      * 普通文本值
      */
+    @Column(length = 4000)
     private String commonValue;
 
     /**

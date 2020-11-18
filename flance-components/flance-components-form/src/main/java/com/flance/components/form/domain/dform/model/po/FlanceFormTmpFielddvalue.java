@@ -2,6 +2,7 @@ package com.flance.components.form.domain.dform.model.po;
 
 import lombok.Data;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -12,11 +13,12 @@ import javax.persistence.Table;
 public class FlanceFormTmpFielddvalue {
 
     @Id
-    private Long id;
+    private String id;
 
     /**
     * 属性表外键
     */
+    @Column(name = "FIELDVALUE_FK")
     private String fieldvalueFk;
 
     /**
