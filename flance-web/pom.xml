@@ -10,7 +10,7 @@
     <parent>
         <artifactId>flance-parent</artifactId>
         <groupId>com.flance</groupId>
-        <version>1.0</version>
+        <version>1.0</version>R
     </parent>
 
     <modules>

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/api/service")
-public class FlanceFromBizServiceController extends BaseWebController<FlanceFormBizService, FlanceFormBizService, FlanceFormBizService, FlanceFormBizService, String> {
+public class FlanceFormBizServiceController extends BaseWebController<FlanceFormBizService, FlanceFormBizService, FlanceFormBizService, FlanceFormBizService, String> {
 
     private FlanceFormBizServiceService flanceFormBizServiceService;
 

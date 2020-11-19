@@ -141,4 +141,10 @@ public interface IBaseDomainService<PO, DTO, ID extends Serializable> {
      * @return  返回结果
      */
     long customSearchCount(HashMap<String, Object> searchMap);
+
+    /**
+     * 获取主键
+     * @return  返回主键
+     */
+    ID getId();
 }

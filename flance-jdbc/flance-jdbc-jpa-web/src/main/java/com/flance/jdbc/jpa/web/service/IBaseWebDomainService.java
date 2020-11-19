@@ -94,4 +94,10 @@ public interface IBaseWebDomainService<PO, DTO, ID extends Serializable> extends
      */
     long customSearchCount(HashMap<String, Object> searchMap);
 
+    /**
+     * 获取主键
+     * @return  返回主键
+     */
+    ID getId();
+
 }

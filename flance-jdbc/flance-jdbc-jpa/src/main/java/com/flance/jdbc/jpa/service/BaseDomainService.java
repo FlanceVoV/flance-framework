@@ -23,6 +23,7 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.util.*;
 
 /**
@@ -49,6 +50,7 @@ public abstract class BaseDomainService<PO, DTO, VO, DO, ID extends Serializable
 
     @Override
     public DTO save(DTO t) {
+        setId(t);
         PO po = this.baseDao.save(baseParser.parseDto2Po(t));
         return baseParser.parsePo2Dto(po);
     }
@@ -56,6 +58,7 @@ public abstract class BaseDomainService<PO, DTO, VO, DO, ID extends Serializable
     @Override
     public void saveBatch(List<DTO> list) {
         if (!CollectionUtils.isEmpty(list)) {
+            setId(list);
             int length = list.size();
             int page = length / 200;
             int mod = length % 200;
@@ -74,6 +77,7 @@ public abstract class BaseDomainService<PO, DTO, VO, DO, ID extends Serializable
     @Override
     public void insertBatch(EntityManagerFactory factory, List<DTO> list) {
         List<PO> pos = baseParser.parseListDto2Po(list);
+        setId(pos);
         int count = 0;
         EntityManager entityManager = factory.createEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
@@ -243,6 +247,11 @@ public abstract class BaseDomainService<PO, DTO, VO, DO, ID extends Serializable
         return table != null && !table.isEmpty() ? baseParser.parseListPo2Dto(this.baseDao.findAll(QueryUtils.buildCondition(table))) : baseParser.parseListPo2Dto(this.baseDao.findAll());
     }
 
+    @Override
+    public ID getId() {
+        return (ID) UUID.randomUUID().toString();
+    }
+
     public List<DTO> findListByProperty(String propertyName, Object propertyValue) {
         return baseParser.parseListPo2Dto(this.baseDao.findAll(this.propertySpec(propertyName, propertyValue)));
     }
@@ -333,5 +342,21 @@ public abstract class BaseDomainService<PO, DTO, VO, DO, ID extends Serializable
         entityManager.clear();
         transaction.commit();
         transaction.begin();
+    }
+
+    private void setId(Object o) {
+        try {
+            Field field = o.getClass().getDeclaredField("id");
+            field.setAccessible(true);
+            if (null == field.get(o)) {
+                field.set(o, getId());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setId(List objs) {
+        objs.forEach(obj -> setId(obj));
     }
 }
