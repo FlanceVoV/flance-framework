@@ -1,6 +1,7 @@
 package com.flance.web.gateway.filter;
 
 import com.flance.web.gateway.client.AuthClient;
+import com.flance.web.gateway.client.UserResourceClient;
 import com.flance.web.gateway.service.GatewayService;
 import com.flance.web.utils.UrlMatchUtil;
 import com.flance.web.utils.feign.request.FeignRequest;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
@@ -43,6 +45,9 @@ public class AuthFilter implements GlobalFilter, Ordered {
     @Resource
     GatewayService gatewayService;
 
+    @Resource
+    UserResourceClient userResourceClient;
+
     @Override
     public int getOrder() {
         return 0;
@@ -63,11 +68,10 @@ public class AuthFilter implements GlobalFilter, Ordered {
             logger.info("gateway-auth-filter：请求标识[{}]，放行[{}]", uuid, uri);
             return chain.filter(exchange);
         } else {
-            String token = exchange.getRequest().getHeaders().getFirst("accessToken");
+            String token = exchange.getRequest().getHeaders().getFirst("access_token");
             if (StringUtils.isEmpty(token)) {
                 token = exchange.getRequest().getQueryParams().getFirst("access_token");
             }
-
             // 构建鉴权请求
             FeignRequest feignRequest = new FeignRequest();
             feignRequest.setMethod(method);
@@ -76,8 +80,28 @@ public class AuthFilter implements GlobalFilter, Ordered {
             feignRequest.setRequestId(requestId);
             feignResponse = authClient.hasPermission(feignRequest);
             logger.info("gateway-auth-filter：请求标识[{}]，完成鉴权请求[{}]，鉴权返回结果[{}]", uuid, uri, feignResponse.toString());
+            return gatewayService.filter(setUserInfo(token, exchange), chain, feignResponse);
         }
-        return gatewayService.filter(exchange, chain, feignResponse);
+    }
+
+    /**
+     * 封装用户信息
+     * @param token
+     * @param exchange
+     * @return
+     */
+    private ServerWebExchange setUserInfo(String token, ServerWebExchange exchange) {
+        FeignRequest feignRequest = new FeignRequest();
+        feignRequest.setMethod("POST");
+        feignRequest.setToken(token);
+        feignRequest.setUrl("/api/sys/user_info");
+        feignRequest.setRequestId("sys.user.info");
+        FeignResponse feignResponse = userResourceClient.getUserInfo(feignRequest);
+        ServerHttpRequest request = exchange.getRequest().mutate()
+                .header("current_user", feignResponse.getData().toString())
+                .header("access_token", token)
+                .build();
+        return exchange.mutate().request(request).build();
     }
 
 }
