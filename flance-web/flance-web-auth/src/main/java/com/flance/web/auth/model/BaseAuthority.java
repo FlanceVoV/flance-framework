@@ -32,4 +32,12 @@ public abstract class BaseAuthority implements GrantedAuthority {
      */
     public abstract String getUrl();
 
+    @Override
+    public boolean equals(Object obj) {
+        if (null == obj) {
+            return false;
+        }
+        BaseAuthority target = (BaseAuthority) obj;
+        return this.getUrl().equals(target.getUrl());
+    }
 }

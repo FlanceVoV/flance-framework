@@ -12,7 +12,7 @@ import javax.annotation.Resource;
  * @author jhf
  */
 @RestController
-@RequestMapping("/permission")
+@RequestMapping("/api/permission")
 public class PermissionController {
 
     @Resource

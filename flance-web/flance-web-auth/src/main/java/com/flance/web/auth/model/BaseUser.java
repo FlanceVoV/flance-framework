@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 用户基类
@@ -31,7 +32,7 @@ public abstract class BaseUser implements UserDetails {
         List<? extends BaseRole> roles = getRoles();
         List<BaseAuthority> authorities = Lists.newArrayList();
         roles.forEach(role -> authorities.addAll(role.getAuthorities()));
-        return authorities;
+        return authorities.stream().distinct().collect(Collectors.toList());
     }
 
 }

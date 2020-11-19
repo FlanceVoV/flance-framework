@@ -21,7 +21,7 @@ public class TokenUtils {
 
     private final static Logger log = LoggerFactory.getLogger(TokenUtils.class);
 
-    private static final String EXP = "expires_in";
+    private static final String EXP = "expires_time";
 
     private static SignatureVerifier verifier;
 
@@ -41,10 +41,11 @@ public class TokenUtils {
     public static String getTokenByRequest(HttpServletRequest request) {
         String token = request.getParameter("access_token");
         if (StringUtils.isEmpty(token)) {
-            token = request.getHeader("token");
+            token = request.getHeader("access_token");
             if (!StringUtils.isEmpty(token)) {
                 // 如果有前缀则剔除前缀，不然无法解析
                 token = token.replaceFirst("Bearer ", "");
+                token = token.replaceFirst("bearer ", "");
             }
         }
         return token;
@@ -53,7 +54,7 @@ public class TokenUtils {
     public static Boolean isExp(String token) {
         Assert.notNull(token, "token不允许为空！");
         log.info("校验token是否过期{}", token);
-        long created = (long) decode(token).get(EXP);
+        long created = Long.parseLong(decode(token).get(EXP) + "");
         long nowTime = System.currentTimeMillis() / 1000L;
         log.info("校验结果为{}", nowTime > created);
         return nowTime > created;

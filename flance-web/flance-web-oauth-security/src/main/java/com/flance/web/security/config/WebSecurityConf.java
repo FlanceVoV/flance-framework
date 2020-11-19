@@ -47,7 +47,7 @@ public class WebSecurityConf extends WebSecurityConfigurerAdapter {
         http.cors().and().csrf().disable();
         http.headers().frameOptions().disable();
 
-        http.authorizeRequests().antMatchers("/oauth/**","/permission/**").permitAll()
+        http.authorizeRequests().antMatchers("/oauth/**","/api/permission/**","/api/user/**").permitAll()
                 .and()
                 .formLogin()
 //                .loginPage("/oauth/token")

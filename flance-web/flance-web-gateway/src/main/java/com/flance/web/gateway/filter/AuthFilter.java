@@ -6,6 +6,7 @@ import com.flance.web.gateway.service.GatewayService;
 import com.flance.web.utils.UrlMatchUtil;
 import com.flance.web.utils.feign.request.FeignRequest;
 import com.flance.web.utils.feign.response.FeignResponse;
+import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -91,14 +92,19 @@ public class AuthFilter implements GlobalFilter, Ordered {
      * @return
      */
     private ServerWebExchange setUserInfo(String token, ServerWebExchange exchange) {
+        if (StringUtils.isEmpty(token)) {
+            return exchange;
+        }
+        Gson gson = new Gson();
         FeignRequest feignRequest = new FeignRequest();
         feignRequest.setMethod("POST");
         feignRequest.setToken(token);
         feignRequest.setUrl("/api/sys/user_info");
         feignRequest.setRequestId("sys.user.info");
         FeignResponse feignResponse = userResourceClient.getUserInfo(feignRequest);
+        logger.info("响应结果[{}]", gson.toJson(feignResponse));
         ServerHttpRequest request = exchange.getRequest().mutate()
-                .header("current_user", feignResponse.getData().toString())
+                .header("current_user", gson.toJson(feignResponse.getData()))
                 .header("access_token", token)
                 .build();
         return exchange.mutate().request(request).build();
