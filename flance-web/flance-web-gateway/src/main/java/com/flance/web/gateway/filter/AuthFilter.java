@@ -2,6 +2,7 @@ package com.flance.web.gateway.filter;
 
 import com.flance.web.gateway.client.AuthClient;
 import com.flance.web.gateway.client.UserResourceClient;
+import com.flance.web.gateway.exception.GlobalGatewayException;
 import com.flance.web.gateway.service.GatewayService;
 import com.flance.web.utils.UrlMatchUtil;
 import com.flance.web.utils.feign.request.FeignRequest;
@@ -104,7 +105,7 @@ public class AuthFilter implements GlobalFilter, Ordered {
         FeignResponse feignResponse = userResourceClient.getUserInfo(feignRequest);
         logger.info("获取用户信息，响应结果[{}]", gson.toJson(feignResponse));
         if (!feignResponse.getSuccess()) {
-            throw new RuntimeException("用户信息获取失败！[" + feignResponse.getMsg() + "]");
+            throw new GlobalGatewayException("用户信息获取失败！[" + feignResponse.getMsg() + "]");
         }
         ServerHttpRequest request = exchange.getRequest().mutate()
                 .headers(header -> {
