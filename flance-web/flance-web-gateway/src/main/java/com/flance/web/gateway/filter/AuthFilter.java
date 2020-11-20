@@ -8,6 +8,7 @@ import com.flance.web.utils.UrlMatchUtil;
 import com.flance.web.utils.feign.request.FeignRequest;
 import com.flance.web.utils.feign.response.FeignResponse;
 import com.google.gson.Gson;
+import com.sun.deploy.net.URLEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +22,7 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Resource;
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.UUID;
 
@@ -109,8 +111,12 @@ public class AuthFilter implements GlobalFilter, Ordered {
         }
         ServerHttpRequest request = exchange.getRequest().mutate()
                 .headers(header -> {
-                    header.set("user_info", gson.toJson(feignResponse.getData()));
-                    header.set("access_token", token);
+                    try {
+                        header.set("user_info", URLEncoder.encode(gson.toJson(feignResponse.getData()), "UTF-8"));
+                        header.set("access_token", token);
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
                 }).build();
         return exchange.mutate().request(request).build();
     }

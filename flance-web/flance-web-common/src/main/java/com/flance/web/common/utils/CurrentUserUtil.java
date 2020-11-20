@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.net.URLDecoder;
 
 /**
  * 用户会话工具
@@ -17,7 +18,12 @@ public class CurrentUserUtil {
         String headerUser = request.getHeader("user_info");
         if (null == sessionUser) {
             Gson gson = new Gson();
-            currentUser = gson.fromJson(headerUser, userClass);
+            try {
+                currentUser = gson.fromJson(URLDecoder.decode(headerUser, "UTF-8"), userClass);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
         } else {
             currentUser = (User) sessionUser;
         }
