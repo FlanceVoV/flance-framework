@@ -3,6 +3,7 @@ package com.flance.web.common.utils;
 import com.google.gson.Gson;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  * 用户会话工具
@@ -21,6 +22,11 @@ public class CurrentUserUtil {
             currentUser = (User) sessionUser;
         }
         return currentUser;
+    }
+
+    public static void setSessionUser(HttpServletRequest request, Object user) {
+        HttpSession httpSession = request.getSession();
+        httpSession.setAttribute("user_info", user);
     }
 
 }

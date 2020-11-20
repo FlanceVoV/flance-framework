@@ -104,9 +104,10 @@ public class AuthFilter implements GlobalFilter, Ordered {
         FeignResponse feignResponse = userResourceClient.getUserInfo(feignRequest);
         logger.info("响应结果[{}]", gson.toJson(feignResponse));
         ServerHttpRequest request = exchange.getRequest().mutate()
-                .header("current_user", gson.toJson(feignResponse.getData()))
-                .header("access_token", token)
-                .build();
+                .headers(header -> {
+                    header.set("user_info", gson.toJson(feignResponse.getData()));
+                    header.set("access_token", token);
+                }).build();
         return exchange.mutate().request(request).build();
     }
 
