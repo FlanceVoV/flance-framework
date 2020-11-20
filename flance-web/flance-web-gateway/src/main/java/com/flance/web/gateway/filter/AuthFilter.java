@@ -102,7 +102,10 @@ public class AuthFilter implements GlobalFilter, Ordered {
         feignRequest.setUrl("/api/sys/user_info");
         feignRequest.setRequestId("sys.user.info");
         FeignResponse feignResponse = userResourceClient.getUserInfo(feignRequest);
-        logger.info("响应结果[{}]", gson.toJson(feignResponse));
+        logger.info("获取用户信息，响应结果[{}]", gson.toJson(feignResponse));
+        if (!feignResponse.getSuccess()) {
+            throw new RuntimeException("用户信息获取失败！[" + feignResponse.getMsg() + "]");
+        }
         ServerHttpRequest request = exchange.getRequest().mutate()
                 .headers(header -> {
                     header.set("user_info", gson.toJson(feignResponse.getData()));
