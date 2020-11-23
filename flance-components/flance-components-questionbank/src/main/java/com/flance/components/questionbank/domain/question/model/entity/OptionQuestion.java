@@ -39,7 +39,7 @@ public class OptionQuestion {
      */
     private String questionExtend;
 
-    /** 每个选项分值，一般错误选项设置为0，设置上限需要参照question.score[没题总分] **/
+    /** 每个选项分值，一般错误选项设置为0，设置上限需要参照question.score[每道题总分] **/
     private Integer score;
 
 }
