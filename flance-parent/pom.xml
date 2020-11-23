@@ -38,6 +38,7 @@
         <flance-web-utils.version>1.0</flance-web-utils.version>
         <flance-components-fastdfs.version>1.0</flance-components-fastdfs.version>
         <flance-components-form.version>1.0</flance-components-form.version>
+        <flance-components-questionbank>1.0</flance-components-questionbank>
     </properties>
 
     <dependencyManagement>
@@ -185,6 +186,12 @@
                 <groupId>com.flance</groupId>
                 <artifactId>flance-components-form</artifactId>
                 <version>${flance-components-form.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.flance</groupId>
+                <artifactId>flance-components-questionbank</artifactId>
+                <version>${flance-components-questionbank}</version>
             </dependency>
 
             <!-- flance end -->
