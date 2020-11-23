@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 
 /**
@@ -27,7 +28,8 @@ public class ExamineeAnswerItem {
     /** 填空记录id，与answerContent对应，多个空的groupQuestionId是一样的 **/
     private Long blankSpacesItemId;
 
-    /** 答案结果 可能是：填空、文章 **/
+    /** 答案结果 可能是：填空、文章、口语音频文件 **/
+    @Lob
     private String answerContent;
 
 }
