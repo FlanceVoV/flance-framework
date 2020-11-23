@@ -348,7 +348,7 @@ public abstract class BaseDomainService<PO, DTO, VO, DO, ID extends Serializable
         try {
             Field field = o.getClass().getDeclaredField("id");
             field.setAccessible(true);
-            if (null == field.get(o)) {
+            if (null == field.get(o) && "java.lang.String".equals(field.getType().getName())) {
                 field.set(o, getId());
             }
         } catch (Exception e) {

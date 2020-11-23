@@ -17,7 +17,7 @@
         <module>flance-components-fastdfs</module>
         <module>flance-components-activiti</module>
         <module>flance-components-form</module>
-        <module>flance-components-redis</module>
+        <module>flance-components-questionbank</module>
     </modules>
 
 
