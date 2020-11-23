@@ -37,6 +37,15 @@ public class Question {
     private String questionContent;
 
     /**
+     * 该题总分 (填空总分、选择总分、文章总分)
+     * 具体根据判分逻辑处理
+     * 如：
+     * 1. 多选，选对一个、选错一个判分
+     * 2. 填空，填对一个、填错一个判分
+     */
+    private Integer score;
+
+    /**
      * 选项信息，只有选择题才有该属性
      */
     @ManyToMany

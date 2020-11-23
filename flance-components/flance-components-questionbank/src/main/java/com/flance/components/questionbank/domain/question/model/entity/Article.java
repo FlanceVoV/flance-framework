@@ -29,4 +29,7 @@ public class Article {
     @Lob
     private String articleAnalysis;
 
+    /** 分值 **/
+    private Integer score;
+
 }

@@ -29,4 +29,7 @@ public class BlankSpacesItem {
     /** 填空编号 **/
     private String blankSpaceNo;
 
+    /** 每空分数值 **/
+    private Integer score;
+
 }

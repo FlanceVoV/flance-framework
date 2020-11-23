@@ -24,5 +24,8 @@ public class GroupQuestion {
     /** 题号 **/
     private Integer questionNo;
 
+    /** 该组总分 **/
+    private Integer groupScore;
+
 
 }
