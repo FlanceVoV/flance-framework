@@ -49,10 +49,15 @@ public abstract class BaseDomainService<PO, DTO, VO, DO, ID extends Serializable
     }
 
     @Override
-    public DTO save(DTO t) {
-        setId(t);
-        PO po = this.baseDao.save(baseParser.parseDto2Po(t));
-        return baseParser.parsePo2Dto(po);
+    public boolean save(DTO t) {
+        try {
+            setId(t);
+            PO po = this.baseDao.save(baseParser.parseDto2Po(t));
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override

@@ -3,24 +3,30 @@ package com.flance.jdbc.mybatis.web.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.flance.jdbc.mybatis.common.BaseEntity;
 import com.flance.jdbc.mybatis.service.BaseService;
+import com.flance.jdbc.mybatis.web.service.BaseWebService;
 import com.flance.web.common.controller.BaseController;
 import com.flance.web.common.request.WebRequest;
 import com.flance.web.common.request.WebResponse;
+import com.flance.web.common.service.IService;
 import com.flance.web.common.utils.ResponseBuilder;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 public class BaseWebController<T extends BaseEntity> extends BaseController<T,T,Long, IPage<T>> {
 
-    private BaseService<T> service;
+    private BaseWebService<T> service;
 
-    public void setService(BaseService<T> baseService) {
+    public void setService(BaseWebService<T> baseService) {
         this.service = baseService;
+        super.setBaseService(baseService);
     }
 
     @Override
     public WebResponse addBatch(WebRequest<T, Long> request) {
-        return ResponseBuilder.getSuccess(WebResponse.builder().singleResult(service.saveBatch(request.getMultiParam())).build());
+        service.saveBatch(request.getMultiParam());
+        return ResponseBuilder.getSuccess(WebResponse.builder().build());
     }
 
     @Override
@@ -34,8 +40,9 @@ public class BaseWebController<T extends BaseEntity> extends BaseController<T,T,
     }
 
     @Override
-    public WebResponse list(WebRequest<T, Long> request) {
-        return null;
-
+    public WebResponse<T, T, Long, IPage<T>> list(WebRequest<T, Long> request) {
+        List list = service.listByMap(request.getParamsMap());
+        return ResponseBuilder.getSuccess(WebResponse.builder().multiResult(list).build());
     }
+
 }

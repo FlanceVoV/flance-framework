@@ -26,7 +26,7 @@ public interface IBaseDomainService<PO, DTO, ID extends Serializable> {
      * @param t 实体
      * @return  返回实体
      */
-    DTO save(DTO t);
+    boolean save(DTO t);
 
     /**
      * 更新非空
