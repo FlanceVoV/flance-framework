@@ -33,6 +33,8 @@
         <flance-jdbc-jpa.version>1.0</flance-jdbc-jpa.version>
         <flance-web-common.version>1.0</flance-web-common.version>
         <flance-jdbc-jpa-web.version>1.0</flance-jdbc-jpa-web.version>
+        <flance-jdbc-mybatis.version>1.0</flance-jdbc-mybatis.version>
+        <flance-jdbc-mybatis-web.version>1.0</flance-jdbc-mybatis-web.version>
         <flance-web-auth.version>1.0</flance-web-auth.version>
         <flance-web-gateway.version>1.0</flance-web-gateway.version>
         <flance-web-oauth-security.version>1.0</flance-web-oauth-security.version>
@@ -158,6 +160,18 @@
                 <groupId>com.flance</groupId>
                 <artifactId>flance-jdbc-jpa-web</artifactId>
                 <version>${flance-jdbc-jpa-web.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.flance</groupId>
+                <artifactId>flance-jdbc-mybatis</artifactId>
+                <version>${flance-jdbc-mybatis.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.flance</groupId>
+                <artifactId>flance-jdbc-mybatis-web</artifactId>
+                <version>${flance-jdbc-mybatis-web.version}</version>
             </dependency>
 
             <dependency>

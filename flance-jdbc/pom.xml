@@ -17,6 +17,7 @@
         <module>flance-jdbc-jpa</module>
         <module>flance-jdbc-jpa-web</module>
         <module>flance-jdbc-mybatis</module>
+        <module>flance-jdbc-mybatis-web</module>
     </modules>
 
 </project>

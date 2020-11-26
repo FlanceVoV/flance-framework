@@ -1,7 +1,6 @@
 package com.flance.web.common.service;
 
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +19,7 @@ public interface IService<T, ID, PAGE> {
      * @param t 实体
      * @return  返回实体
      */
-    T save(T t);
+    boolean save(T t);
 
     /**
      * 批量保存（循环）

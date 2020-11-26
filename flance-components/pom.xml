@@ -18,6 +18,7 @@
         <module>flance-components-activiti</module>
         <module>flance-components-form</module>
         <module>flance-components-questionbank</module>
+        <module>flance-components-es</module>
     </modules>
 
 

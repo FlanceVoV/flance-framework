@@ -9,20 +9,19 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>flance-jdbc-mybatis</artifactId>
+    <artifactId>flance-jdbc-mybatis-web</artifactId>
 
     <dependencies>
         <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-boot-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
+            <groupId>com.flance</groupId>
+            <artifactId>flance-jdbc-mybatis</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.flance</groupId>
+            <artifactId>flance-web-common</artifactId>
+        </dependency>
 
     </dependencies>
-
 
 </project>

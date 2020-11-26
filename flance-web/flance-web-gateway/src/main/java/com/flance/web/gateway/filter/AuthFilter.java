@@ -8,7 +8,7 @@ import com.flance.web.utils.UrlMatchUtil;
 import com.flance.web.utils.feign.request.FeignRequest;
 import com.flance.web.utils.feign.response.FeignResponse;
 import com.google.gson.Gson;
-import com.sun.deploy.net.URLEncoder;
+import java.net.URLEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;

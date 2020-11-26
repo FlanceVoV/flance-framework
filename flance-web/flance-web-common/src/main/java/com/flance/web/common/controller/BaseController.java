@@ -27,8 +27,8 @@ public abstract class BaseController<DTO, VO, ID, PAGE> implements IBaseControll
     @Override
     @PostMapping("/add")
     public WebResponse add(@RequestBody WebRequest<DTO, ID> request) {
-        DTO dto = baseService.save(request.getSingleParam());
-        return ResponseBuilder.getSuccess(WebResponse.builder().singleResult(dto).build());
+        boolean flag = baseService.save(request.getSingleParam());
+        return ResponseBuilder.getSuccess(WebResponse.builder().singleResult(flag).build());
     }
 
     @Override
