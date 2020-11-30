@@ -1,6 +1,7 @@
 package com.flance.components.questionbank.domain.question.model.entity;
 
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -22,14 +23,16 @@ public class BlankSpacesItem {
     /** 正确内容 **/
     private String correctContent;
 
-    /** 内容分析 **/
-    @Lob
-    private String contentAnalysis;
-
     /** 填空编号 **/
     private String blankSpaceNo;
 
     /** 每空分数值 **/
     private Integer score;
+
+    /**
+     * 配置字段，可以配置一些属性，用于配置展示
+     */
+    @Length(max = 4000)
+    private String config;
 
 }

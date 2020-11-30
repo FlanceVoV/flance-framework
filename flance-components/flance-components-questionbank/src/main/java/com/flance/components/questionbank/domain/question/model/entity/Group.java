@@ -29,13 +29,15 @@ public class Group {
     @Length(max = 4000)
     private String groupContent;
 
-    /** 扩展属性，比如音频文件、大段文章等 **/
-    @Length(max = 4000)
-    private String groupExtend;
-
     /** 扩展信息 **/
     @OneToOne
     @JoinColumn(name = "GROUP_ID")
     private GroupQuestion groupQuestion;
+
+    /**
+     * 配置字段，可以配置一些属性，用于配置展示
+     */
+    @Length(max = 4000)
+    private String config;
 
 }

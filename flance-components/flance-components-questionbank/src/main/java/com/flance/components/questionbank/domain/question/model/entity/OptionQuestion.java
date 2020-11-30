@@ -1,6 +1,7 @@
 package com.flance.components.questionbank.domain.question.model.entity;
 
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -30,16 +31,13 @@ public class OptionQuestion {
     /** 是否正确选项 **/
     private boolean isCorrect;
 
-    /** 选项分析 **/
-    @Lob
-    private String optionAnalysis;
-
-    /**
-     * 试题扩展信息，比如音频文件、图片等
-     */
-    private String questionExtend;
-
     /** 每个选项分值，一般错误选项设置为0，设置上限需要参照question.score[每道题总分] **/
     private Integer score;
+
+    /**
+     * 配置字段，可以配置一些属性，用于配置展示
+     */
+    @Length(max = 4000)
+    private String config;
 
 }

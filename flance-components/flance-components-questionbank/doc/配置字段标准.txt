@@ -1,0 +1,59 @@
+配置采用json形式的字符串存储进数据库
+配置项包括，样式、起始标记（针对文章中的段落） 等，可以根据前端要求进行自定义
+{
+    "style":{
+        "back-color":"",
+        "font-color":"",
+        "font":"",
+        "font-size":"",
+        "underline":"",
+        "classes":""
+    },
+    "position":{
+        "start":"",
+        "end":""
+    },
+    "keywords":[
+        {
+            "word":"",
+            "start":"",
+            "end":""
+        }
+    ],
+    "article":{
+        "id":""
+    },
+    "analysis":{
+        "id":""
+    },
+    "videos":["/xxx/xxx1.mp4","/xxx/xxx2.mp4"],
+    "audios":["/xxx/xxx1.mp3","/xxx/xxx2.mp3"],
+    "pictures":["/xxx/xxx1.png","/xxx/xxx2.png"]
+}
+配置说明：
+style:样式配置
+style.back-color:背景色
+style.font-color:字体色
+style.font-size:字号
+style.font:字体
+style.underline:下划线
+style.classes:样式class,多个用","隔开
+
+position:关联文章内容位置配置
+position.start:起始坐标
+position.end:结束坐标
+
+keywords:关键词配置
+keywords[i].word:关键词
+keywords[i].start:文章中的起始位置
+keywords[i].end:文章中的结束位置
+
+analysis:问题分析模块
+analysis.id:问题分析模块主键(指的是text中的id)
+
+article:文章模块
+article.id:文章模块主键(指的是text中的id)
+
+videos:视频文件路径，按照数组顺序
+audios:音频文件路径，按照数组顺序
+pictures:图片路径，按照数组顺序

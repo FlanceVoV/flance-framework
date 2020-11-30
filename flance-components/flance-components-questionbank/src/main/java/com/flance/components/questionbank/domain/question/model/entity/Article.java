@@ -1,6 +1,7 @@
 package com.flance.components.questionbank.domain.question.model.entity;
 
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -19,17 +20,18 @@ public class Article {
     @Id
     private Long id;
 
+    @Length(max = 4000)
     private String articleContent;
 
     private String articleName;
 
-    private String articleExtend;
-
-    /** 文章分析 **/
-    @Lob
-    private String articleAnalysis;
-
     /** 分值 **/
     private Integer score;
+
+    /**
+     * 配置字段，可以配置一些属性，用于配置展示
+     */
+    @Length(max = 4000)
+    private String config;
 
 }

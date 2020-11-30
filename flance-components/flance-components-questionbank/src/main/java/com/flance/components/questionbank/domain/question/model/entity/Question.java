@@ -65,6 +65,11 @@ public class Question {
     @JoinColumn(name = "QUESTION_ID")
     private List<Article> articles;
 
+    /**
+     * 配置字段，可以配置一些属性，用于配置展示
+     */
+    @Length(max = 4000)
+    private String config;
 
 
 }
