@@ -1,7 +1,10 @@
 package com.flance.components.fastdfs.infrastructure.fastdfs;
 
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.csource.fastdfs.StorageClient;
@@ -18,23 +21,24 @@ import java.io.IOException;
  * 开启连接，关闭连接
  * @author jhf
  */
+@Slf4j
 @Aspect
 @Component
 public class StorageClientAop {
 
-    private final Logger logger = LoggerFactory.getLogger(StorageClientAop.class);
-
     @Resource
     TrackerServer trackerServer;
 
-    /**
-     * storageClient连接配置
-     */
-    @Before("@annotation(fastDfsStorage))")
-    public void putStorage(JoinPoint point, FastDfsStorage fastDfsStorage) {
+    @Around("@annotation(fastDfsStorage))")
+    public Object processAuthority(ProceedingJoinPoint point, FastDfsStorage fastDfsStorage) throws Throwable{
         StorageClient storageClient = new StorageClient(trackerServer, null);
+        log.info("注入[fastDfsStorage]，注入值{}", storageClient);
+        log.info("注入[fastDfsStorage]，调用类{}", point.getSignature().getDeclaringTypeName());
+        log.info("注入[fastDfsStorage]，调用方法{}", point.getSignature().getDeclaringType().getSimpleName());
         Object[] args = point.getArgs();
         args[fastDfsStorage.clientArgIndex()] = storageClient;
+        log.info("注入[fastDfsStorage]，注入成功{}", storageClient);
+        return point.proceed(args);
     }
 
     /**
@@ -42,9 +46,11 @@ public class StorageClientAop {
      */
     @After("@annotation(fastDfsStorage))")
     public void closeStorage(JoinPoint point, FastDfsStorage fastDfsStorage) throws IOException {
+        log.info("关闭连接[fastDfsStorage]{}", fastDfsStorage);
         Object[] args = point.getArgs();
         StorageClient storageClient = (StorageClient) args[fastDfsStorage.clientArgIndex()];
         storageClient.close();
     }
+
 
 }

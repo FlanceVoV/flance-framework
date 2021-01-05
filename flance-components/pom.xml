@@ -21,6 +21,7 @@
         <module>flance-components-es</module>
         <module>flance-components-logs</module>
         <module>flance-components-minio</module>
+        <module>flance-components-office</module>
     </modules>
 
 

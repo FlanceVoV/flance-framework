@@ -21,6 +21,7 @@
         <spring-cloud.version>Hoxton.SR8</spring-cloud.version>
         <jjwt.version>0.9.1</jjwt.version>
         <hutool.version>5.4.4</hutool.version>
+        <poi-ooxml.version>3.17</poi-ooxml.version>
         <google-guava.version>19.0</google-guava.version>
         <ojdbc.version>10.2.0.4.0</ojdbc.version>
         <mysql-jdbc.version>8.0.15</mysql-jdbc.version>
@@ -86,6 +87,12 @@
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-all</artifactId>
                 <version>${hutool.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-ooxml</artifactId>
+                <version>${poi-ooxml.version}</version>
             </dependency>
             <!-- lombok -->
             <dependency>
