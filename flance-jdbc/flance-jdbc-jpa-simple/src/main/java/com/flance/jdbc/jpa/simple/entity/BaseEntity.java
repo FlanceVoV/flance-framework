@@ -23,7 +23,9 @@ import java.util.Date;
  */
 @Data
 @MappedSuperclass
-public class BaseEntity<ID extends Serializable> {
+public class BaseEntity<ID extends Serializable> implements Serializable {
+
+    private static final long serialVersionUID = -3315045018004505703L;
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
