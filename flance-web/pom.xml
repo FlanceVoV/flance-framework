@@ -19,6 +19,7 @@
         <module>flance-web-common</module>
         <module>flance-web-auth</module>
         <module>flance-web-utils</module>
+        <module>flance-web-security</module>
     </modules>
 
 </project>
