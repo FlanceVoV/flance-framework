@@ -1,10 +1,9 @@
 package com.flance.web.common.controller;
 
 
-import com.flance.web.common.request.WebRequest;
-import com.flance.web.common.request.WebResponse;
 import com.flance.web.common.service.IService;
-import com.flance.web.common.utils.ResponseBuilder;
+import com.flance.web.utils.web.request.WebRequest;
+import com.flance.web.utils.web.response.WebResponse;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,7 +27,7 @@ public abstract class BaseController<DTO, VO, ID, PAGE> implements IBaseControll
     @PostMapping("/add")
     public WebResponse add(@RequestBody WebRequest<DTO, ID> request) {
         boolean flag = baseService.save(request.getSingleParam());
-        return ResponseBuilder.getSuccess(WebResponse.builder().singleResult(flag).build());
+        return WebResponse.getSucceed(flag, "新增成功！");
     }
 
     @Override
@@ -37,7 +36,7 @@ public abstract class BaseController<DTO, VO, ID, PAGE> implements IBaseControll
         DTO dto = request.getSingleParam();
         ID id = request.getId();
         baseService.updateNotNull(dto, id);
-        return ResponseBuilder.getSuccess(WebResponse.builder().singleResult(dto).build());
+        return WebResponse.getSucceed(dto, "编辑成功！");
     }
 
     @Override
@@ -45,7 +44,7 @@ public abstract class BaseController<DTO, VO, ID, PAGE> implements IBaseControll
     public WebResponse delete(@RequestBody WebRequest<DTO, ID> request) {
         ID id = request.getId();
         baseService.delete(id);
-        return ResponseBuilder.getSuccess(WebResponse.builder().build());
+        return WebResponse.getSucceed(null, "删除成功！");
     }
 
     @Override
@@ -53,7 +52,7 @@ public abstract class BaseController<DTO, VO, ID, PAGE> implements IBaseControll
     public WebResponse deleteBatch(@RequestBody WebRequest<DTO, ID> request) {
         List<ID> ids = request.getIds();
         baseService.deleteByIds(ids);
-        return ResponseBuilder.getSuccess(WebResponse.builder().build());
+        return WebResponse.getSucceed(null, "删除成功！");
     }
 
     @Override
@@ -61,7 +60,7 @@ public abstract class BaseController<DTO, VO, ID, PAGE> implements IBaseControll
     public WebResponse page(@RequestBody WebRequest<DTO, ID> request) {
         Map<String, Object> searchMap = request.getParamsMap();
         PAGE page = baseService.findPage(searchMap);
-        return ResponseBuilder.getSuccess(WebResponse.builder().pageResult(page).build());
+        return WebResponse.getSucceed(page, "查询成功！");
     }
 
 }

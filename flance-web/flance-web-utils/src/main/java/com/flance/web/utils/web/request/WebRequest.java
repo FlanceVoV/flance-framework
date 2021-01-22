@@ -2,12 +2,15 @@ package com.flance.web.utils.web.request;
 
 import lombok.Data;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * 鉴权请求
  * @author jhf
  */
 @Data
-public class WebRequest {
+public class WebRequest<DTO, ID> {
 
     private String url;
 
@@ -16,5 +19,15 @@ public class WebRequest {
     private String method;
 
     private String token;
+
+    private Map<String, Object> paramsMap;
+
+    private List<ID> ids;
+
+    private ID id;
+
+    private DTO singleParam;
+
+    private List<DTO> multiParam;
 
 }
