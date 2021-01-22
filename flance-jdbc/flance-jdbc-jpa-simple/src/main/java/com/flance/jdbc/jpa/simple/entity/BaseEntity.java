@@ -15,6 +15,9 @@ import java.util.Date;
 
 /**
  * 实体基类
+ * 逻辑删除：
+ * @SQLDelete(sql = "update yc_ytjg_enterprise_car set deleted = 1 where id = ? ")
+ * @Where(clause = "deleted = 0")
  * @author jhf
  * @param <ID>
  */

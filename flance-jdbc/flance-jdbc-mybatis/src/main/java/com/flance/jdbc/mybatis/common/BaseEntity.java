@@ -9,15 +9,15 @@ import java.util.Date;
  * @author jhf
  */
 @Data
-public class BaseEntity {
+public class BaseEntity<ID> {
 
-    private Long id;
+    private ID id;
 
-    private String createBy;
+    private ID createBy;
 
     private Date createDate;
 
-    private String updateBy;
+    private ID updateBy;
 
     private Date updateDate;
 

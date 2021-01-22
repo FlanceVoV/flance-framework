@@ -146,6 +146,7 @@ public  abstract class BaseService<T, ID extends Serializable> implements IServi
         if (null == searchMap) {
             searchMap = Maps.newHashMap();
         }
+        searchMap.entrySet().removeIf(entry -> null == entry.getValue() || "".equals(entry.getValue().toString()));
         final Map<String, Object> finalMap = searchMap;
         QueryLocal.searchParamater.set(JSONObject.parseObject(JSONObject.toJSONString(finalMap)));
         Set<String> keys = finalMap.keySet();
@@ -223,6 +224,7 @@ public  abstract class BaseService<T, ID extends Serializable> implements IServi
         if (null == searchMap) {
             searchMap = Maps.newHashMap();
         }
+        searchMap.entrySet().removeIf(entry -> null == entry.getValue() || "".equals(entry.getValue().toString()));
         final Map<String, Object> finalMap = searchMap;
         Table<String, Operator, Object> table = HashBasedTable.create();
         finalMap.entrySet().stream().forEach(entry -> table.put(entry.getKey(), Operator.EQ, entry.getValue()));
