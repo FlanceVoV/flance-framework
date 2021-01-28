@@ -4,6 +4,7 @@ package com.flance.jdbc.jpa.simple.common.jdbc;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.*;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
@@ -15,6 +16,7 @@ import java.util.*;
  * sql拼接
  * @author jhf
  */
+@Slf4j
 public class QueryUtils {
 
 
@@ -111,7 +113,7 @@ public class QueryUtils {
                     Path path = root;
                     if (key.contains(":")) {
                         String listName = key.split(":")[0];
-                        Join join = root.join(root.getModel().getList(listName, (Class) QueryLocal.classLocal.get()), JoinType.LEFT);
+                        Join join = root.join(root.getModel().getList(listName, (Class)QueryLocal.classLocal.get()), JoinType.LEFT);
                         path = join.get(key.split(":")[2]);
                     } else {
                         String[] keyArr = keys;
@@ -119,7 +121,12 @@ public class QueryUtils {
 
                         for(int i = 0; i < keyLength; ++i) {
                             String k = keyArr[i];
-                            path = path.get(k);
+                            try {
+                                path = path.get(k);
+                            } catch (IllegalArgumentException e) {
+                                log.error("找不到[{}]字段[{}]，该条件将被剔除", path.getJavaType().getSimpleName(), k);
+                                continue label;
+                            }
                         }
                     }
 
