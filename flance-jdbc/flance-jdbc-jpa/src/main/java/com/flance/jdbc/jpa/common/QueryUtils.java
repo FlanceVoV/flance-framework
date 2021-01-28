@@ -69,14 +69,14 @@ public class QueryUtils {
 
         assert criteriacMap != null;
 
-        Collection<Predicate> ac = criteriacMap.get(Operator.AND);
-        if (ac != null && ac.size() > 0) {
-            where.add(builder.and(ac.toArray(new Predicate[0])));
-        }
-
         Collection<Predicate> oc = criteriacMap.get(Operator.OR);
         if (oc != null && oc.size() > 0) {
             where.add(builder.or(oc.toArray(new Predicate[0])));
+        }
+
+        Collection<Predicate> ac = criteriacMap.get(Operator.AND);
+        if (ac != null && ac.size() > 0) {
+            where.add(builder.and(ac.toArray(new Predicate[0])));
         }
 
         return where;
@@ -117,7 +117,11 @@ public class QueryUtils {
 
                         for(int i = 0; i < keyLength; ++i) {
                             String k = keyArr[i];
-                            path = path.get(k);
+                            try {
+                                path = path.get(k);
+                            } catch (IllegalArgumentException e) {
+                                continue label;
+                            }
                         }
                     }
 
