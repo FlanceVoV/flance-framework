@@ -30,6 +30,10 @@ public class QueryUtils {
 
             if (andArray == null) {
                 List<Predicate> where = getWhere(root, query, builder, (Set)null, conditionTable);
+                // 当where条件为空时(可能为错误条件被过滤)，builder.or 会添加 0 = 1 导致查询不出数据; builder.and 会添加 1 = 1
+                if (where.size() == 0) {
+                    return builder.and(where.toArray(new Predicate[0]));
+                }
                 return builder.or(where.toArray(new Predicate[0]));
             } else {
                 List<Predicate> allList = Lists.newArrayList();
@@ -95,7 +99,7 @@ public class QueryUtils {
             Operator op = iterator.next();
             Map<String, Object> keyValue = conditionTable.column(op);
             Iterator<String> keyIterator = keyValue.keySet().iterator();
-
+            label2:
             while(true) {
                 while(true) {
                     String key;
@@ -125,7 +129,7 @@ public class QueryUtils {
                                 path = path.get(k);
                             } catch (IllegalArgumentException e) {
                                 log.error("找不到[{}]字段[{}]，该条件将被剔除", path.getJavaType().getSimpleName(), k);
-                                continue label;
+                                continue label2;
                             }
                         }
                     }
