@@ -20,6 +20,7 @@ public class QueryUtils {
         return (root, query, builder) -> {
             JSONArray andArray = null;
             JSONObject searchParamater = QueryLocal.searchParamater.get();
+            // 用于条件分组把数组中的字段用and分组拼接，"AND":[["enterprise.enterpriseName"],["name", "jszhm"],["safeEducation.id"]]
             if (searchParamater != null) {
                 andArray = searchParamater.getJSONArray("AND");
             }
