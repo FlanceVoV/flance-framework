@@ -6,8 +6,7 @@ import com.flance.components.fastdfs.domain.file.model.dto.FastDfsFileDto;
 import com.flance.components.fastdfs.domain.file.parser.FastDfsFileParser;
 import com.flance.components.fastdfs.domain.file.service.FastDfsFileService;
 import com.flance.components.fastdfs.infrastructure.utils.FastDfsClient;
-import com.flance.web.common.request.WebResponse;
-import com.flance.web.common.utils.ResponseBuilder;
+import com.flance.web.utils.web.response.WebResponse;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
@@ -38,7 +37,7 @@ public class FileController {
         fastDfsFileDto = fastDfsFileParser.parseDo2Dto(fastDfsFileDo);
         fastDfsFileDo.setAppId(appId);
         fastDfsFileService.save(fastDfsFileDto);
-        return ResponseBuilder.getSuccess(WebResponse.builder().singleResult(fastDfsFileDto).build());
+        return WebResponse.getSucceed(fastDfsFileDto, "上传成功！");
     }
 
     @GetMapping("/download/{fileId}")
@@ -48,7 +47,7 @@ public class FileController {
         appClientDo.setAppAuthUrl(fastDfsFileDto.getAppId());
         appClientDo.hasFilePermission(null, fileId);
         fastDfsClient.downloadFile(fastDfsFileDto, null, response);
-        return ResponseBuilder.getSuccess(WebResponse.builder().build());
+        return WebResponse.getSucceed(fastDfsFileDto, "下载成功！");
     }
 
 }

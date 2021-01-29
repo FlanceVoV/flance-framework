@@ -5,8 +5,7 @@ import com.flance.components.form.domain.dform.parser.FlanceFormBizServiceformPa
 import com.flance.components.form.domain.dform.service.FlanceFormBizServiceformService;
 import com.flance.components.form.infrastructure.sync.FlanceFormServiceFormSyncService;
 import com.flance.jdbc.jpa.web.controller.BaseWebController;
-import com.flance.web.common.request.WebResponse;
-import com.flance.web.common.utils.ResponseBuilder;
+import com.flance.web.utils.web.response.WebResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,6 +45,6 @@ public class FlanceFormBizServiceFormController extends BaseWebController<Flance
     @GetMapping("/generateJson/{serviceFormId}")
     public WebResponse generateJson(@PathVariable("serviceFormId")String serviceFormId){
         flanceFormServiceFormSyncService.syncServiceFormRec(serviceFormId);
-        return ResponseBuilder.getSuccess(WebResponse.builder().singleResult(null).build());
+        return WebResponse.getSucceed(null, "生成成功！");
     }
 }
