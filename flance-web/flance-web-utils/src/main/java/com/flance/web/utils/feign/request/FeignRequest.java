@@ -1,9 +1,11 @@
 package com.flance.web.utils.feign.request;
 
 /**
- * 鉴权请求
+ * 请求
+ * 推荐所有接口统一使用WebRequest
  * @author jhf
  */
+@Deprecated
 public class FeignRequest {
 
     private String url;

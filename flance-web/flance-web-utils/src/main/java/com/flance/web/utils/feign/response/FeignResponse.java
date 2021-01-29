@@ -1,5 +1,11 @@
 package com.flance.web.utils.feign.response;
 
+/**
+ * feign响应
+ * 推荐所有接口统一使用WebResponse
+ * @author jhf
+ */
+@Deprecated
 public class FeignResponse {
 
     private Boolean success;
