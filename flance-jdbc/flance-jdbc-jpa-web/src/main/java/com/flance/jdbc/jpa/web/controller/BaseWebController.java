@@ -5,9 +5,8 @@ import com.flance.jdbc.jpa.parser.BaseParser;
 import com.flance.jdbc.jpa.web.service.BaseWebDomainService;
 import com.flance.jdbc.jpa.web.service.IBaseWebDomainService;
 import com.flance.web.common.controller.BaseController;
-import com.flance.web.common.request.WebRequest;
-import com.flance.web.common.request.WebResponse;
-import com.flance.web.common.utils.ResponseBuilder;
+import com.flance.web.utils.web.request.WebRequest;
+import com.flance.web.utils.web.response.WebResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,7 +53,7 @@ public abstract class BaseWebController<PO, DTO, VO, DO, ID extends Serializable
     public WebResponse get(@RequestBody WebRequest<DTO, ID> request) {
         ID id = request.getId();
         DTO dto = baseWebDomainService.findOne(id);
-        return ResponseBuilder.getSuccess(WebResponse.builder().singleResult(baseParser.parseDto2Vo(dto)).build());
+        return WebResponse.getSucceed(baseParser.parseDto2Vo(dto), "获取成功！");
     }
 
     @Override
@@ -62,32 +61,31 @@ public abstract class BaseWebController<PO, DTO, VO, DO, ID extends Serializable
     public WebResponse list(@RequestBody WebRequest<DTO, ID> request) {
         Map<String, Object> searchMap = request.getParamsMap();
         List<DTO> dtos = baseWebDomainService.findAll(searchMap);
-        return ResponseBuilder.getSuccess(WebResponse.builder().multiResult((List<Object>) baseParser.parseListDto2Vo(dtos)).build());
+        return WebResponse.getSucceed(baseParser.parseListDto2Vo(dtos), "获取成功！");
     }
 
     @Override
     @PostMapping("/addBatch")
-    public WebResponse<DTO, VO, ID, PageResponse> addBatch(@RequestBody WebRequest<DTO, ID> request) {
+    public WebResponse addBatch(@RequestBody WebRequest<DTO, ID> request) {
         List<DTO> dtos = request.getMultiParam();
         baseWebDomainService.saveBatch(dtos);
-        return ResponseBuilder.getSuccess(WebResponse.builder().build());
+        return WebResponse.getSucceed(null, "请求成功！");
     }
 
     @Override
     @PatchMapping("/updateBatch")
-    public WebResponse<DTO, VO, ID, PageResponse> updateBatch(@RequestBody WebRequest<DTO, ID> request) {
+    public WebResponse updateBatch(@RequestBody WebRequest<DTO, ID> request) {
         List<DTO> dtos = request.getMultiParam();
         baseWebDomainService.updateBatch(entityManagerFactory, dtos);
-        return ResponseBuilder.getSuccess(WebResponse.builder().build());
+        return WebResponse.getSucceed(null, "请求成功！");
     }
 
     @Override
-    public WebResponse<DTO, VO, ID, PageResponse> page(@RequestBody WebRequest<DTO, ID> request) {
-        WebResponse WebResponse = super.page(request);
-        PageResponse pageResponse = (PageResponse) WebResponse.getPageResult();
+    public WebResponse page(@RequestBody WebRequest<DTO, ID> request) {
+        WebResponse webResponse = super.page(request);
+        PageResponse pageResponse = (PageResponse) webResponse.getData();
         List<DTO> dtos = pageResponse.getData();
         pageResponse.setData(baseParser.parseListDto2Vo(dtos));
-        WebResponse.setPageResult(pageResponse);
-        return WebResponse;
+        return WebResponse.getSucceed(pageResponse, "请求成功！");
     }
 }
