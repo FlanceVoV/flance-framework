@@ -4,8 +4,9 @@ package com.flance.web.security.controller;
 import com.flance.web.auth.model.BaseUser;
 import com.flance.web.auth.utils.TokenUtils;
 import com.flance.web.security.service.SecurityUserDetailsService;
-import com.flance.web.utils.feign.request.FeignRequest;
-import com.flance.web.utils.feign.response.FeignResponse;
+import com.flance.web.security.utils.ErrCodeConstant;
+import com.flance.web.utils.web.request.WebRequest;
+import com.flance.web.utils.web.response.WebResponse;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,27 +30,27 @@ public class UserInfoController {
 
 
     @PostMapping("/getUserInfo")
-    public FeignResponse getUserInfo(@RequestBody FeignRequest feignRequest, HttpServletRequest request) {
+    public WebResponse getUserInfo(@RequestBody WebRequest webRequest, HttpServletRequest request) {
         String token = TokenUtils.getTokenByRequest(request);
         if (StringUtils.isEmpty(token)) {
-            token = feignRequest.getToken();
+            token = webRequest.getToken();
             token = token.replaceFirst("Bearer ", "");
             token = token.replaceFirst("bearer ", "");
         }
         if (StringUtils.isEmpty(token)) {
-            return FeignResponse.getFailed("token为空！");
+            return WebResponse.getFailed(ErrCodeConstant.ERROR_TOKEN_NULL, "token为空！");
         }
         try {
             if (TokenUtils.isExp(token)) {
-                return FeignResponse.getFailed("token已过期！");
+                return WebResponse.getFailed(ErrCodeConstant.ERROR_TOKEN_EXPIRED, "token已过期！");
             }
             Map<String, Object> map = TokenUtils.decode(token);
             String userId = map.get("id").toString();
             BaseUser user = securityUserDetailsService.getUserByUserId(userId);
-            return FeignResponse.getSucceed(user);
+            return WebResponse.getSucceed(user, "用户信息获取成功！");
         } catch (Exception e) {
             e.printStackTrace();
-            return FeignResponse.getFailed("token解析失败！[ " +e.getMessage() + "]");
+            return WebResponse.getFailed(ErrCodeConstant.ERROR_TOKEN_UNKNOWN, "token解析失败！[ " +e.getMessage() + "]");
         }
     }
 

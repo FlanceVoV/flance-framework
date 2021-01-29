@@ -2,7 +2,8 @@ package com.flance.web.security.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.flance.web.auth.utils.TokenUtils;
-import com.flance.web.utils.feign.response.FeignResponse;
+import com.flance.web.security.utils.ErrCodeConstant;
+import com.flance.web.utils.web.response.WebResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
@@ -39,33 +40,33 @@ public class OauthController {
     CheckTokenEndpoint checkTokenEndpoint;
 
     @RequestMapping("/token")
-    public FeignResponse postAccessTokenWithUserInfo(Principal principal, @RequestParam Map<String, String> parameters) throws HttpRequestMethodNotSupportedException {
+    public WebResponse postAccessTokenWithUserInfo(Principal principal, @RequestParam Map<String, String> parameters) throws HttpRequestMethodNotSupportedException {
         try {
             OAuth2AccessToken accessToken = tokenEndpoint.postAccessToken(principal, parameters).getBody();
-            return FeignResponse.getSucceed(accessToken);
+            return WebResponse.getSucceed(accessToken, "access_token获取成功！");
         } catch (InvalidGrantException e) {
             e.printStackTrace();
-            return FeignResponse.getFailed("access_token获取失败！");
+            return WebResponse.getFailed("010001", "access_token获取失败！");
         }
     }
 
     @GetMapping("/check_token")
-    public FeignResponse checkToken(String token) {
+    public WebResponse checkToken(String token) {
         try {
             Map<String, ?> response = checkTokenEndpoint.checkToken(token);
             log.info("响应token：[{}]", JSONObject.toJSONString(response));
         } catch (InvalidTokenException e) {
             e.printStackTrace();
             if (StringUtils.isEmpty(e.getMessage()) && e.getMessage().equals(ERROR_TOKEN)) {
-                return FeignResponse.getFailed("access_token校验失败");
+                return WebResponse.getFailed(ErrCodeConstant.ERROR_TOKEN_RECOGNISED, "access_token校验失败");
             } else if (StringUtils.isEmpty(e.getMessage()) && e.getMessage().equals(EXPIRED_TOKEN)) {
-                return FeignResponse.getFailed("access_token已经过期");
+                return WebResponse.getFailed(ErrCodeConstant.ERROR_TOKEN_EXPIRED, "access_token已经过期");
             } else {
-                return FeignResponse.getFailed("access_token校验失败");
+                return WebResponse.getFailed(ErrCodeConstant.ERROR_TOKEN_UNKNOWN, "access_token校验失败");
             }
         }
         log.info("解析token：[{}]", JSONObject.toJSONString(TokenUtils.decode(token)));
-        return FeignResponse.getSucceed(true);
+        return WebResponse.getSucceed(null, "access_token获取成功！");
     }
 
 }

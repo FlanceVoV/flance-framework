@@ -1,8 +1,9 @@
 package com.flance.web.security.controller;
 
 import com.flance.web.security.service.AuthService;
-import com.flance.web.utils.feign.request.FeignRequest;
-import com.flance.web.utils.feign.response.FeignResponse;
+import com.flance.web.security.utils.ErrCodeConstant;
+import com.flance.web.utils.web.request.WebRequest;
+import com.flance.web.utils.web.response.WebResponse;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -19,23 +20,23 @@ public class PermissionController {
     AuthService authService;
 
     @PostMapping("/hasPermission")
-    public FeignResponse hasPermission(@RequestBody FeignRequest feignRequest) {
+    public WebResponse hasPermission(@RequestBody WebRequest webRequest) {
         boolean flag;
         try {
-            flag = authService.hasPermission(feignRequest.getToken(),
-                                                feignRequest.getUrl(),
-                                                feignRequest.getMethod(),
-                                                feignRequest.getRequestId());
+            flag = authService.hasPermission(webRequest.getToken(),
+                                            webRequest.getUrl(),
+                                            webRequest.getMethod(),
+                                            webRequest.getRequestId());
 
         } catch (Exception e) {
             e.printStackTrace();
-            return FeignResponse.getFailed("鉴权失败！reason:[" + e.getMessage() + "]");
+            return WebResponse.getFailed(ErrCodeConstant.ERROR_AUTH_UNKNOWN, "鉴权失败！reason:[" + e.getMessage() + "]");
         }
 
         if (flag) {
-            return FeignResponse.getSucceed("鉴权成功");
+            return WebResponse.getSucceed(null, "鉴权成功");
         }
-        return FeignResponse.getFailed("没有访问权限！url(" + feignRequest.getMethod() + "):[" + feignRequest.getUrl() + "]");
+        return WebResponse.getFailed(ErrCodeConstant.ERROR_AUTH_ACCESS, "没有访问权限！url(" + webRequest.getMethod() + "):[" + webRequest.getUrl() + "]");
     }
 
 }
