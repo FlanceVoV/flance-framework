@@ -1,5 +1,6 @@
 package com.flance.web.security.intercept;
 
+import com.flance.web.security.config.SecurityUrlConfig;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,10 +19,7 @@ import java.io.IOException;
 @Component
 public class HttpServletRequestFilter implements Filter {
 
-    @Value("${server.servlet.context-path}")
-    private String urlContext;
 
-    private static final String[] FILTER_URL = {};
 
     private final AntPathMatcher antPathMatcher = new AntPathMatcher();
 
@@ -34,7 +32,8 @@ public class HttpServletRequestFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         String url = ((HttpServletRequest) servletRequest).getRequestURI();
         log.info("filter-请求url[{}]", url);
-        if (matchUrl(url)) {
+        // 去除servlet-context-path
+        if (matchUrl(url.replaceFirst(SecurityUrlConfig.getUrlContext(), ""))) {
             ParamsRequestWrapper requestWrapper = new ParamsRequestWrapper((HttpServletRequest) servletRequest);
             filterChain.doFilter(requestWrapper, servletResponse);
         } else {
@@ -48,7 +47,7 @@ public class HttpServletRequestFilter implements Filter {
     }
 
     public Boolean matchUrl(String url) {
-        return Lists.newArrayList(FILTER_URL).stream().anyMatch(item -> antPathMatcher.match(item, url));
+        return Lists.newArrayList(SecurityUrlConfig.getFilterUrls()).stream().anyMatch(item -> antPathMatcher.match(item, url));
     }
 
 }

@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author jhf
  */
 @Slf4j
-public class RequestParamIntercept extends HandlerInterceptorAdapter {
+public abstract class BaseParamIntercept extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
