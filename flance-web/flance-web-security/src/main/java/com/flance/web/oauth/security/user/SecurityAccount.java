@@ -8,6 +8,6 @@ public interface SecurityAccount extends UserDetails {
 
     SecurityUserInfo getUserInfo();
 
-    List<SecurityRole> getRoles();
+    List<? extends SecurityRole> getRoles();
 
 }
