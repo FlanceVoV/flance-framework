@@ -35,10 +35,12 @@
         <flance-jdbc-jpa.version>1.0</flance-jdbc-jpa.version>
         <flance-web-common.version>1.0</flance-web-common.version>
         <flance-jdbc-jpa-web.version>1.0</flance-jdbc-jpa-web.version>
+        <flance-jdbc-jpa-simple.version>1.0</flance-jdbc-jpa-simple.version>
         <flance-jdbc-mybatis.version>1.0</flance-jdbc-mybatis.version>
         <flance-jdbc-mybatis-web.version>1.0</flance-jdbc-mybatis-web.version>
         <flance-web-auth.version>1.0</flance-web-auth.version>
         <flance-web-gateway.version>1.0</flance-web-gateway.version>
+        <flance-web-security.version>1.0</flance-web-security.version>
         <flance-web-oauth-security.version>1.0</flance-web-oauth-security.version>
         <flance-web-utils.version>1.0</flance-web-utils.version>
         <flance-components-fastdfs.version>1.0</flance-components-fastdfs.version>
@@ -179,6 +181,12 @@
 
             <dependency>
                 <groupId>com.flance</groupId>
+                <artifactId>flance-jdbc-jpa-simple</artifactId>
+                <version>${flance-jdbc-jpa-simple.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.flance</groupId>
                 <artifactId>flance-jdbc-mybatis</artifactId>
                 <version>${flance-jdbc-mybatis.version}</version>
             </dependency>
@@ -206,6 +214,13 @@
                 <artifactId>flance-web-oauth-security</artifactId>
                 <version>${flance-web-oauth-security.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>com.flance</groupId>
+                <artifactId>flance-web-security</artifactId>
+                <version>${flance-web-security.version}</version>
+            </dependency>
+
 
             <dependency>
                 <groupId>com.flance</groupId>
