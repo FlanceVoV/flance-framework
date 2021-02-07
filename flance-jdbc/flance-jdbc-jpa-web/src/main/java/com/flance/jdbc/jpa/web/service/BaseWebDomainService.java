@@ -45,7 +45,14 @@ public abstract class BaseWebDomainService<PO, DTO, VO, DO, ID extends Serializa
     @Override
     public List<DTO> findAll(Map<String, Object> searchMap) {
         Table<String, Operator, Object> table = HashBasedTable.create();
-        searchMap.entrySet().stream().forEach(entry -> table.put(entry.getKey(), Operator.AND, entry.getValue()));
+        searchMap.entrySet().stream().forEach(entry -> {
+            if (entry.getKey().contains("_")) {
+                Operator operator = Operator.valueOf(entry.getKey().split("_")[0]);
+                table.put(entry.getKey().split("_")[1], operator, entry.getValue());
+            } else {
+                table.put(entry.getKey(), Operator.EQ, entry.getValue());
+            }
+        });
         return super.findAll(table);
     }
 }

@@ -37,6 +37,7 @@ import java.util.*;
  * @param <ID>  主键
  */
 public  abstract class BaseService<T, ID extends Serializable> implements IService<T, ID, PageResponse<T>> {
+
     private BaseRepository<T, ID> baseDao;
 
     protected void setBaseDao(BaseRepository<T, ID> baseDao) {
@@ -227,7 +228,14 @@ public  abstract class BaseService<T, ID extends Serializable> implements IServi
         searchMap.entrySet().removeIf(entry -> null == entry.getValue() || "".equals(entry.getValue().toString()));
         final Map<String, Object> finalMap = searchMap;
         Table<String, Operator, Object> table = HashBasedTable.create();
-        finalMap.entrySet().stream().forEach(entry -> table.put(entry.getKey(), Operator.EQ, entry.getValue()));
+        finalMap.entrySet().stream().forEach(entry -> {
+            if (entry.getKey().contains("_")) {
+                Operator operator = Operator.valueOf(entry.getKey().split("_")[0]);
+                table.put(entry.getKey().split("_")[1], operator, entry.getValue());
+            } else {
+                table.put(entry.getKey(), Operator.EQ, entry.getValue());
+            }
+        });
         return findAll(table);
     }
 
