@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.flance.web.auth.model.BaseAuthority;
 import com.flance.web.auth.model.BaseUser;
 import com.flance.web.auth.utils.Constants;
-import com.flance.web.auth.utils.RedisUtils;
+import com.flance.web.utils.RedisUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.springframework.security.oauth2.common.*;
