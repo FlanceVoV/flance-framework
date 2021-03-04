@@ -4,6 +4,7 @@ package com.flance.jdbc.jpa.simple.common.request;
  * 响应构造
  * @author jhf
  */
+@Deprecated
 public class ResponseBuilder {
 
     private static final String SUCCESS_CODE = "00000";

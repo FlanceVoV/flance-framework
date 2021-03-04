@@ -12,6 +12,7 @@ import java.util.Map;
  * @param <ID>  主键
  */
 @Data
+@Deprecated
 public class WebRequest<T, ID> {
 
     private String api;

@@ -15,6 +15,7 @@ import java.util.List;
  */
 @Data
 @Builder
+@Deprecated
 public class WebResponse<T, ID, PAGE> {
 
     private String code;
