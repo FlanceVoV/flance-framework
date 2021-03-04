@@ -16,7 +16,7 @@ public class WebResponse {
     private Object data;
 
     public static WebResponse getSucceed(Object data, String msg) {
-        return WebResponse.builder().code("000000").success(true).msg(msg).build();
+        return WebResponse.builder().code("000000").success(true).msg(msg).data(data).build();
     }
 
     public static WebResponse getFailed(String code, String msg) {
