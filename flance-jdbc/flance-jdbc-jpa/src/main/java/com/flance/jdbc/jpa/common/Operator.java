@@ -31,7 +31,8 @@ public enum Operator {
     NULL,
     NOTNULL,
     ORNULL,
-    ORNOTNULL;
+    ORNOTNULL,
+    GROUPBY;
 
     private Operator() {
     }

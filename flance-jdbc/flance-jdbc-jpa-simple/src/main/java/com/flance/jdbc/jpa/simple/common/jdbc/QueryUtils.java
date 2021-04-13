@@ -243,6 +243,8 @@ public class QueryUtils {
                             break;
                         case ORNOTNULL:
                             criteriacMap.put(Operator.OR, builder.isNotEmpty(path));
+                        case GROUPBY:
+                            query.groupBy(path);
                         default:
                             break;
                     }
