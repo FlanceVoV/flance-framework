@@ -115,8 +115,12 @@ public class QueryUtils {
                     // 格式 例：EQ_selfCheckItems::checkStatus 表示 list属性中的值作为条件 left join
                     if (key.contains(":")) {
                         String listName = key.split(":")[0];
-                        Join join = root.join(root.getModel().getList(listName, (Class)QueryLocal.classLocal.get()), JoinType.LEFT);
-                        path = join.get(key.split(":")[2]);
+                        try {
+                            Join join = root.join(root.getModel().getList(listName, (Class)QueryLocal.classLocal.get()), JoinType.LEFT);
+                            path = join.get(key.split(":")[2]);
+                        } catch (Exception e) {
+                            continue label2;
+                        }
                     } else {
                         String[] keyArr = keys;
                         int keyLength = keys.length;
