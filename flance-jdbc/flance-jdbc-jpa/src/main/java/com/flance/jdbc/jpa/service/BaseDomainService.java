@@ -294,7 +294,11 @@ public abstract class BaseDomainService<PO, DTO, VO, DO, ID extends Serializable
 
                 for(int i = 0; i < keyLength; ++i) {
                     String k = keyArr[i];
-                    path = path.get(k);
+                    try {
+                        path = path.get(k);
+                    } catch (Exception e) {
+                        System.out.println("BaseService<311>找不到字段["+k+"],将被剔除");
+                    }
                 }
 
                 if (null != value) {
@@ -316,7 +320,11 @@ public abstract class BaseDomainService<PO, DTO, VO, DO, ID extends Serializable
 
             for(int i = 0; i < keyLength; ++i) {
                 String k = keyArr[i];
-                path = path.get(k);
+                try {
+                    path = path.get(k);
+                } catch (Exception e) {
+                    System.out.println("BaseService<311>找不到字段["+k+"],将被剔除");
+                }
             }
 
             List<Predicate> list = new ArrayList();

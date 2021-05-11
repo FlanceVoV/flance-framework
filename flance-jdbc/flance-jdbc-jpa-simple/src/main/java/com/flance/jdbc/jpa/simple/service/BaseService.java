@@ -11,6 +11,7 @@ import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Table;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -36,7 +37,8 @@ import java.util.*;
  * @param <T>   实体类型
  * @param <ID>  主键
  */
-public  abstract class BaseService<T, ID extends Serializable> implements IService<T, ID, PageResponse<T>> {
+@Slf4j
+public abstract class BaseService<T, ID extends Serializable> implements IService<T, ID, PageResponse<T>> {
 
     private BaseRepository<T, ID> baseDao;
 
@@ -303,7 +305,11 @@ public  abstract class BaseService<T, ID extends Serializable> implements IServi
 
                 for(int i = 0; i < keyLength; ++i) {
                     String k = keyArr[i];
-                    path = path.get(k);
+                    try {
+                        path = path.get(k);
+                    } catch (Exception e) {
+                        log.error("BaseService<311>找不到字段[{}],将被剔除", k);
+                    }
                 }
 
                 if (null != value) {
@@ -325,7 +331,11 @@ public  abstract class BaseService<T, ID extends Serializable> implements IServi
 
             for(int i = 0; i < keyLength; ++i) {
                 String k = keyArr[i];
-                path = path.get(k);
+                try {
+                    path = path.get(k);
+                } catch (Exception e) {
+                    log.error("BaseService<311>找不到字段[{}],将被剔除", k);
+                }
             }
 
             List<Predicate> list = Lists.newArrayList();
