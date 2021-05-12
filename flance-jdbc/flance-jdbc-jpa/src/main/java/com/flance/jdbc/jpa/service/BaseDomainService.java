@@ -20,6 +20,7 @@ import org.springframework.util.CollectionUtils;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import java.io.Serializable;
@@ -291,20 +292,27 @@ public abstract class BaseDomainService<PO, DTO, VO, DO, ID extends Serializable
                 String[] keys = StringUtils.split(key, ".");
                 String[] keyArr = keys;
                 int keyLength = keys.length;
-
+                Object setValue = value;
                 for(int i = 0; i < keyLength; ++i) {
                     String k = keyArr[i];
                     try {
                         path = path.get(k);
                     } catch (Exception e) {
                         System.out.println("BaseService<311>找不到字段["+k+"],将被剔除");
+                        setValue = null;
                     }
                 }
 
-                if (null != value) {
-                    predicates.add(criteriaBuilder.equal(path, value));
-                } else {
-                    predicates.add(path.isNull());
+                if (null != setValue) {
+                    if (setValue instanceof List) {
+                        CriteriaBuilder.In<Object> in = criteriaBuilder.in(path);
+                        for (int i = 0; i < ((List)setValue).size() ; i++) {
+                            in.value(((List)setValue).get(i));
+                        }
+                        predicates.add(in);
+                    } else {
+                        predicates.add(criteriaBuilder.equal(path, setValue));
+                    }
                 }
             });
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
@@ -317,21 +325,28 @@ public abstract class BaseDomainService<PO, DTO, VO, DO, ID extends Serializable
             String[] keys = StringUtils.split(propertyName, ".");
             String[] keyArr = keys;
             int keyLength = keys.length;
-
+            Object setValue = propertyValue;
             for(int i = 0; i < keyLength; ++i) {
                 String k = keyArr[i];
                 try {
                     path = path.get(k);
                 } catch (Exception e) {
-                    System.out.println("BaseService<311>找不到字段["+k+"],将被剔除");
+                    System.out.println("BaseService<326>找不到字段["+k+"],将被剔除");
+                    setValue = null;
                 }
             }
 
             List<Predicate> list = new ArrayList();
-            if (null != propertyValue) {
-                list.add(criteriaBuilder.equal(path, propertyValue));
-            } else {
-                list.add(path.isNull());
+            if (null != setValue) {
+                if (setValue instanceof List) {
+                    CriteriaBuilder.In<Object> in = criteriaBuilder.in(path);
+                    for (int i = 0; i < ((List)setValue).size() ; i++) {
+                        in.value(((List)setValue).get(i));
+                    }
+                    list.add(in);
+                } else {
+                    list.add(criteriaBuilder.equal(path, setValue));
+                }
             }
 
             return criteriaBuilder.and(list.toArray(new Predicate[0]));
