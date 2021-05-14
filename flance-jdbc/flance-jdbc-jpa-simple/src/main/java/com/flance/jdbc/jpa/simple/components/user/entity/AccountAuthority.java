@@ -53,4 +53,11 @@ public class AccountAuthority extends BaseEntity<Long> implements GrantedAuthori
      */
     private String authority;
 
+    @Override
+    public String getAuthority() {
+        if (null == this.authority) {
+            return url;
+        }
+        return authority;
+    }
 }
