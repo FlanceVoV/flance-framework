@@ -2,6 +2,7 @@ package com.flance.jdbc.jpa.simple.components.user.entity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.flance.jdbc.jpa.simple.entity.BaseEntity;
+import com.flance.web.oauth.security.user.SecurityAuth;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -25,7 +26,7 @@ import javax.persistence.UniqueConstraint;
 @SQLDelete(sql = "update f_app_comp_auth set deleted = 1, url = concat(url, '-', id) where id = ? ")
 @Where(clause = "deleted = 0")
 @Table(name = "f_app_comp_auth", uniqueConstraints = {@UniqueConstraint(columnNames = {"url"})})
-public class AccountAuthority extends BaseEntity<Long> implements GrantedAuthority {
+public class AccountAuthority extends BaseEntity<Long> implements GrantedAuthority, SecurityAuth {
 
     /**
      * 权限类型

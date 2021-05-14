@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.flance.jdbc.jpa.simple.entity.BaseEntity;
 import com.flance.jdbc.jpa.simple.utils.StreamUtils;
 import com.flance.jdbc.jpa.simple.utils.YamlUtil;
+import com.flance.web.oauth.security.user.SecurityRole;
 import com.google.common.collect.Lists;
 
 import lombok.Data;
@@ -32,7 +33,7 @@ import java.util.stream.Collectors;
 @SQLDelete(sql = "update f_app_comp_role set deleted = 1, role_code = concat(role_code, '-', id) where id = ? ")
 @Where(clause = "deleted = 0")
 @Table(name = "f_app_comp_role", uniqueConstraints = @UniqueConstraint(columnNames = {"roleCode"}))
-public class AccountRole extends BaseEntity<Long> {
+public class AccountRole extends BaseEntity<Long> implements SecurityRole {
 
     /**
      * 角色名
@@ -60,9 +61,15 @@ public class AccountRole extends BaseEntity<Long> {
     @JsonIgnore
     private List<AccountAuthority> auths;
 
-    @Transient
+    /**
+     * 角色-菜单中间表
+     */
+    @ManyToMany(fetch = FetchType.EAGER)
+    @NotFound(action = NotFoundAction.IGNORE)
+    @JoinTable(name = "f_app_comp_role_mid_menu",
+            joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "menu_id", referencedColumnName = "id"))
     private List<AccountMenu> menus;
-
 
     /**
      * 从配置文件中加载权限

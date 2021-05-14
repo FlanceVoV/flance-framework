@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.flance.jdbc.jpa.simple.entity.BaseEntity;
 import com.flance.jdbc.jpa.simple.utils.StreamUtils;
+import com.flance.web.oauth.security.user.SecurityAccount;
 import com.flance.web.oauth.security.user.SecurityUserInfo;
 import com.google.common.collect.Lists;
 import lombok.Data;
@@ -29,7 +30,7 @@ import java.util.stream.Collectors;
 @Where(clause = "deleted = 0")
 @Table(name = "f_app_comp_account", uniqueConstraints = {@UniqueConstraint(columnNames = {"accountMobile"})})
 @Entity
-public class Account extends BaseEntity<Long> implements UserDetails {
+public class Account extends BaseEntity<Long> implements UserDetails, SecurityAccount {
 
     /**
      * 账号/登录名
@@ -65,7 +66,7 @@ public class Account extends BaseEntity<Long> implements UserDetails {
      * 用户信息
      */
     @Transient
-    private SecurityUserInfo securityUserInfo;
+    private SecurityUserInfo userInfo;
 
     /**
      * 角色-账号中间表
