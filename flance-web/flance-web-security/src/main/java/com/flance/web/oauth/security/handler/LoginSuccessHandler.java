@@ -31,7 +31,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
                                         Authentication authentication) throws IOException, ServletException {
         logger.info("登录成功");
         response.setContentType("application/json;charset=UTF-8");
-        response.getWriter().write(objectMapper.writeValueAsString(WebResponse.getSucceed(null, "登录成功！")));
+        response.getWriter().write(objectMapper.writeValueAsString(WebResponse.getSucceed(authentication.getPrincipal(), "登录成功！")));
     }
 
 }
