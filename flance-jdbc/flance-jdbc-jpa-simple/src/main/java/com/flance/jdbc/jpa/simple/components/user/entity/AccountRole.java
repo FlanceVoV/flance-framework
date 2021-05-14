@@ -10,12 +10,12 @@ import com.google.common.collect.Lists;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -54,6 +54,7 @@ public class AccountRole extends BaseEntity<Long> implements SecurityRole {
      * 角色-权限中间表关联
      */
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @Fetch(FetchMode.SUBSELECT)
     @NotFound(action = NotFoundAction.IGNORE)
     @JoinTable(name = "f_app_comp_role_mid_auth",
             joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
@@ -64,7 +65,8 @@ public class AccountRole extends BaseEntity<Long> implements SecurityRole {
     /**
      * 角色-菜单中间表
      */
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @Fetch(FetchMode.SUBSELECT)
     @NotFound(action = NotFoundAction.IGNORE)
     @JoinTable(name = "f_app_comp_role_mid_menu",
             joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
@@ -74,6 +76,7 @@ public class AccountRole extends BaseEntity<Long> implements SecurityRole {
     /**
      * 从配置文件中加载权限
      */
+    @Override
     public List<AccountAuthority> getAuths() {
         auths = Lists.newArrayList();
 

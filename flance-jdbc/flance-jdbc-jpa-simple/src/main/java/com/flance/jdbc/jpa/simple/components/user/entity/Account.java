@@ -90,30 +90,17 @@ public class Account extends BaseEntity<Long> implements UserDetails, SecurityAc
         return authorities.stream().filter(StreamUtils.distinctByKey(AccountAuthority::getUrl)).collect(Collectors.toList());
     }
 
+    private boolean accountNonExpired;
+
+    private boolean accountNonLocked;
+
+    private boolean credentialsNonExpired;
+
+    private boolean enabled;
 
     @Override
     public String getUsername() {
         return this.loginName;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return false;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return false;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return false;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return false;
     }
 
     @Override

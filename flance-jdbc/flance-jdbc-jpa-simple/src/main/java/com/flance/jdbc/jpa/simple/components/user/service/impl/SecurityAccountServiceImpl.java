@@ -57,7 +57,7 @@ public class SecurityAccountServiceImpl implements SecurityAccountService {
             SecurityUserInfo object = applicationContext.getBean(beanClazz).getUserInfo(account.getId());
             account.setUserInfo(object);
         }
-        return null;
+        return account;
     }
 
     private void buildRoles(Account account) {
