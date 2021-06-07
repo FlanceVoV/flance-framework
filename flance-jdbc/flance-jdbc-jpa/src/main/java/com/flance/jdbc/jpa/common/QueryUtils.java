@@ -54,8 +54,11 @@ public class QueryUtils {
             }
 
             List<Predicate> where = getWhere(root, query, builder, set, conditionTable);
-            Predicate p = builder.or(where.toArray(new Predicate[where.size()]));
-            list.add(p);
+            if (where.size() == 0) {
+                list.add(builder.and(where.toArray(new Predicate[0])));
+            } else {
+                list.add(builder.or(where.toArray(new Predicate[where.size()])));
+            }
         }
 
         return list;
