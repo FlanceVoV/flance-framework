@@ -22,9 +22,9 @@
         <jjwt.version>0.9.1</jjwt.version>
         <hutool.version>5.4.4</hutool.version>
         <poi-ooxml.version>3.17</poi-ooxml.version>
-        <google-guava.version>19.0</google-guava.version>
+        <google-guava.version>30.0-jre</google-guava.version>
         <ojdbc.version>10.2.0.4.0</ojdbc.version>
-        <mysql-jdbc.version>8.0.15</mysql-jdbc.version>
+        <mysql-jdbc.version>8.0.16</mysql-jdbc.version>
         <lombok.version>1.16.20</lombok.version>
         <fastjson.version>1.2.73</fastjson.version>
         <minio.version>8.0.3</minio.version>
