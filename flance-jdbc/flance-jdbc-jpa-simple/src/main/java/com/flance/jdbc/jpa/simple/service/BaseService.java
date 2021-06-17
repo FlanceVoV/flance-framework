@@ -230,6 +230,7 @@ public abstract class BaseService<T, ID extends Serializable> implements IServic
         }
         searchMap.entrySet().removeIf(entry -> null == entry.getValue() || "".equals(entry.getValue().toString()));
         final Map<String, Object> finalMap = searchMap;
+        QueryLocal.searchParamater.set(JSONObject.parseObject(JSONObject.toJSONString(finalMap)));
         Table<String, Operator, Object> table = HashBasedTable.create();
         finalMap.entrySet().stream().forEach(entry -> {
             if (entry.getKey().contains("_")) {
