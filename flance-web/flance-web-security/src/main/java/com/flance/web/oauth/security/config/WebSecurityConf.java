@@ -1,7 +1,7 @@
 package com.flance.web.oauth.security.config;
 
 import com.flance.web.oauth.security.handler.*;
-import com.flance.web.oauth.security.user.UserDetailsAuthenticationProvider;
+import com.flance.web.security.common.user.UserDetailsAuthenticationProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

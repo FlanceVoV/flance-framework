@@ -1,8 +1,8 @@
 package com.flance.web.oauth.security.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.flance.web.oauth.security.exception.AuthException;
-import com.flance.web.oauth.security.utils.SecurityConstant;
+import com.flance.web.security.common.SecurityConstant;
+import com.flance.web.security.common.exception.AuthException;
 import com.flance.web.utils.web.response.WebResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;

@@ -1,7 +1,7 @@
 package com.flance.web.oauth.security.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.flance.web.oauth.security.utils.SecurityConstant;
+import com.flance.web.security.common.SecurityConstant;
 import com.flance.web.utils.web.response.WebResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

@@ -1,4 +1,4 @@
-package com.flance.web.oauth.security.user;
+package com.flance.web.security.common.user;
 
 public interface SecurityUserInfoService<T extends SecurityUserInfo, ID> {
 

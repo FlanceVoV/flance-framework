@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.flance.jdbc.jpa.simple.entity.BaseEntity;
 import com.flance.jdbc.jpa.simple.utils.StreamUtils;
 import com.flance.jdbc.jpa.simple.utils.YamlUtil;
-import com.flance.web.oauth.security.user.SecurityRole;
+import com.flance.web.security.common.user.SecurityRole;
 import com.google.common.collect.Lists;
 
 import lombok.Data;

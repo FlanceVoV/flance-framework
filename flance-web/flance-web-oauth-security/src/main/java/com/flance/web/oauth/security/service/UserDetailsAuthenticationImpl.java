@@ -1,7 +1,7 @@
 package com.flance.web.oauth.security.service;
 
-import com.flance.web.auth.model.BaseUser;
 import com.flance.web.oauth.security.exception.AuthException;
+import com.flance.web.security.common.user.SecurityAccountService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
 import org.springframework.security.core.AuthenticationException;
@@ -19,7 +19,7 @@ import javax.annotation.Resource;
 public class UserDetailsAuthenticationImpl extends AbstractUserDetailsAuthenticationProvider {
 
     @Resource
-    SecurityUserDetailsService<? extends BaseUser> userDetailsService;
+    SecurityAccountService userDetailsService;
 
     @Resource
     private PasswordEncoder passwordEncoder;

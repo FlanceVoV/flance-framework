@@ -1,10 +1,12 @@
-package com.flance.web.oauth.security.user;
+package com.flance.web.security.common.user;
 
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 
 public interface SecurityAccount extends UserDetails {
+
+    Long getAccountId();
 
     SecurityUserInfo getUserInfo();
 

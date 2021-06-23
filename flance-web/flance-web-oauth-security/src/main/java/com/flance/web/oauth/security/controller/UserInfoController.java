@@ -1,10 +1,10 @@
 package com.flance.web.oauth.security.controller;
 
 
-import com.flance.web.auth.model.BaseUser;
 import com.flance.web.auth.utils.TokenUtils;
-import com.flance.web.oauth.security.service.SecurityUserDetailsService;
 import com.flance.web.oauth.security.utils.ErrCodeConstant;
+import com.flance.web.security.common.user.SecurityAccount;
+import com.flance.web.security.common.user.SecurityAccountService;
 import com.flance.web.utils.web.request.WebRequest;
 import com.flance.web.utils.web.response.WebResponse;
 import org.springframework.util.StringUtils;
@@ -26,7 +26,7 @@ import java.util.Map;
 public class UserInfoController {
 
     @Resource
-    SecurityUserDetailsService<? extends BaseUser> securityUserDetailsService;
+    SecurityAccountService securityUserDetailsService;
 
 
     @PostMapping("/getUserInfo")
@@ -45,8 +45,8 @@ public class UserInfoController {
                 return WebResponse.getFailed(ErrCodeConstant.ERROR_TOKEN_EXPIRED, "token已过期！");
             }
             Map<String, Object> map = TokenUtils.decode(token);
-            String userId = map.get("id").toString();
-            BaseUser user = securityUserDetailsService.getUserByUserId(userId);
+            Long userId = Long.parseLong(map.get("id").toString());
+            SecurityAccount user = securityUserDetailsService.getUserByUserId(userId);
             return WebResponse.getSucceed(user, "用户信息获取成功！");
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,7 +1,8 @@
 package com.flance.web.oauth.security.auth;
 
-import com.flance.web.oauth.security.user.SecurityAccount;
-import com.flance.web.oauth.security.user.SecurityAuth;
+
+import com.flance.web.security.common.user.SecurityAccount;
+import com.flance.web.security.common.user.SecurityAuth;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

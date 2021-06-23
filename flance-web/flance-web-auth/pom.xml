@@ -58,6 +58,11 @@
             <artifactId>flance-web-utils</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.flance</groupId>
+            <artifactId>flance-web-security-common</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>

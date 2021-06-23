@@ -1,6 +1,6 @@
 package com.flance.jdbc.jpa.simple.utils;
 
-import com.flance.web.oauth.security.user.SecurityUserInfoService;
+import com.flance.web.security.common.user.SecurityUserInfoService;
 import com.google.common.collect.Maps;
 
 import java.util.Map;

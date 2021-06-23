@@ -39,6 +39,11 @@
         </dependency>
 
         <dependency>
+            <groupId>com.flance</groupId>
+            <artifactId>flance-web-security-common</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
             <version>${snakeyaml.version}</version>

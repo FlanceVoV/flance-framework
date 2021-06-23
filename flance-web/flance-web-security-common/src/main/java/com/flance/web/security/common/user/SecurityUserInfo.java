@@ -1,4 +1,4 @@
-package com.flance.web.oauth.security.user;
+package com.flance.web.security.common.user;
 
 /**
  * securityUserInfo 用户基本信息标准

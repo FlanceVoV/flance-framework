@@ -1,4 +1,4 @@
-package com.flance.web.oauth.security.utils;
+package com.flance.web.security.common;
 
 /**
  * security 异常常量

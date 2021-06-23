@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.flance.jdbc.jpa.simple.entity.BaseEntity;
 import com.flance.jdbc.jpa.simple.utils.StreamUtils;
-import com.flance.web.oauth.security.user.SecurityAccount;
-import com.flance.web.oauth.security.user.SecurityUserInfo;
+import com.flance.web.security.common.user.SecurityAccount;
+import com.flance.web.security.common.user.SecurityUserInfo;
 import com.google.common.collect.Lists;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -101,6 +101,11 @@ public class Account extends BaseEntity<Long> implements UserDetails, SecurityAc
     @Override
     public String getUsername() {
         return this.loginName;
+    }
+
+    @Override
+    public Long getAccountId() {
+        return this.getId();
     }
 
     @Override

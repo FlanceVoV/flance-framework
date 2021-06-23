@@ -1,4 +1,4 @@
-package com.flance.web.oauth.security.exception;
+package com.flance.web.security.common.exception;
 
 import com.flance.web.utils.web.response.WebResponse;
 import org.springframework.security.authentication.BadCredentialsException;

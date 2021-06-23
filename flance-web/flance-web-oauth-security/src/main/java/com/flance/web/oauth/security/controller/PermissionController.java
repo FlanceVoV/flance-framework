@@ -1,7 +1,7 @@
 package com.flance.web.oauth.security.controller;
 
+import com.flance.web.oauth.security.auth.AuthService;
 import com.flance.web.oauth.security.utils.ErrCodeConstant;
-import com.flance.web.oauth.security.service.AuthService;
 import com.flance.web.utils.web.request.WebRequest;
 import com.flance.web.utils.web.response.WebResponse;
 import org.springframework.web.bind.annotation.*;

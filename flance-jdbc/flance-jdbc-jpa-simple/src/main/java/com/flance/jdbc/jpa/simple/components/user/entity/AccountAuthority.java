@@ -2,7 +2,7 @@ package com.flance.jdbc.jpa.simple.components.user.entity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.flance.jdbc.jpa.simple.entity.BaseEntity;
-import com.flance.web.oauth.security.user.SecurityAuth;
+import com.flance.web.security.common.user.SecurityAuth;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;

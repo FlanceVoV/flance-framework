@@ -1,7 +1,7 @@
-package com.flance.web.oauth.security.user;
+package com.flance.web.security.common.user;
 
-import com.flance.web.oauth.security.exception.AuthException;
-import com.flance.web.oauth.security.utils.SecurityConstant;
+import com.flance.web.security.common.SecurityConstant;
+import com.flance.web.security.common.exception.AuthException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
 import org.springframework.security.core.AuthenticationException;
