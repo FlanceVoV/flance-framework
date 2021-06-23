@@ -41,7 +41,7 @@
         <flance-web-auth.version>1.0</flance-web-auth.version>
         <flance-web-gateway.version>1.0</flance-web-gateway.version>
         <flance-web-security.version>1.0</flance-web-security.version>
-        <flance-web-security-common>1.0</flance-web-security-common>
+        <flance-web-security-common.version>1.0</flance-web-security-common.version>
         <flance-web-oauth-security.version>1.0</flance-web-oauth-security.version>
         <flance-web-utils.version>1.0</flance-web-utils.version>
         <flance-components-fastdfs.version>1.0</flance-components-fastdfs.version>
