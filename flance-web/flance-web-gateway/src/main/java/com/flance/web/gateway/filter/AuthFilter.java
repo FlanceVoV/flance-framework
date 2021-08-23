@@ -84,7 +84,7 @@ public class AuthFilter implements GlobalFilter, Ordered {
             webRequest.setRequestId(requestId);
             webResponse = authClient.hasPermission(webRequest);
             logger.info("gateway-auth-filter：请求标识[{}]，完成鉴权请求[{}]，鉴权返回结果[{}]", uuid, uri, webResponse.toString());
-            return gatewayService.filter(setUserInfo(token, exchange), chain, webResponse);
+            return gatewayService.filter(setUserInfo(token, exchange, uuid), chain, webResponse);
         }
     }
 
@@ -94,7 +94,7 @@ public class AuthFilter implements GlobalFilter, Ordered {
      * @param exchange
      * @return
      */
-    private ServerWebExchange setUserInfo(String token, ServerWebExchange exchange) {
+    private ServerWebExchange setUserInfo(String token, ServerWebExchange exchange, String logId) {
         if (StringUtils.isEmpty(token)) {
             return exchange;
         }
@@ -114,6 +114,7 @@ public class AuthFilter implements GlobalFilter, Ordered {
                     try {
                         header.set("user_info", URLEncoder.encode(gson.toJson(webResponse.getData()), "UTF-8"));
                         header.set("access_token", token);
+                        header.set("log_id", logId);
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
                     }
