@@ -1,8 +1,8 @@
 package com.flance.web.gateway.client;
 
 
-import com.flance.web.utils.feign.request.FeignRequest;
-import com.flance.web.utils.feign.response.FeignResponse;
+import com.flance.web.utils.web.request.WebRequest;
+import com.flance.web.utils.web.response.WebResponse;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -15,12 +15,12 @@ public interface AuthClient {
 
     /**
      * 验证权限
-     * @param feignRequest 鉴权请求封装
+     * @param webRequest 鉴权请求封装
      * @return  返回鉴权结果
      */
     @ResponseBody
     @PostMapping("/hasPermission")
-    FeignResponse hasPermission(@RequestBody FeignRequest feignRequest);
+    WebResponse hasPermission(@RequestBody WebRequest webRequest);
 
 
 }

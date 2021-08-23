@@ -5,8 +5,8 @@ import com.flance.web.gateway.client.UserResourceClient;
 import com.flance.web.gateway.exception.GlobalGatewayException;
 import com.flance.web.gateway.service.GatewayService;
 import com.flance.web.utils.UrlMatchUtil;
-import com.flance.web.utils.feign.request.FeignRequest;
-import com.flance.web.utils.feign.response.FeignResponse;
+import com.flance.web.utils.web.request.WebRequest;
+import com.flance.web.utils.web.response.WebResponse;
 import com.google.gson.Gson;
 import java.net.URLEncoder;
 import org.slf4j.Logger;
@@ -66,7 +66,7 @@ public class AuthFilter implements GlobalFilter, Ordered {
 
         logger.info("gateway-auth-filter：请求标识[{}]，请求路径[({}){}]，url标识[{}]", uuid, method, uri, requestId);
 
-        FeignResponse feignResponse;
+        WebResponse webResponse;
 
         if (UrlMatchUtil.matchUrl(uri, Arrays.asList(ignoreUrls))) {
             logger.info("gateway-auth-filter：请求标识[{}]，放行[{}]", uuid, uri);
@@ -77,14 +77,14 @@ public class AuthFilter implements GlobalFilter, Ordered {
                 token = exchange.getRequest().getQueryParams().getFirst("access_token");
             }
             // 构建鉴权请求
-            FeignRequest feignRequest = new FeignRequest();
-            feignRequest.setMethod(method);
-            feignRequest.setToken(token);
-            feignRequest.setUrl(uri);
-            feignRequest.setRequestId(requestId);
-            feignResponse = authClient.hasPermission(feignRequest);
-            logger.info("gateway-auth-filter：请求标识[{}]，完成鉴权请求[{}]，鉴权返回结果[{}]", uuid, uri, feignResponse.toString());
-            return gatewayService.filter(setUserInfo(token, exchange), chain, feignResponse);
+            WebRequest webRequest = new WebRequest();
+            webRequest.setMethod(method);
+            webRequest.setToken(token);
+            webRequest.setUrl(uri);
+            webRequest.setRequestId(requestId);
+            webResponse = authClient.hasPermission(webRequest);
+            logger.info("gateway-auth-filter：请求标识[{}]，完成鉴权请求[{}]，鉴权返回结果[{}]", uuid, uri, webResponse.toString());
+            return gatewayService.filter(setUserInfo(token, exchange), chain, webResponse);
         }
     }
 
@@ -99,20 +99,20 @@ public class AuthFilter implements GlobalFilter, Ordered {
             return exchange;
         }
         Gson gson = new Gson();
-        FeignRequest feignRequest = new FeignRequest();
-        feignRequest.setMethod("POST");
-        feignRequest.setToken(token);
-        feignRequest.setUrl("/api/sys/user_info");
-        feignRequest.setRequestId("sys.user.info");
-        FeignResponse feignResponse = userResourceClient.getUserInfo(feignRequest);
-        logger.info("获取用户信息，响应结果[{}]", gson.toJson(feignResponse));
-        if (!feignResponse.getSuccess()) {
-            throw new GlobalGatewayException("用户信息获取失败！[" + feignResponse.getMsg() + "]");
+        WebRequest webRequest = new WebRequest();
+        webRequest.setMethod("POST");
+        webRequest.setToken(token);
+        webRequest.setUrl("/api/sys/user_info");
+        webRequest.setRequestId("sys.user.info");
+        WebResponse webResponse = userResourceClient.getUserInfo(webRequest);
+        logger.info("获取用户信息，响应结果[{}]", gson.toJson(webResponse));
+        if (!webResponse.getSuccess()) {
+            throw new GlobalGatewayException("用户信息获取失败！[" + webResponse.getMsg() + "]");
         }
         ServerHttpRequest request = exchange.getRequest().mutate()
                 .headers(header -> {
                     try {
-                        header.set("user_info", URLEncoder.encode(gson.toJson(feignResponse.getData()), "UTF-8"));
+                        header.set("user_info", URLEncoder.encode(gson.toJson(webResponse.getData()), "UTF-8"));
                         header.set("access_token", token);
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
