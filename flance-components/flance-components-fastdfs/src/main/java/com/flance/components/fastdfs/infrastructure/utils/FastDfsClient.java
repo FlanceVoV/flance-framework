@@ -3,6 +3,8 @@ package com.flance.components.fastdfs.infrastructure.utils;
 import com.flance.components.fastdfs.domain.file.model.dto.FastDfsFileDto;
 import com.flance.components.fastdfs.infrastructure.exception.FastDfsException;
 import com.flance.components.fastdfs.infrastructure.fastdfs.FastDfsStorage;
+import com.flance.web.utils.AssertException;
+import com.flance.web.utils.AssertUtil;
 import org.csource.common.MyException;
 import org.csource.fastdfs.StorageClient;
 import org.slf4j.Logger;
@@ -30,7 +32,7 @@ public class FastDfsClient {
      */
     @FastDfsStorage(clientArgIndex = 1)
     public FastDfsFileDto uploadFile(MultipartFile file, StorageClient storageClient) {
-        Assert.notNull(storageClient, "client为空！");
+        AssertUtil.notNull(storageClient, AssertException.getByEnum(AssertException.ErrCode.SYS_ERROR));
         FastDfsFileDto fastDfsFileDto = new FastDfsFileDto();
         fastDfsFileDto.setFileName(file.getOriginalFilename());
         fastDfsFileDto.setFileSize(file.getSize());
