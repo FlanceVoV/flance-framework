@@ -46,12 +46,16 @@ public class GlobalRouteConfiguration {
         Optional.ofNullable(routes).orElse(Lists.newArrayList()).forEach(route -> {
             log.info("flance-gateway：加载路由 => [name: {}, id: {}, code: {}, path: {}, uri: {}, filter: {}]",
                     route.getRouteName(), route.getRouteId(), route.getRouteCode(), route.getRoutePath(), route.getRouteUri(), route.getFilter());
+            URI uri = URI.create(route.getRouteUri());
+            if (null == route.getFilter()) {
+                b.route(route.getRouteId(), dr -> dr.path(route.getRoutePath()).uri(uri));
+                return;
+            }
             String[] filters = route.getFilter().split(",");
             GatewayFilter[] gatewayFilters = new GatewayFilter[filters.length];
             for (int i = 0; i < gatewayFilters.length; i++) {
                 gatewayFilters[i] = applicationContext.getBean(filters[i], GatewayFilter.class);
             }
-            URI uri = URI.create(route.getRouteUri());
             b.route(route.getRouteId(), dr -> dr.path(route.getRoutePath()).uri(uri).filters(gatewayFilters));
         });
 
