@@ -9,18 +9,18 @@ import java.util.Date;
  * @author jhf
  */
 @Data
-public class BaseEntity<ID> {
+public class BaseEntity<ID> implements IEntity<ID>{
 
     private ID id;
 
-    private ID createBy;
+    private ID createUserId;
 
     private Date createDate;
 
-    private ID updateBy;
+    private ID lastUpdateUserId;
 
-    private Date updateDate;
+    private Date lastUpdateDate;
 
-    private Short deleted;
+    private Integer status;
 
 }
