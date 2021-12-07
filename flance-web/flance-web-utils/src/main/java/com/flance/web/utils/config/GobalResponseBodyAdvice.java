@@ -14,9 +14,15 @@ import java.util.List;
 
 public class GobalResponseBodyAdvice implements ResponseBodyAdvice {
 
-    @Value("${flance.response.advice::#{null}}")
     private List<String> ignoreUrl;
 
+    public GobalResponseBodyAdvice() {
+
+    }
+
+    public GobalResponseBodyAdvice(List<String> ignoreUrl) {
+        this.ignoreUrl = ignoreUrl;
+    }
 
     @Override
     public boolean supports(MethodParameter methodParameter, Class aClass) {
@@ -38,6 +44,9 @@ public class GobalResponseBodyAdvice implements ResponseBodyAdvice {
     }
 
     private boolean ignore(String url) {
+        if (null == ignoreUrl) {
+            return false;
+        }
         return UrlMatchUtil.matchUrl(url, ignoreUrl);
     }
 
