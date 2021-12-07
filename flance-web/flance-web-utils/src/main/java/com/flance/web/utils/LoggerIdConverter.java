@@ -10,6 +10,6 @@ public class LoggerIdConverter extends ClassicConverter {
 
     @Override
     public String convert(ILoggingEvent iLoggingEvent) {
-        return RequestUtil.getLogId();
+        return RequestUtil.getLogId() == null ? "system-log" : RequestUtil.getLogId();
     }
 }
