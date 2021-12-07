@@ -3,6 +3,7 @@ package com.flance.web.utils.config;
 
 import com.flance.web.utils.UrlMatchUtil;
 import com.flance.web.utils.web.response.WebResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.ServerHttpRequest;
@@ -15,15 +16,8 @@ import java.util.List;
 @ControllerAdvice
 public class GobalResponseBodyAdvice implements ResponseBodyAdvice {
 
+    @Value("${flance.response.advice::#{null}}")
     private List<String> ignoreUrl;
-
-    public GobalResponseBodyAdvice() {
-
-    }
-
-    public GobalResponseBodyAdvice(List<String> ignoreUrl) {
-        this.ignoreUrl = ignoreUrl;
-    }
 
     @Override
     public boolean supports(MethodParameter methodParameter, Class aClass) {
@@ -45,9 +39,6 @@ public class GobalResponseBodyAdvice implements ResponseBodyAdvice {
     }
 
     private boolean ignore(String url) {
-        if (null == ignoreUrl) {
-            return false;
-        }
         return UrlMatchUtil.matchUrl(url, ignoreUrl);
     }
 
