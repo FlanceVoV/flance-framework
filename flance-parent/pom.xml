@@ -47,6 +47,7 @@
         <flance-components-fastdfs.version>1.0</flance-components-fastdfs.version>
         <flance-components-form.version>1.0</flance-components-form.version>
         <flance-components-questionbank>1.0</flance-components-questionbank>
+        <flance-components-kafka>1.0</flance-components-kafka>
     </properties>
 
     <dependencyManagement>
@@ -250,6 +251,12 @@
                 <groupId>com.flance</groupId>
                 <artifactId>flance-components-questionbank</artifactId>
                 <version>${flance-components-questionbank}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.flance</groupId>
+                <artifactId>flance-components-kafka</artifactId>
+                <version>${flance-components-kafka}</version>
             </dependency>
 
             <!-- flance end -->
