@@ -21,7 +21,7 @@
         <spring-cloud.version>Hoxton.SR8</spring-cloud.version>
         <jjwt.version>0.9.1</jjwt.version>
         <hutool.version>5.4.4</hutool.version>
-        <poi-ooxml.version>3.17</poi-ooxml.version>
+        <poi-ooxml.version>5.0.0</poi-ooxml.version>
         <google-guava.version>30.0-jre</google-guava.version>
         <ojdbc.version>10.2.0.4.0</ojdbc.version>
         <mysql-jdbc.version>8.0.16</mysql-jdbc.version>
