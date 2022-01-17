@@ -17,7 +17,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 import java.util.List;
 
 @ControllerAdvice
-public class GobalResponseBodyAdvice implements ResponseBodyAdvice<Object> {
+public class GlobalResponseBodyAdvice implements ResponseBodyAdvice<Object> {
 
     @Value("${flance.response.advice::#{null}}")
     private List<String> ignoreUrl;

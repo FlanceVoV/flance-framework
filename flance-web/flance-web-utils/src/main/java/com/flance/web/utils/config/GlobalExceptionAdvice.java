@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Slf4j
 @ControllerAdvice
-public class GobalExceptionAdvice {
+public class GlobalExceptionAdvice {
 
     /**
      * 全局异常捕捉处理
