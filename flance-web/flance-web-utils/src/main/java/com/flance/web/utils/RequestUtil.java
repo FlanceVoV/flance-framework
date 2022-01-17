@@ -1,8 +1,10 @@
 package com.flance.web.utils;
 
+import com.alibaba.ttl.TransmittableThreadLocal;
+
 public class RequestUtil {
 
-    private static final ThreadLocal<String> REQUEST_ID = new ThreadLocal<>();
+    private static final TransmittableThreadLocal<String> REQUEST_ID = new TransmittableThreadLocal<>();
 
     public static String getLogId() {
         return REQUEST_ID.get();
