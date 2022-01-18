@@ -23,4 +23,14 @@ public class WebResponse {
         return WebResponse.builder().code(code).success(false).msg(msg).build();
     }
 
+    public <T> T getResultData(Class<T> clazz) {
+        if (null == data) {
+            return null;
+        }
+        if (data.getClass().equals(clazz)) {
+            return (T) data;
+        }
+        return null;
+    }
+
 }
