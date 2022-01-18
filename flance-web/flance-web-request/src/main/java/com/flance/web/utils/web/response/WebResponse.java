@@ -1,5 +1,6 @@
 package com.flance.web.utils.web.response;
 
+import com.google.gson.Gson;
 import lombok.Builder;
 import lombok.Data;
 
@@ -27,10 +28,18 @@ public class WebResponse {
         if (null == data) {
             return null;
         }
-        if (data.getClass().equals(clazz)) {
+        try {
             return (T) data;
+        } catch (Exception e) {
+            e.printStackTrace();
+            try {
+                Gson gson = new Gson();
+                return gson.fromJson(gson.toJson(data), clazz);
+            } catch (Exception cast) {
+                e.printStackTrace();
+                return null;
+            }
         }
-        return null;
     }
 
 }
