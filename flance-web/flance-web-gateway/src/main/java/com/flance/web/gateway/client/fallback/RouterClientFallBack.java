@@ -1,7 +1,7 @@
 package com.flance.web.gateway.client.fallback;
 
 
-import com.flance.web.gateway.client.UserResourceClient;
+import com.flance.web.gateway.client.RouterClient;
 import com.flance.web.gateway.exception.GlobalGatewayException;
 
 /**
@@ -10,10 +10,10 @@ import com.flance.web.gateway.exception.GlobalGatewayException;
  */
 public class RouterClientFallBack {
 
-    public UserResourceClient create(Throwable throwable) {
+    public RouterClient create(Throwable throwable) {
         return (permissionRequest) -> {
             throwable.printStackTrace();
-            throw new GlobalGatewayException("用户资源调用失败[getUserInfo]！");
+            throw new GlobalGatewayException("路由资源加载失败[getRouters]！");
         };
     }
 
