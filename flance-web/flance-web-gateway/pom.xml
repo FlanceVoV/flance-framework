@@ -35,14 +35,15 @@
             <artifactId>sentinel-spring-cloud-gateway-adapter</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.flance</groupId>
-            <artifactId>flance-web-utils</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.flance</groupId>
+            <artifactId>flance-web-request</artifactId>
         </dependency>
 
     </dependencies>

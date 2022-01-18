@@ -48,6 +48,7 @@
         <flance-components-form.version>1.0</flance-components-form.version>
         <flance-components-questionbank>1.0</flance-components-questionbank>
         <flance-components-kafka>1.0</flance-components-kafka>
+        <flance-web-request>1.0</flance-web-request>
         <alibaba-transmittable.version>2.2.0</alibaba-transmittable.version>
     </properties>
 
@@ -258,6 +259,12 @@
                 <groupId>com.flance</groupId>
                 <artifactId>flance-components-kafka</artifactId>
                 <version>${flance-components-kafka}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.flance</groupId>
+                <artifactId>flance-web-request</artifactId>
+                <version>${flance-web-request}</version>
             </dependency>
 
             <!-- flance end -->

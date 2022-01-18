@@ -21,6 +21,7 @@
         <module>flance-web-utils</module>
         <module>flance-web-security</module>
         <module>flance-web-security-common</module>
+        <module>flance-web-request</module>
     </modules>
 
 </project>

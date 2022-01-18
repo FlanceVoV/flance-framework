@@ -2,12 +2,10 @@ package com.flance.jdbc.jpa.web.controller;
 
 import com.flance.jdbc.jpa.page.PageResponse;
 import com.flance.jdbc.jpa.parser.BaseParser;
-import com.flance.jdbc.jpa.web.service.BaseWebDomainService;
 import com.flance.jdbc.jpa.web.service.IBaseWebDomainService;
 import com.flance.web.common.controller.BaseController;
 import com.flance.web.utils.web.request.WebRequest;
 import com.flance.web.utils.web.response.WebResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
