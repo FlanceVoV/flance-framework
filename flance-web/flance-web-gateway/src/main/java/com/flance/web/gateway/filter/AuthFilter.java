@@ -31,7 +31,8 @@ import java.util.UUID;
  * 权限过滤器
  * @author jhf
  */
-@Component
+//@Component
+@Deprecated
 public class AuthFilter implements GlobalFilter, Ordered {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());

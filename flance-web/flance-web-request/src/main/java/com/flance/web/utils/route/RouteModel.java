@@ -1,4 +1,4 @@
-package com.flance.web.gateway.route;
+package com.flance.web.utils.route;
 
 /**
  * 路由模型接口
@@ -46,7 +46,7 @@ public interface RouteModel {
      * 获取全局限流配置 单位： 请求次数/毫秒
      * @return  返回限流
      */
-    Integer getLimit();
+    Integer getRequestLimit();
 
     /**
      * 获取接口超时配置 单位：ms

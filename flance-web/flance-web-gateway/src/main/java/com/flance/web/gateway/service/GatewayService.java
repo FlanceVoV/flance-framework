@@ -19,6 +19,15 @@ public interface GatewayService {
      * @param webResponse  鉴权响应
      * @return          返回
      */
+    @Deprecated
     Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain, WebResponse webResponse);
+
+    /**
+     * 自定义网关业务逻辑处理
+     * @param exchange  参数
+     * @param chain     调用连
+     * @return          返回
+     */
+    Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain);
 
 }

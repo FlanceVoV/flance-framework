@@ -1,6 +1,8 @@
 package com.flance.web.gateway.service;
 
-import com.flance.web.gateway.route.RouteModel;
+
+
+import com.flance.web.utils.route.RouteModel;
 
 import java.util.List;
 
@@ -14,6 +16,6 @@ public interface RouteService {
      * 获取所有动态路由
      * @return  返回路由列表
      */
-    List<RouteModel> getRouteLists();
+    List<? extends RouteModel> getRouteLists();
 
 }
