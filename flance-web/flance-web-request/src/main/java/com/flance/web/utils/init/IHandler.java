@@ -1,4 +1,4 @@
-package com.flance.jdbc.jpa.simple.common.init;
+package com.flance.web.utils.init;
 
 /**
  * 启动逻辑接口

@@ -17,7 +17,7 @@ public class LogInterceptor implements HandlerInterceptor {
         if (null == logId) {
             logId = UUID.randomUUID().toString();
         }
-        RequestUtil.setRequestId(logId);
+        RequestUtil.setLogId(logId);
         return true;
     }
 

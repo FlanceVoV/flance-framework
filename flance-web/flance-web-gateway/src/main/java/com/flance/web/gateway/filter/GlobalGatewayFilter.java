@@ -2,6 +2,7 @@ package com.flance.web.gateway.filter;
 
 import com.flance.web.gateway.service.GatewayService;
 import com.flance.web.utils.RequestConstant;
+import com.flance.web.utils.RequestUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
@@ -26,7 +27,7 @@ public class GlobalGatewayFilter implements GlobalFilter, Ordered {
         String method = exchange.getRequest().getMethodValue();
         String requestId =  exchange.getRequest().getHeaders().getFirst(RequestConstant.HEADER_REQUEST_ID);
         String logId = UUID.randomUUID().toString();
-
+        RequestUtil.setLogId(logId);
         log.info("gateway-global-filter：请求标识[{}]，请求路径[({}){}]，url标识[{}]", logId, method, uri, requestId);
         final String token = exchange.getRequest().getHeaders().getFirst(RequestConstant.HEADER_TOKEN);
 
@@ -39,7 +40,7 @@ public class GlobalGatewayFilter implements GlobalFilter, Ordered {
                     header.set(RequestConstant.HEADER_LOG_ID, logId);
                 }).build();
 
-        return gatewayService.filter(exchange, chain);
+        return gatewayService.filter(exchange, chain).doFinally(obj -> RequestUtil.remove());
     }
 
     @Override

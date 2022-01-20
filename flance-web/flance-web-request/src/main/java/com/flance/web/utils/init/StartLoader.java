@@ -1,4 +1,4 @@
-package com.flance.jdbc.jpa.simple.common.init;
+package com.flance.web.utils.init;
 
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;

@@ -4,6 +4,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -136,8 +137,8 @@ public class RedisUtils {
      * @param mkey
      * @param ckey
      */
-    public void delTable(String mkey, String ckey) {
-        redisTemplate.opsForHash().delete(mkey, ckey);
+    public Long delTable(String mkey, String ckey) {
+        return redisTemplate.opsForHash().delete(mkey, ckey);
     }
 
     /**
@@ -164,7 +165,11 @@ public class RedisUtils {
      * @return          删除成功与否
      */
     public Boolean clear(String key) {
-        return redisTemplate.delete(key);
+        Set<String> keys = redisTemplate.keys(key);
+        if (null == keys) {
+            return redisTemplate.delete(key);
+        }
+        return redisTemplate.delete(keys) > 0;
     }
 
 }
