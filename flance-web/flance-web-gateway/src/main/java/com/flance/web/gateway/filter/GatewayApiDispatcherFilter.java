@@ -1,24 +1,17 @@
 package com.flance.web.gateway.filter;
 
-import com.flance.web.gateway.common.BizConstant;
-import com.flance.web.gateway.config.GlobalRouteConfiguration;
+
 import com.flance.web.gateway.service.RouteApiService;
-import com.flance.web.gateway.service.RouteService;
 import com.flance.web.utils.RequestConstant;
 import com.flance.web.utils.route.RouteApiModel;
-import com.flance.web.utils.route.RouteModel;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
-import org.springframework.cloud.gateway.handler.AsyncPredicate;
 import org.springframework.cloud.gateway.route.Route;
-import org.springframework.cloud.gateway.route.RouteDefinition;
 import org.springframework.cloud.gateway.route.RouteLocator;
-import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.cloud.gateway.support.NotFoundException;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -29,7 +22,6 @@ import reactor.core.publisher.Mono;
 import javax.annotation.Resource;
 
 import java.net.URI;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
