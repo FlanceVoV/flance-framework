@@ -6,4 +6,6 @@ public interface BizConstant {
 
     String ROUTER_KEY = "gateway:router";
 
+    String APP_KEY = "gateway:app";
+
 }

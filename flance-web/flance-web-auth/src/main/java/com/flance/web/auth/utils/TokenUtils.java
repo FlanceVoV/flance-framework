@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.security.interfaces.RSAPublicKey;
 import java.util.Map;
 
+@Deprecated
 public class TokenUtils {
 
     private final static Logger log = LoggerFactory.getLogger(TokenUtils.class);
@@ -29,7 +30,7 @@ public class TokenUtils {
         log.info("初始化[JwtUserHelper]");
         if (null == verifier) {
             try {
-                RSAPublicKey rsaPublicKey = RsaUtil.getPublicKey();
+                RSAPublicKey rsaPublicKey = RsaUtil.getPublicKey("");
                 verifier = new RsaVerifier(rsaPublicKey);
             } catch (Exception e) {
                 e.printStackTrace();

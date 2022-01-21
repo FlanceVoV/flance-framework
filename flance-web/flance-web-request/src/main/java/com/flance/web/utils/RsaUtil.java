@@ -18,6 +18,8 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -26,10 +28,8 @@ import java.util.Properties;
  */
 public class RsaUtil {
 
-    /** 指定配置文件 **/
-    private final static String KEY_PROPERTIES = "oauth.properties";
-
-    private final static Logger LOGGER = LoggerFactory.getLogger(RsaUtil.class);
+    public static final String PUBLIC_KEY = "publicKey";
+    public static final String PRIVATE_KEY = "privateKey";
 
     /** 算法名称 */
     private final static String ALGORITHM =  "RSA";
@@ -43,70 +43,34 @@ public class RsaUtil {
     /** 最大解密长度 */
     private final static int MAX_DECRYPT_BLOCK = 256;
 
-    /** 密钥对生成器 */
-    private static KeyPairGenerator keyPairGenerator = null;
-
-    private static KeyFactory keyFactory = null;
-
-    /** 缓存的密钥对 */
-    private static KeyPair keyPair = null;
-
-    /** 配置文件 **/
-    private static Properties oauthProperties;
-
-    /** 当前服务的公钥名 **/
-    private static String PUBLIC_KEY_NAME;
-
-    /** 当前服务的私钥名 **/
-    private static String PRIVATE_KEY_NAME;
-
     /** Base64 编码/解码器 JDK1.8 */
     private final static Base64.Decoder DECODER = Base64.getDecoder();
 
     private final static Base64.Encoder ENCODER = Base64.getEncoder();
 
-    static{
-        try {
-            keyPairGenerator = KeyPairGenerator.getInstance(ALGORITHM);
-            keyFactory = KeyFactory.getInstance(ALGORITHM);
-            initOauthProperties();
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage(),e);
-        }
-    }
-
     /** 私有构造器 */
     private RsaUtil(){}
 
-    private static void initOauthProperties() throws Exception {
-        oauthProperties = PropertiesLoaderUtils.loadAllProperties(KEY_PROPERTIES);
-    }
 
     /**
      * 生成密钥对
      * 将密钥分别用Base64编码保存到#publicKey.properties#和#privateKey.properties#文件中
      * 保存的默认名称分别为publicKey和privateKey
-     *
-     *
      */
-    public static synchronized void generateKeyPair(String publicKey, String privateKey){
-        try {
-            PUBLIC_KEY_NAME = publicKey;
-            PRIVATE_KEY_NAME = privateKey;
-            keyPairGenerator.initialize(KEY_SIZE, new SecureRandom());
-            keyPair = keyPairGenerator.generateKeyPair();
-        } catch (InvalidParameterException e){
-            LOGGER.error("KeyPairGenerator does not support a key length of " + KEY_SIZE + ".",e);
-        } catch (NullPointerException e){
-            LOGGER.error("RSAUtils#key_pair_gen is null,can not generate KeyPairGenerator instance.",e);
-        }
-        RSAPublicKey rsaPublicKey = (RSAPublicKey) keyPair.getPublic();
-        RSAPrivateKey rsaPrivateKey = (RSAPrivateKey) keyPair.getPrivate();
-        String publicKeyString = ENCODER.encodeToString(rsaPublicKey.getEncoded());
-        String privateKeyString = ENCODER.encodeToString(rsaPrivateKey.getEncoded());
-        System.out.println("flance.oauth.public.key[" + publicKey + "]:" + publicKeyString);
-        System.out.println(" =============================================== ");
-        System.out.println("flance.oauth.private.key[" + privateKey + "]:" + privateKeyString);
+    public static synchronized void generateKeyPair() throws Exception {
+
+        KeyPairGenerator keyPairGenerator = KeyPairGenerator
+                .getInstance(ALGORITHM);
+        keyPairGenerator.initialize(KEY_SIZE);
+        KeyPair keyPair = keyPairGenerator.generateKeyPair();
+        RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
+        RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
+        Map<String, byte[]> keyMap = new HashMap<String, byte[]>();
+        keyMap.put(PUBLIC_KEY, publicKey.getEncoded());
+        keyMap.put(PRIVATE_KEY, privateKey.getEncoded());
+        System.out.println("public:"+new String(ENCODER.encode(publicKey.getEncoded())));
+        System.out.println("private:"+new String(ENCODER.encode(privateKey.getEncoded())));
+
     }
 
     /**
@@ -144,14 +108,14 @@ public class RsaUtil {
      * @return RSA公钥
      * @throws InvalidKeySpecException
      */
-    public static RSAPublicKey getPublicKey(){
+    public static RSAPublicKey getPublicKey(String pubKey){
         try {
-            byte[] keyBytes = DECODER.decode(getKeyString(PUBLIC_KEY_NAME, oauthProperties));
+            byte[] keyBytes = DECODER.decode(pubKey);
             X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(keyBytes);
-            RSAPublicKey rsa = (RSAPublicKey)keyFactory.generatePublic(x509EncodedKeySpec);
-            return rsa;
-        }catch (InvalidKeySpecException e) {
-            LOGGER.error("getPublicKey()#" + e.getMessage(),e);
+            KeyFactory keyFactory = KeyFactory.getInstance(ALGORITHM);
+            return (RSAPublicKey)keyFactory.generatePublic(x509EncodedKeySpec);
+        }catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -161,23 +125,24 @@ public class RsaUtil {
      * @return RSA私钥
      * @throws InvalidKeySpecException
      */
-    public static RSAPrivateKey getPrivateKey(){
+    public static RSAPrivateKey getPrivateKey(String priKey){
         try {
-            byte[] keyBytes = DECODER.decode(getKeyString(PRIVATE_KEY_NAME, oauthProperties));
+            byte[] keyBytes = DECODER.decode(priKey);
             PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(keyBytes);
+            KeyFactory keyFactory = KeyFactory.getInstance(ALGORITHM);
             return (RSAPrivateKey)keyFactory.generatePrivate(pkcs8EncodedKeySpec);
-        } catch (InvalidKeySpecException e) {
-            LOGGER.error("getPrivateKey()#" + e.getMessage(),e);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }
     /**
      * RSA公钥加密
      */
-    public static byte[] encryptByPublicKey(byte[] data) throws Exception {
+    public static byte[] encryptByPublicKey(byte[] data, String pubKey) throws Exception {
         // 对数据加密
         Cipher cipher = Cipher.getInstance("RSA");
-        cipher.init(Cipher.ENCRYPT_MODE, getPublicKey());
+        cipher.init(Cipher.ENCRYPT_MODE, getPublicKey(pubKey));
         int inputLen = data.length;
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         int offSet = 0;
@@ -200,8 +165,8 @@ public class RsaUtil {
     }
 
     /** 私钥解密 */
-    public static byte[] decryptByPrivateKey(byte[] encryptedData) throws Exception {
-        PKCS8EncodedKeySpec pkcs8KeySpec = new PKCS8EncodedKeySpec(getPrivateKey().getEncoded());
+    public static byte[] decryptByPrivateKey(byte[] encryptedData, String priKey) throws Exception {
+        PKCS8EncodedKeySpec pkcs8KeySpec = new PKCS8EncodedKeySpec(getPrivateKey(priKey).getEncoded());
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
         Key privateK = keyFactory.generatePrivate(pkcs8KeySpec);
         Cipher cipher = Cipher.getInstance(keyFactory.getAlgorithm());
@@ -236,9 +201,9 @@ public class RsaUtil {
      * @return 验签结果
      * @throws Exception
      */
-    public static boolean verify(byte[] data, String sign) throws Exception {
+    public static boolean verify(byte[] data, String sign, String pubKey) throws Exception {
         Signature signature = Signature.getInstance(RSA_SIGNATURE_ALGORITHM);
-        signature.initVerify(getPublicKey());
+        signature.initVerify(getPublicKey(pubKey));
         signature.update(data);
         return signature.verify(Base64Utils.decodeFromUrlSafeString(sign));
     }
@@ -252,18 +217,16 @@ public class RsaUtil {
      * @return 签名byte[]
      * @throws Exception
      */
-    public static byte[] sign(byte[] data) throws Exception {
+    public static byte[] sign(byte[] data, String priKey) throws Exception {
         // Sign
         Signature signature = Signature.getInstance(RSA_SIGNATURE_ALGORITHM);
-        signature.initSign(getPrivateKey());
+        signature.initSign(getPrivateKey(priKey));
         signature.update(data);
         return signature.sign();
     }
 
-    public static KeyPair getKeyPair(String publicKey, String privateKey){
-        PUBLIC_KEY_NAME = publicKey;
-        PRIVATE_KEY_NAME = privateKey;
-        return new KeyPair(getPublicKey(), getPrivateKey());
+    public static void main(String[] args) throws Exception {
+        generateKeyPair();
     }
 
 }

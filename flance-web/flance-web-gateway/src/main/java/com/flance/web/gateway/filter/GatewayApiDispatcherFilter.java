@@ -72,12 +72,13 @@ public class GatewayApiDispatcherFilter implements GatewayFilter {
         if (null != route) {
             String url = routeApiModel.getApiUri() + routeApiModel.getApiPath();
             log.info("【appId:{}】切换路由【({}){}】", appId, method, url);
-            exchange = changeRoute(exchange, routeApiModel);
+            ServerHttpRequest request = changeRoute(exchange, routeApiModel);
+            return chain.filter(exchange.mutate().request(request).build());
         }
         return chain.filter(exchange);
     }
 
-    private ServerWebExchange changeRoute(ServerWebExchange exchange, RouteApiModel routeApiModel) {
+    private ServerHttpRequest changeRoute(ServerWebExchange exchange, RouteApiModel routeApiModel) {
         String url = routeApiModel.getApiUri() + routeApiModel.getApiPath();
         URI uri = UriComponentsBuilder.fromUriString(url).build().toUri();
         ServerHttpRequest request = exchange.getRequest().mutate().uri(uri).build();
@@ -90,7 +91,7 @@ public class GatewayApiDispatcherFilter implements GatewayFilter {
                 .uri(uri)
                 .build();
         exchange.getAttributes().put(GATEWAY_ROUTE_ATTR, newRoute);
-        return exchange.mutate().request(request).build();
+        return request;
     }
 
     private List<GatewayFilter> getFilters(RouteApiModel routeApiModel) {

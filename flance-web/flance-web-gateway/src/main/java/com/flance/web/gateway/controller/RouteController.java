@@ -26,4 +26,8 @@ public class RouteController {
         return globalRouteConfiguration.refreshApi();
     }
 
+    @GetMapping("/app")
+    public Mono<ResponseEntity<Object>> app() {
+        return globalRouteConfiguration.refreshApp();
+    }
 }

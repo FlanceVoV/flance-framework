@@ -30,6 +30,7 @@ import javax.sql.DataSource;
  * 认证服务配置
  * @author
  */
+@Deprecated
 @Configuration
 @EnableAuthorizationServer
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
@@ -66,9 +67,10 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     }
 
     @Bean
+    @Deprecated
     protected JwtAccessTokenConverter jwtAccessTokenConverter() {
         JwtAccessTokenConverter converter = new AccessTokenConverter();
-        converter.setKeyPair(RsaUtil.getKeyPair(publicKey, privateKey));
+//        converter.setKeyPair(RsaUtil.getKeyPair(publicKey, privateKey));
         return converter;
     }
 

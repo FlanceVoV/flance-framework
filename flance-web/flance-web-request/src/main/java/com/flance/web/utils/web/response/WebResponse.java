@@ -19,17 +19,30 @@ public class WebResponse {
 
     private String code;
 
+    /**
+     * 如果加密
+     * 则：原数据转 to jsonStr 加密 -> base64字符串
+     */
     private Object data;
+
+    /**
+     * 签名 = sign(data转base64 + timestamp)
+     */
+    private String sign;
+
+    private Long timestamp;
 
     public WebResponse() {
 
     }
 
-    public WebResponse(Boolean success, String msg, String code, Object data) {
+    public WebResponse(Boolean success, String msg, String code, Object data, String sign, Long timestamp) {
         this.success = success;
         this.msg = msg;
         this.code = code;
         this.data = data;
+        this.sign = sign;
+        this.timestamp = timestamp;
     }
 
     public static WebResponse getSucceed(Object data, String msg) {

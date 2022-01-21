@@ -18,6 +18,7 @@ import java.nio.charset.StandardCharsets;
  * response统一响应处理
  * @author jhf
  */
+@Deprecated
 public class CommonResponseDecoder extends ServerHttpResponseDecorator {
 
     public CommonResponseDecoder(ServerHttpResponse delegate) {
@@ -26,35 +27,24 @@ public class CommonResponseDecoder extends ServerHttpResponseDecorator {
 
     @Override
     public Mono<Void> writeWith(Publisher<? extends DataBuffer> body) {
-        NettyDataBufferFactory dataBufferFactory=new NettyDataBufferFactory(new PooledByteBufAllocator());
-        PooledDataBuffer buffer = dataBufferFactory.allocateBuffer(4);
-
-        if (body instanceof Flux) {
-            Flux<? extends DataBuffer> fluxBody = (Flux<? extends DataBuffer>) body;
-            return super.writeWith(fluxBody.map(dataBuffer -> {
-                byte[] content = new byte[dataBuffer.readableByteCount()];
-                dataBuffer.read(content);
-                //释放掉内存
-                DataBufferUtils.release(dataBuffer);
-                String result = new String(content, StandardCharsets.UTF_8);
-                WebResponse webResponse = WebResponse.builder().code("000000").data(result).msg("请求成功").build();
-                Gson gson = new Gson();
-                byte[] uppedContent = new String(gson.toJson(webResponse).getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8).getBytes();
-                return buffer.write(uppedContent);
-            }));
-        }
+//        NettyDataBufferFactory dataBufferFactory=new NettyDataBufferFactory(new PooledByteBufAllocator());
+//        PooledDataBuffer buffer = dataBufferFactory.allocateBuffer(4);
+//
+//        if (body instanceof Flux) {
+//            Flux<? extends DataBuffer> fluxBody = (Flux<? extends DataBuffer>) body;
+//            return super.writeWith(fluxBody.map(dataBuffer -> {
+//                byte[] content = new byte[dataBuffer.readableByteCount()];
+//                dataBuffer.read(content);
+//                //释放掉内存
+//                DataBufferUtils.release(dataBuffer);
+//                String result = new String(content, StandardCharsets.UTF_8);
+//                WebResponse webResponse = WebResponse.builder().code("000000").data(result).msg("请求成功").build();
+//                Gson gson = new Gson();
+//                byte[] uppedContent = new String(gson.toJson(webResponse).getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8).getBytes();
+//                return buffer.write(uppedContent);
+//            }));
+//        }
         return super.writeWith(body);
     }
-
-    @Override
-    public boolean setRawStatusCode(Integer value) {
-        return super.setRawStatusCode(value);
-    }
-
-    @Override
-    public Integer getRawStatusCode() {
-        return super.getRawStatusCode();
-    }
-
 
 }
