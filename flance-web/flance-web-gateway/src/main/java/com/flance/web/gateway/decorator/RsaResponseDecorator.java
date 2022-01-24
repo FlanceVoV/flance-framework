@@ -6,6 +6,7 @@ import com.flance.web.utils.web.response.WebResponse;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import io.netty.buffer.PooledByteBufAllocator;
 import org.reactivestreams.Publisher;
 import org.springframework.core.io.buffer.DataBuffer;
@@ -43,7 +44,7 @@ public class RsaResponseDecorator extends ServerHttpResponseDecorator {
     public Mono<Void> writeWith(Publisher<? extends DataBuffer> body) {
         NettyDataBufferFactory dataBufferFactory=new NettyDataBufferFactory(new PooledByteBufAllocator());
         PooledDataBuffer buffer = dataBufferFactory.allocateBuffer(4);
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
         if (body instanceof Flux) {
             Flux<? extends DataBuffer> fluxBody = (Flux<? extends DataBuffer>) body;
             return super.writeWith(fluxBody.buffer().map(dataBuffers -> {

@@ -205,7 +205,7 @@ public class RsaUtil {
         Signature signature = Signature.getInstance(RSA_SIGNATURE_ALGORITHM);
         signature.initVerify(getPublicKey(pubKey));
         signature.update(data);
-        return signature.verify(Base64Utils.decodeFromUrlSafeString(sign));
+        return signature.verify(Base64Utils.decodeFromString(sign));
     }
 
     /**

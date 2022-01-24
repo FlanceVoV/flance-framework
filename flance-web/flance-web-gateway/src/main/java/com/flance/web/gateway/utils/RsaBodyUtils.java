@@ -1,12 +1,14 @@
 package com.flance.web.gateway.utils;
 
 import com.flance.web.gateway.decorator.RsaRequestDecorator;
+import com.flance.web.gateway.decorator.RsaResponseDecorator;
 import com.flance.web.utils.RequestUtil;
 import com.flance.web.utils.RsaUtil;
 import com.flance.web.utils.route.AppModel;
 import com.flance.web.utils.web.request.GatewayRequest;
 import com.flance.web.utils.web.response.WebResponse;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.factory.rewrite.CachedBodyOutputMessage;
@@ -37,14 +39,18 @@ import java.nio.charset.StandardCharsets;
  *
  * 加密流程：
  * 1. 请求体业务参数（GatewayRequest.data）转json => jsonStr
- * 2. jsonStr 转 base64 => base64Str
- * 3. base64Str 加密 => encodeStr
+ * 2. jsonStr 转 base64 => base64byte[]
+ * 3. base64byte[] 加密 => encodeStr
  * 4. encodeStr 转 base64 => base64Result
  *
  * 验签流程：
  * 1. 读取请求体 签名参数 => sign
- * 2. 获取app公钥 = > appPubKey
- * 3.
+ * 2. 获取app公钥 => appPubKey
+ * 3. 解密数据deCodeData
+ * 4. deCodeData转json字符串 => jsonStr
+ * 5. jsonStr拼接时间戳 => j+time
+ * 6. 对j+time用公钥验签
+ *
  *
  * 响应签名流程：同签名流程（WebResponse.data）
  *
@@ -75,11 +81,12 @@ public class RsaBodyUtils {
             HttpHeaders headers = new HttpHeaders();
             headers.putAll(request.getHeaders());
             headers.remove(HttpHeaders.CONTENT_LENGTH);
+
             CachedBodyOutputMessage outputMessage = new CachedBodyOutputMessage(exchange, headers);
             return bodyInserter.insert(outputMessage, new BodyInserterContext())
                     .then(Mono.defer(() -> {
-                        RsaRequestDecorator requestHandler = new RsaRequestDecorator(request, RequestUtil.getLogId());
-//                    RsaResponseDecorator responseDecorator = new RsaResponseDecorator(response);
+                        RsaRequestDecorator requestHandler = new RsaRequestDecorator(request, RequestUtil.getLogId(), outputMessage);
+//                        RsaResponseDecorator responseDecorator = new RsaResponseDecorator(exchange.getResponse(), appModel, RequestUtil.getLogId());
                         return chain.filter(exchange.mutate().request(requestHandler).build());
                     }));
         } catch (Exception e) {
@@ -101,7 +108,7 @@ public class RsaBodyUtils {
     public static WebResponse encodeBody(WebResponse response, AppModel appModel, String logId) {
         try {
             RequestUtil.setLogId(logId);
-            Gson gson = new Gson();
+            Gson gson = new GsonBuilder().disableHtmlEscaping().create();
             Long timestamp = System.currentTimeMillis();
             response.setTimestamp(timestamp);
 
@@ -144,13 +151,13 @@ public class RsaBodyUtils {
 
     public static String decodeBody(String gatewayBody, String pubKey, String priKey) {
         log.info("【解密-请求体:{}】", gatewayBody);
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
         GatewayRequest gatewayRequest = gson.fromJson(gatewayBody, GatewayRequest.class);
         String encodeData = gatewayRequest.getData();
         String sign = gatewayRequest.getSign();
         Long timestamp = gatewayRequest.getTimestamp();
         byte[] dataBytes = Base64Utils.decode(encodeData.getBytes(StandardCharsets.UTF_8));
-        byte[] signDataBytes = Base64Utils.encode((encodeData + timestamp).getBytes(StandardCharsets.UTF_8));
+        byte[] signDataBytes = (encodeData + timestamp).getBytes(StandardCharsets.UTF_8);
         String signData = new String(signDataBytes);
         String result = null;
 
@@ -166,11 +173,14 @@ public class RsaBodyUtils {
             // 解密
             if (flag) {
                 byte[] bytes = RsaUtil.decryptByPrivateKey(dataBytes, priKey);
-                result = new String(bytes);
+                result = new String(Base64Utils.decode(bytes), StandardCharsets.UTF_8);
+            } else {
+                throw new RuntimeException("【解密-验签失败】");
             }
         } catch (Exception e) {
             log.error("【解密-异常:{}】", e.getMessage());
             e.printStackTrace();
+            throw new RuntimeException("解密异常");
         }
         log.info("【解密-明文:{}】", result);
         return result;
