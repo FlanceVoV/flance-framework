@@ -1,7 +1,7 @@
 package com.flance.web.gateway.decorator;
 
-import com.flance.web.utils.web.request.WebRequest;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpRequestDecorator;
 
@@ -16,9 +16,14 @@ public class RsaRequestDecorator extends ServerHttpRequestDecorator {
     public HttpHeaders getHeaders() {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.putAll(super.getHeaders());
-        //由于修改了请求体的body，导致content-length长度不确定，因此使用分块编码
-        httpHeaders.remove(HttpHeaders.CONTENT_LENGTH);
-        httpHeaders.remove(HttpHeaders.TRANSFER_ENCODING);
+        headerSetting(httpHeaders);
         return httpHeaders;
+    }
+
+    private void headerSetting(HttpHeaders httpHeaders) {
+        httpHeaders.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+        httpHeaders.add(HttpHeaders.CONTENT_ENCODING, "UTF-8");
+        httpHeaders.remove(HttpHeaders.TRANSFER_ENCODING);
+        httpHeaders.remove(HttpHeaders.TRANSFER_ENCODING);
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.core.io.buffer.NettyDataBufferFactory;
 import org.springframework.core.io.buffer.PooledDataBuffer;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.http.server.reactive.ServerHttpResponseDecorator;
 import reactor.core.publisher.Flux;
@@ -20,11 +21,14 @@ import java.nio.charset.StandardCharsets;
 
 public class RsaResponseDecorator extends ServerHttpResponseDecorator {
 
-    private AppModel appModel;
+    private final AppModel appModel;
+
+    private final ServerHttpResponse response;
 
     public RsaResponseDecorator(ServerHttpResponse delegate, AppModel appModel) {
         super(delegate);
         this.appModel = appModel;
+        this.response = delegate;
     }
 
     @Override
@@ -41,14 +45,14 @@ public class RsaResponseDecorator extends ServerHttpResponseDecorator {
                 DataBufferUtils.release(dataBuffer);
                 String result = new String(content, StandardCharsets.UTF_8);
 
-                WebResponse response = gson.fromJson(result, WebResponse.class);
+                WebResponse webResponse = gson.fromJson(result, WebResponse.class);
                 // 如果响应业务数据不为空 则加签/加密
-                if (null != response.getData()) {
-                    RsaBodyUtils.encodeBody(response, appModel);
+                if (null != webResponse.getData()) {
+                    RsaBodyUtils.encodeBody(webResponse, appModel);
                 }
-
 //                WebResponse webResponse = WebResponse.builder().code("000000").data(result).msg("请求成功").build();
-                byte[] uppedContent = new String(gson.toJson(response).getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8).getBytes();
+                byte[] uppedContent = new String(gson.toJson(webResponse).getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8).getBytes();
+                headerSetting(response.getHeaders());
                 return buffer.write(uppedContent);
             }));
         }
@@ -60,9 +64,15 @@ public class RsaResponseDecorator extends ServerHttpResponseDecorator {
     public HttpHeaders getHeaders() {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.putAll(super.getHeaders());
-        //由于修改了请求体的body，导致content-length长度不确定，因此使用分块编码
-        httpHeaders.remove(HttpHeaders.CONTENT_LENGTH);
-        httpHeaders.remove(HttpHeaders.TRANSFER_ENCODING);
+        headerSetting(httpHeaders);
         return httpHeaders;
     }
+
+    private void headerSetting(HttpHeaders httpHeaders) {
+        httpHeaders.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+        httpHeaders.add(HttpHeaders.CONTENT_ENCODING, "UTF-8");
+        httpHeaders.remove(HttpHeaders.TRANSFER_ENCODING);
+        httpHeaders.remove(HttpHeaders.TRANSFER_ENCODING);
+    }
+
 }
