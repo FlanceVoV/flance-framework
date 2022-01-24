@@ -30,4 +30,11 @@ public class RouteController {
     public Mono<ResponseEntity<Object>> app() {
         return globalRouteConfiguration.refreshApp();
     }
+
+    @GetMapping("/all")
+    public Mono<ResponseEntity<Object>> all() {
+        globalRouteConfiguration.refreshApi();
+        globalRouteConfiguration.refreshApp();
+        return globalRouteConfiguration.refreshRouter();
+    }
 }
