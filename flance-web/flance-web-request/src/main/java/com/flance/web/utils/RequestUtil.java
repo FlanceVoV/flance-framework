@@ -14,7 +14,9 @@ public class RequestUtil {
 
     public static void remove() {
         log.info("释放资源");
-        REQUEST_ID.remove();
+        if (null != REQUEST_ID.get()) {
+            REQUEST_ID.remove();
+        }
     }
 
     public static void setLogId(String requestId) {

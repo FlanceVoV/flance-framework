@@ -3,6 +3,7 @@ package com.flance.web.gateway.filter;
 import com.flance.web.gateway.decorator.RsaResponseDecorator;
 import com.flance.web.gateway.service.AppService;
 import com.flance.web.utils.RequestConstant;
+import com.flance.web.utils.RequestUtil;
 import com.flance.web.utils.route.AppModel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -52,7 +53,7 @@ public class RsaEncodeFilter implements GatewayFilter, Ordered {
         }
 
         ServerHttpResponse response = exchange.getResponse();
-        RsaResponseDecorator rsaResponseDecorator = new RsaResponseDecorator(response, appModel);
+        RsaResponseDecorator rsaResponseDecorator = new RsaResponseDecorator(response, appModel, RequestUtil.getLogId());
         return chain.filter(exchange.mutate().response(rsaResponseDecorator).build());
     }
 }

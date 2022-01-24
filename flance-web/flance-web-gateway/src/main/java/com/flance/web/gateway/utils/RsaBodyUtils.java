@@ -1,6 +1,7 @@
 package com.flance.web.gateway.utils;
 
 import com.flance.web.gateway.decorator.RsaRequestDecorator;
+import com.flance.web.utils.RequestUtil;
 import com.flance.web.utils.RsaUtil;
 import com.flance.web.utils.route.AppModel;
 import com.flance.web.utils.web.request.GatewayRequest;
@@ -54,30 +55,39 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 public class RsaBodyUtils {
 
-    public static Mono<Void> readBody(ServerHttpRequest request, ServerWebExchange exchange, GatewayFilterChain chain, AppModel appModel) {
-        MediaType mediaType = request.getHeaders().getContentType();
-        // ModifyRequestBodyGatewayFilterFactory
-        ServerRequest serverRequest = ServerRequest.create(exchange, HandlerStrategies.withDefaults().messageReaders());
+    public static Mono<Void> readBody(ServerHttpRequest request, ServerWebExchange exchange, GatewayFilterChain chain, AppModel appModel, String logId) {
 
-        Mono<String> modifyBody = serverRequest.bodyToMono(String.class)
-                .flatMap(body -> {
-                    log.info("【解密-解密前数据:{}】", body);
-                    if (MediaType.APPLICATION_JSON.isCompatibleWith(mediaType)) {
-                        return Mono.just(decodeBody(body, appModel.getAppRsaPubKey(), appModel.getSysRsaPriKey()));
-                    }
-                    return Mono.just(body);
-                });
-        BodyInserter<Mono<String>, ReactiveHttpOutputMessage> bodyInserter = BodyInserters.fromPublisher(modifyBody, String.class);
-        HttpHeaders headers = new HttpHeaders();
-        headers.putAll(request.getHeaders());
-        headers.remove(HttpHeaders.CONTENT_LENGTH);
-        CachedBodyOutputMessage outputMessage = new CachedBodyOutputMessage(exchange, headers);
-        return bodyInserter.insert(outputMessage, new BodyInserterContext())
-                .then(Mono.defer(() -> {
-                    RsaRequestDecorator requestHandler = new RsaRequestDecorator(request);
+        try {
+            RequestUtil.setLogId(logId);
+            MediaType mediaType = request.getHeaders().getContentType();
+            // ModifyRequestBodyGatewayFilterFactory
+            ServerRequest serverRequest = ServerRequest.create(exchange, HandlerStrategies.withDefaults().messageReaders());
+
+            Mono<String> modifyBody = serverRequest.bodyToMono(String.class)
+                    .flatMap(body -> {
+                        log.info("【解密-解密前数据:{}】", body);
+                        if (MediaType.APPLICATION_JSON.isCompatibleWith(mediaType)) {
+                            return Mono.just(decodeBody(body, appModel.getAppRsaPubKey(), appModel.getSysRsaPriKey()));
+                        }
+                        return Mono.just(body);
+                    });
+            BodyInserter<Mono<String>, ReactiveHttpOutputMessage> bodyInserter = BodyInserters.fromPublisher(modifyBody, String.class);
+            HttpHeaders headers = new HttpHeaders();
+            headers.putAll(request.getHeaders());
+            headers.remove(HttpHeaders.CONTENT_LENGTH);
+            CachedBodyOutputMessage outputMessage = new CachedBodyOutputMessage(exchange, headers);
+            return bodyInserter.insert(outputMessage, new BodyInserterContext())
+                    .then(Mono.defer(() -> {
+                        RsaRequestDecorator requestHandler = new RsaRequestDecorator(request, RequestUtil.getLogId());
 //                    RsaResponseDecorator responseDecorator = new RsaResponseDecorator(response);
-                    return chain.filter(exchange.mutate().request(requestHandler).build());
-                }));
+                        return chain.filter(exchange.mutate().request(requestHandler).build());
+                    }));
+        } catch (Exception e) {
+            return null;
+        } finally {
+            RequestUtil.remove();
+        }
+
     }
 
     /**
@@ -88,40 +98,48 @@ public class RsaBodyUtils {
      * @param appModel  app
      * @return          修改后的响应
      */
-    public static WebResponse encodeBody(WebResponse response, AppModel appModel) {
-        Gson gson = new Gson();
-        Long timestamp = System.currentTimeMillis();
-        response.setTimestamp(timestamp);
-
-        String data = gson.toJson(response.getData());
-        // 原数据base64 byte
-        byte[] dataBytes = Base64Utils.encode(data.getBytes(StandardCharsets.UTF_8));
-        // 签名base64 str
-        String signData = Base64Utils.encodeToString(dataBytes) + timestamp;
-        log.info("【加密-响应体-原数据json串:{}】", data);
+    public static WebResponse encodeBody(WebResponse response, AppModel appModel, String logId) {
         try {
+            RequestUtil.setLogId(logId);
+            Gson gson = new Gson();
+            Long timestamp = System.currentTimeMillis();
+            response.setTimestamp(timestamp);
 
-            // 加签
-            byte[] signBytes = RsaUtil.sign(signData.getBytes(StandardCharsets.UTF_8), appModel.getSysRsaPriKey());
-            String sign = Base64Utils.encodeToString(signBytes);
-            response.setSign(sign);
-            log.info("【加密-响应体-签名:{}】", sign);
+            String data = gson.toJson(response.getData());
+            // 原数据base64 byte
+            byte[] dataBytes = Base64Utils.encode(data.getBytes(StandardCharsets.UTF_8));
+            // 签名base64 str
+            String signData = Base64Utils.encodeToString(dataBytes) + timestamp;
+            log.info("【加密-响应体-原数据json串:{}】", data);
+            try {
 
-            // 加密
-            byte[] encodeDataBytes = RsaUtil.encryptByPublicKey(dataBytes, appModel.getAppRsaPubKey());
-            String dataResponse = Base64Utils.encodeToString(encodeDataBytes);
-            response.setData(dataResponse);
-            log.info("【加密-响应体-密文:{}】", dataResponse);
+                // 加签
+                byte[] signBytes = RsaUtil.sign(signData.getBytes(StandardCharsets.UTF_8), appModel.getSysRsaPriKey());
+                String sign = Base64Utils.encodeToString(signBytes);
+                response.setSign(sign);
+                log.info("【加密-响应体-签名:{}】", sign);
 
+                // 加密
+                byte[] encodeDataBytes = RsaUtil.encryptByPublicKey(dataBytes, appModel.getAppRsaPubKey());
+                String dataResponse = Base64Utils.encodeToString(encodeDataBytes);
+                response.setData(dataResponse);
+                log.info("【加密-响应体-密文:{}】", dataResponse);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                response.setMsg("签名/加密 失败");
+                response.setSuccess(false);
+                response.setData(null);
+                response.setCode("-1");
+            }
+
+            return response;
         } catch (Exception e) {
-            e.printStackTrace();
-            response.setMsg("签名/加密 失败");
-            response.setSuccess(false);
-            response.setData(null);
-            response.setCode("-1");
+            return null;
+        } finally {
+            RequestUtil.remove();
         }
 
-        return response;
     }
 
     public static String decodeBody(String gatewayBody, String pubKey, String priKey) {

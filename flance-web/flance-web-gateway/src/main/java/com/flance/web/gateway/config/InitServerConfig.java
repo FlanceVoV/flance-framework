@@ -133,12 +133,14 @@ public class InitServerConfig {
         if (null != routeModel.getFilter()) {
             String[] filters = routeModel.getFilter().split(",");
             List<FilterDefinition> filterDefinitions = Lists.newArrayList();
+
             for (int i = 0; i < filters.length; i++) {
                 FilterDefinition filterDefinition = new FilterDefinition();
                 filterDefinition.setName("Global");
                 filterDefinition.addArg("filterName", filters[i]);
                 filterDefinitions.add(filterDefinition);
             }
+
             definition.setFilters(filterDefinitions);
         }
 

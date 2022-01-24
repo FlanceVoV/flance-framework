@@ -117,7 +117,11 @@ public class GatewayApiDispatcherFilter implements GatewayFilter {
     }
 
     private GatewayFilter getFilter(String beanName) {
-        return applicationContext.getBean(beanName, GatewayFilter.class);
+        try {
+            return applicationContext.getBean(beanName, GatewayFilter.class);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     private Route getRoute(String routeId) {

@@ -3,6 +3,8 @@ package com.flance.web.gateway.decorator;
 import com.flance.web.gateway.utils.RsaBodyUtils;
 import com.flance.web.utils.route.AppModel;
 import com.flance.web.utils.web.response.WebResponse;
+import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import io.netty.buffer.PooledByteBufAllocator;
 import org.reactivestreams.Publisher;
@@ -18,6 +20,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 public class RsaResponseDecorator extends ServerHttpResponseDecorator {
 
@@ -25,10 +28,15 @@ public class RsaResponseDecorator extends ServerHttpResponseDecorator {
 
     private final ServerHttpResponse response;
 
-    public RsaResponseDecorator(ServerHttpResponse delegate, AppModel appModel) {
+    private final String logId;
+
+    private static Joiner JOINER = Joiner.on("");
+
+    public RsaResponseDecorator(ServerHttpResponse delegate, AppModel appModel, String logId) {
         super(delegate);
         this.appModel = appModel;
         this.response = delegate;
+        this.logId = logId;
     }
 
     @Override
@@ -38,17 +46,21 @@ public class RsaResponseDecorator extends ServerHttpResponseDecorator {
         Gson gson = new Gson();
         if (body instanceof Flux) {
             Flux<? extends DataBuffer> fluxBody = (Flux<? extends DataBuffer>) body;
-            return super.writeWith(fluxBody.map(dataBuffer -> {
-                byte[] content = new byte[dataBuffer.readableByteCount()];
-                dataBuffer.read(content);
-                //释放掉内存
-                DataBufferUtils.release(dataBuffer);
-                String result = new String(content, StandardCharsets.UTF_8);
+            return super.writeWith(fluxBody.buffer().map(dataBuffers -> {
 
+                List<String> sections = Lists.newArrayList();
+                dataBuffers.forEach(dataBuffer -> {
+                    byte[] content = new byte[dataBuffer.readableByteCount()];
+                    dataBuffer.read(content);
+                    DataBufferUtils.release(dataBuffer);
+                    sections.add(new String(content, StandardCharsets.UTF_8));
+                });
+                String result = JOINER.join(sections);
                 WebResponse webResponse = gson.fromJson(result, WebResponse.class);
+
                 // 如果响应业务数据不为空 则加签/加密
                 if (null != webResponse.getData()) {
-                    RsaBodyUtils.encodeBody(webResponse, appModel);
+                    RsaBodyUtils.encodeBody(webResponse, appModel, logId);
                 }
 //                WebResponse webResponse = WebResponse.builder().code("000000").data(result).msg("请求成功").build();
                 byte[] uppedContent = new String(gson.toJson(webResponse).getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8).getBytes();

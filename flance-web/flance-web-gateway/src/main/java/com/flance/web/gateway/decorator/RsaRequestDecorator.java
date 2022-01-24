@@ -8,8 +8,11 @@ import org.springframework.http.server.reactive.ServerHttpRequestDecorator;
 
 public class RsaRequestDecorator extends ServerHttpRequestDecorator {
 
-    public RsaRequestDecorator(ServerHttpRequest delegate) {
+    private final String logId;
+
+    public RsaRequestDecorator(ServerHttpRequest delegate, String logId) {
         super(delegate);
+        this.logId = logId;
     }
 
     @Override
