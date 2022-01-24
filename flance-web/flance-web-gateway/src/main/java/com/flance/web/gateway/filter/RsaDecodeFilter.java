@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.support.NotFoundException;
+import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
@@ -21,10 +22,15 @@ import javax.annotation.Resource;
  */
 @Slf4j
 @Component
-public class RsaDecodeFilter implements GatewayFilter {
+public class RsaDecodeFilter implements GatewayFilter, Ordered {
 
     @Resource
     AppService appService;
+
+    @Override
+    public int getOrder() {
+        return -3;
+    }
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {

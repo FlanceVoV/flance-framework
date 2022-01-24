@@ -32,11 +32,13 @@ import java.nio.charset.StandardCharsets;
  * 1. 请求体业务参数（GatewayRequest.data）转json => jsonStr
  * 2. jsonStr 转 base64字符串 => base64Str
  * 3. base64Str + timestamp 加签 => signStr
+ * 4. signStr 转 base64 => signResult
  *
  * 加密流程：
  * 1. 请求体业务参数（GatewayRequest.data）转json => jsonStr
  * 2. jsonStr 转 base64 => base64Str
  * 3. base64Str 加密 => encodeStr
+ * 4. encodeStr 转 base64 => base64Result
  *
  * 验签流程：
  * 1. 读取请求体 签名参数 => sign
@@ -92,20 +94,22 @@ public class RsaBodyUtils {
         response.setTimestamp(timestamp);
 
         String data = gson.toJson(response.getData());
+        // 原数据base64 byte
         byte[] dataBytes = Base64Utils.encode(data.getBytes(StandardCharsets.UTF_8));
+        // 签名base64 str
         String signData = Base64Utils.encodeToString(dataBytes) + timestamp;
         log.info("【加密-响应体-原数据json串:{}】", data);
         try {
 
             // 加签
             byte[] signBytes = RsaUtil.sign(signData.getBytes(StandardCharsets.UTF_8), appModel.getSysRsaPriKey());
-            String sign = new String(signBytes);
+            String sign = Base64Utils.encodeToString(signBytes);
             response.setSign(sign);
             log.info("【加密-响应体-签名:{}】", sign);
 
             // 加密
             byte[] encodeDataBytes = RsaUtil.encryptByPublicKey(dataBytes, appModel.getAppRsaPubKey());
-            String dataResponse = new String(encodeDataBytes);
+            String dataResponse = Base64Utils.encodeToString(encodeDataBytes);
             response.setData(dataResponse);
             log.info("【加密-响应体-密文:{}】", dataResponse);
 

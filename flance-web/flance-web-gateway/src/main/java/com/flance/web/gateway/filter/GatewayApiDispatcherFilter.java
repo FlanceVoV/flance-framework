@@ -8,6 +8,7 @@ import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
+import org.springframework.cloud.gateway.handler.FilteringWebHandler;
 import org.springframework.cloud.gateway.route.Route;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.support.NotFoundException;
@@ -45,6 +46,9 @@ public class GatewayApiDispatcherFilter implements GatewayFilter {
     @Resource
     ApplicationContext applicationContext;
 
+    @Resource
+    FilteringWebHandler filteringWebHandler;
+
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         String uri = exchange.getRequest().getURI().getPath();
@@ -73,7 +77,8 @@ public class GatewayApiDispatcherFilter implements GatewayFilter {
             String url = routeApiModel.getApiUri() + routeApiModel.getApiPath();
             log.info("【appId:{}】切换路由【({}){}】", appId, method, url);
             ServerHttpRequest request = changeRoute(exchange, routeApiModel);
-            return chain.filter(exchange.mutate().request(request).build());
+            return filteringWebHandler.handle(exchange.mutate().request(request).build());
+//            return chain.filter(exchange.mutate().request(request).build());
         }
         return chain.filter(exchange);
     }
