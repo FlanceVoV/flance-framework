@@ -51,6 +51,7 @@ public class InitServerConfig {
      */
     public void clearRouter() {
         redisUtils.clear(BizConstant.ROUTER_KEY);
+        redisUtils.clear(BizConstant.ROUTER_MODEL_KEY + ":*");
     }
 
     /**
@@ -75,14 +76,15 @@ public class InitServerConfig {
 
         // 获取所有动态路由
         List<? extends RouteModel> routes = routeService.getRouteLists();
-
+        Gson gson = new Gson();
         List<RouteDefinition> routeDefinitions = Lists.newArrayList();
         Optional.ofNullable(routes).orElse(Lists.newArrayList()).forEach(route -> {
             log.info("flance-gateway：加载路由 => [name: {}, id: {}, code: {}, path: {}, uri: {}, filter: {}]",
                     route.getRouteName(), route.getRouteId(), route.getRouteCode(), route.getRoutePath(), route.getRouteUri(), route.getFilter());
             routeDefinitions.add(setDefaultDefinition(route));
+            redisUtils.add(BizConstant.ROUTER_MODEL_KEY + ":" + route.getRouteId(), gson.toJson(route));
         });
-        Gson gson = new Gson();
+
         redisUtils.add(BizConstant.ROUTER_KEY, gson.toJson(routeDefinitions));
     }
 

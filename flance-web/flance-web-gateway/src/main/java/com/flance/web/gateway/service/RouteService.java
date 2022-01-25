@@ -26,4 +26,11 @@ public interface RouteService {
      */
     RouteDefinition getRouteById(String routeId);
 
+    /**
+     * 根据路由id获取路由实例
+     * @param routeId   路由id
+     * @return          路由
+     */
+    RouteModel getRouteModelById(String routeId);
+
 }

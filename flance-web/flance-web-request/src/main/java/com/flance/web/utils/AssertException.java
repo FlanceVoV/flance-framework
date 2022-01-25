@@ -32,6 +32,9 @@ public class AssertException extends RuntimeException {
         SYS_GATEWAY_SIGN_CHECK_ERROR("解密失败-验签失败", "000006"),
         SYS_GATEWAY_ENCODE_ERROR("加密失败", "000007"),
         SYS_GATEWAY_ENCODE_BASE64_ERROR("加密失败-编码异常", "000007"),
+
+        SYS_GATEWAY_LIMIT_ROUTER_ERROR("服务限流，请求过于频繁，请过一会儿再请求", "000008"),
+        SYS_GATEWAY_LIMIT_API_ERROR("接口限流，请求过于频繁，请过一会儿再请求", "000009"),
         ;
 
 

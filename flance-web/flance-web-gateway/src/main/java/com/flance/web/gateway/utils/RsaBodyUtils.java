@@ -30,6 +30,8 @@ import reactor.core.publisher.Mono;
 
 import java.nio.charset.StandardCharsets;
 
+import static com.flance.web.utils.AssertException.ErrCode.*;
+
 /**
  * rsa 请求/响应 处理
  * 签名说明
@@ -136,14 +138,14 @@ public class RsaBodyUtils {
 
             } catch (Exception e) {
                 e.printStackTrace();
-                AssertUtil.throwError(AssertException.getByEnum(AssertException.ErrCode.SYS_GATEWAY_ENCODE_ERROR));
+                AssertUtil.throwError(AssertException.getByEnum(SYS_GATEWAY_ENCODE_ERROR));
             }
 
         } catch (AssertException e) {
             throw e;
         } catch (Exception e) {
             e.printStackTrace();
-            AssertUtil.throwError(AssertException.getByEnum(AssertException.ErrCode.SYS_GATEWAY_ENCODE_BASE64_ERROR));
+            AssertUtil.throwError(AssertException.getByEnum(SYS_GATEWAY_ENCODE_BASE64_ERROR));
         } finally {
             RequestUtil.remove();
         }
@@ -161,9 +163,9 @@ public class RsaBodyUtils {
             Long timestamp = gatewayRequest.getTimestamp();
 
             // 参数校验
-            AssertUtil.notEmpty(encodeData, AssertException.getByEnum(AssertException.ErrCode.SYS_GATEWAY_DECODE_EMPTY_DATA));
-            AssertUtil.notEmpty(sign, AssertException.getByEnum(AssertException.ErrCode.SYS_GATEWAY_DECODE_EMPTY_SIGN));
-            AssertUtil.notNull(timestamp, AssertException.getByEnum(AssertException.ErrCode.SYS_GATEWAY_DECODE_EMPTY_TIMESTAMP));
+            AssertUtil.notEmpty(encodeData, AssertException.getByEnum(SYS_GATEWAY_DECODE_EMPTY_DATA));
+            AssertUtil.notEmpty(sign, AssertException.getByEnum(SYS_GATEWAY_DECODE_EMPTY_SIGN));
+            AssertUtil.notNull(timestamp, AssertException.getByEnum(SYS_GATEWAY_DECODE_EMPTY_TIMESTAMP));
 
             byte[] dataBytes = Base64Utils.decode(encodeData.getBytes(StandardCharsets.UTF_8));
             byte[] signDataBytes = (encodeData + timestamp).getBytes(StandardCharsets.UTF_8);
@@ -181,14 +183,14 @@ public class RsaBodyUtils {
                 byte[] bytes = RsaUtil.decryptByPrivateKey(dataBytes, priKey);
                 result = new String(Base64Utils.decode(bytes), StandardCharsets.UTF_8);
             } else {
-                AssertUtil.throwError(AssertException.getByEnum(AssertException.ErrCode.SYS_GATEWAY_SIGN_CHECK_ERROR));
+                AssertUtil.throwError(AssertException.getByEnum(SYS_GATEWAY_SIGN_CHECK_ERROR));
             }
         } catch (AssertException e) {
             throw e;
         } catch (Exception e) {
             log.error("【解密-异常:{}】", e.getMessage());
             e.printStackTrace();
-            AssertUtil.throwError(AssertException.getByEnum(AssertException.ErrCode.SYS_GATEWAY_DECODE_ERROR));
+            AssertUtil.throwError(AssertException.getByEnum(SYS_GATEWAY_DECODE_ERROR));
         }
         log.info("【解密-明文:{}】", result);
         return result;
