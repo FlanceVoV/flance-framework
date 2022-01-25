@@ -18,4 +18,8 @@ public interface RequestConstant {
 
     String LIMIT_API_KEY = "limit_api_id";
 
+    String ORDER_CREATE_TIME = "createDate";
+
+    String ORDER_UPDATE_TIME = "updateDate";
+
 }
