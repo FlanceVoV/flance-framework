@@ -28,4 +28,8 @@ public class AssertUtil {
         }
     }
 
+    public static void throwError(AssertException exception) {
+        throw exception;
+    }
+
 }
