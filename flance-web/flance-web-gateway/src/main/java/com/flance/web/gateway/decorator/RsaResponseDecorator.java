@@ -31,7 +31,7 @@ public class RsaResponseDecorator extends ServerHttpResponseDecorator {
 
     private final String logId;
 
-    private static Joiner JOINER = Joiner.on("");
+    private static final Joiner JOINER = Joiner.on("");
 
     public RsaResponseDecorator(ServerHttpResponse delegate, AppModel appModel, String logId) {
         super(delegate);
@@ -63,7 +63,6 @@ public class RsaResponseDecorator extends ServerHttpResponseDecorator {
                 if (null != webResponse.getData()) {
                     RsaBodyUtils.encodeBody(webResponse, appModel, logId);
                 }
-//                WebResponse webResponse = WebResponse.builder().code("000000").data(result).msg("请求成功").build();
                 byte[] uppedContent = new String(gson.toJson(webResponse).getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8).getBytes();
                 headerSetting(response.getHeaders());
                 return buffer.write(uppedContent);
