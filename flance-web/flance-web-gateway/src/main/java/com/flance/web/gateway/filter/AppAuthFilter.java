@@ -55,6 +55,11 @@ public class AppAuthFilter implements GatewayFilter, Ordered {
             return Mono.error(new NotFoundException("找不到app[" + appId + "]"));
         }
 
+        if (null == appModel.getApiResources() || appModel.getApiResources().size() == 0) {
+            log.error("没有配置权限【appId:{}】【method:{}】【uri:{}】【api_id:{}】", appId, method, uri, apiId);
+            return Mono.error(new NotFoundException("没有配置权限[" + appId + "][" + apiId + "]"));
+        }
+
         if (!appModel.getApiResources().contains(apiId)) {
             log.error("没有权限访问【appId:{}】【method:{}】【uri:{}】【api_id:{}】", appId, method, uri, apiId);
             return Mono.error(new NotFoundException("没有权限[" + appId + "][" + apiId + "]"));
