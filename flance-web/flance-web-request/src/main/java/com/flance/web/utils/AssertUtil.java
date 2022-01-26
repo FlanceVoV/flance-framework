@@ -28,6 +28,12 @@ public class AssertUtil {
         }
     }
 
+    public static void mastTrue(boolean flag, AssertException exception) {
+        if (!flag) {
+            throw exception;
+        }
+    }
+
     public static void throwError(AssertException exception) {
         throw exception;
     }

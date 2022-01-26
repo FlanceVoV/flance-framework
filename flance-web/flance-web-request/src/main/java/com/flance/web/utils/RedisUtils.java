@@ -172,4 +172,23 @@ public class RedisUtils {
         return redisTemplate.delete(keys) > 0;
     }
 
+    /**
+     * 判断key是否存在
+     * @param key
+     * @return
+     */
+    public Boolean hasKey(String key) {
+        return redisTemplate.hasKey(key);
+    }
+
+    /**
+     * 重置过期时间
+     * @param key
+     * @param time
+     * @return
+     */
+    public Boolean setExp(String key, Long time) {
+        return redisTemplate.expire(key, time, TimeUnit.SECONDS);
+    }
+
 }
