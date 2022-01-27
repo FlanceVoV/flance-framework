@@ -4,6 +4,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -179,6 +180,16 @@ public class RedisUtils {
      */
     public Boolean hasKey(String key) {
         return redisTemplate.hasKey(key);
+    }
+
+    /**
+     * 获取所有子key
+     * @param key
+     * @return
+     */
+    public Set<String> keys(String key) {
+        Set<String> keys = redisTemplate.keys(key);
+        return null == keys ? new HashSet<>() : keys;
     }
 
     /**
