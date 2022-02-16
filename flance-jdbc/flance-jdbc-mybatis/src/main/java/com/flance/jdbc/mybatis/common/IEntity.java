@@ -16,4 +16,16 @@ public interface IEntity<ID> {
 
     Integer getStatus();
 
+    void setId(ID id);
+
+    void setCreateUserId(ID id);
+
+    void setCreateDate(Date date);
+
+    void setLastUpdateUserId(ID id);
+
+    void setLastUpdateDate(Date date);
+
+    void setStatus(Integer status);
+
 }
