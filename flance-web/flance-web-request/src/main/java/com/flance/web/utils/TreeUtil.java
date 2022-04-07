@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 public class TreeUtil {
 
-    public static <T extends TreeModel<Object>> List<T> getRoot(List<T> list, Object rootValue) {
+    public static <ID, T extends TreeModel<T, ID>> List<T> getRoot(List<T> list, Object rootValue) {
         return list.stream()
                 .filter(item -> rootValue.equals(item.getParentId()))
                 .peek(tree -> tree.setChildren(parseTree(tree, list)))
@@ -14,7 +14,7 @@ public class TreeUtil {
                 .collect(Collectors.toList());
     }
 
-    private static <T extends TreeModel<Object>> List<T> parseTree(T t, List<T> list) {
+    private static <ID, T extends TreeModel<T, ID>> List<T> parseTree(T t, List<T> list) {
         return list.stream()
                 .filter(item -> t.getId().toString().equals(item.getParentId().toString()))
                 .peek(item -> item.setChildren(parseTree(item, list)))

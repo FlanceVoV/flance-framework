@@ -3,7 +3,7 @@ package com.flance.web.utils;
 
 import java.util.List;
 
-public interface TreeModel<ID> {
+public interface TreeModel<T, ID> {
 
     ID getId();
 
@@ -11,8 +11,8 @@ public interface TreeModel<ID> {
 
     Integer getSort();
 
-    List<? extends TreeModel<ID>> getChildren();
+    List<T> getChildren();
 
-    void setChildren(List<? extends TreeModel<ID>> list);
+    void setChildren(List<T> list);
 
 }
