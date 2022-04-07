@@ -6,9 +6,9 @@ import java.util.stream.Collectors;
 
 public class TreeUtil {
 
-    public static <T extends TreeModel<Object>> List<T> getRoot(List<T> list) {
+    public static <T extends TreeModel<Object>> List<T> getRoot(List<T> list, Object rootValue) {
         return list.stream()
-                .filter(item -> "0".equals(item.getParentId().toString()))
+                .filter(item -> rootValue.equals(item.getParentId()))
                 .peek(tree -> tree.setChildren(parseTree(tree, list)))
                 .sorted(Comparator.comparingInt(node -> (node.getSort() == null ? 0 : node.getSort())))
                 .collect(Collectors.toList());
