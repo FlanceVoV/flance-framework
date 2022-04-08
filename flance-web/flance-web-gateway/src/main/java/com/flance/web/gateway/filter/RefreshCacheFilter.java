@@ -16,7 +16,7 @@ import reactor.core.publisher.Mono;
  */
 @Slf4j
 @Component
-public abstract class RefreshCacheFilter implements GatewayFilter, Ordered {
+public class RefreshCacheFilter implements GatewayFilter, Ordered {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
