@@ -3,6 +3,7 @@ package com.flance.web.gateway.filter;
 
 import com.flance.web.gateway.service.RouteApiService;
 import com.flance.web.utils.RequestConstant;
+import com.flance.web.utils.RequestUtil;
 import com.flance.web.utils.route.RouteApiModel;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,7 @@ import javax.annotation.Resource;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.GATEWAY_ROUTE_ATTR;
@@ -65,6 +67,16 @@ public class GatewayApiDispatcherFilter implements GatewayFilter, Ordered {
         String appId = exchange.getRequest().getHeaders().getFirst(RequestConstant.HEADER_APP_ID);
         String apiId =  exchange.getRequest().getHeaders().getFirst(RequestConstant.HEADER_REQUEST_ID);
         String version =  exchange.getRequest().getHeaders().getFirst(RequestConstant.HEADER_REQUEST_VERSION);
+        String headerLogId = exchange.getRequest().getHeaders().getFirst(RequestConstant.HEADER_LOG_ID);
+        String logId = RequestUtil.getLogId();
+        if (null == logId) {
+            logId = headerLogId;
+        }
+        if (null == logId) {
+            logId = UUID.randomUUID().toString();
+        }
+        final String setLogId = logId;
+        RequestUtil.setLogId(setLogId);
         if (StringUtils.isEmpty(apiId)) {
             apiId =  exchange.getRequest().getQueryParams().getFirst(RequestConstant.HEADER_REQUEST_ID);
         }
