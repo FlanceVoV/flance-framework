@@ -13,7 +13,7 @@ public class LogInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        String logId = request.getHeader("logId");
+        String logId = request.getHeader(RequestConstant.HEADER_LOG_ID);
         if (null == logId) {
             logId = UUID.randomUUID().toString();
         }
