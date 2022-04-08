@@ -54,6 +54,6 @@ public class RsaEncodeFilter implements GatewayFilter, Ordered {
 
         ServerHttpResponse response = exchange.getResponse();
         RsaResponseDecorator rsaResponseDecorator = new RsaResponseDecorator(response, appModel, RequestUtil.getLogId());
-        return chain.filter(exchange.mutate().response(rsaResponseDecorator).build());
+        return chain.filter(exchange.mutate().response(rsaResponseDecorator).build()).doFinally(obj -> RequestUtil.remove());
     }
 }

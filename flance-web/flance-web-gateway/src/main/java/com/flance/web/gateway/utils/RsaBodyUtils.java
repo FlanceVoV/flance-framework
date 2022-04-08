@@ -69,7 +69,6 @@ import static com.flance.web.utils.AssertException.ErrCode.*;
 public class RsaBodyUtils {
 
     public static Mono<Void> readBody(ServerWebExchange exchange, GatewayFilterChain chain, AppModel appModel, String logId) {
-        RequestUtil.setLogId(logId);
         MediaType mediaType = exchange.getRequest().getHeaders().getContentType();
         // ModifyRequestBodyGatewayFilterFactory
         ServerRequest serverRequest = ServerRequest.create(exchange, HandlerStrategies.withDefaults().messageReaders());

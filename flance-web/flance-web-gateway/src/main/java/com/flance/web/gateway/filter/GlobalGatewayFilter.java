@@ -49,11 +49,11 @@ public class GlobalGatewayFilter implements GlobalFilter, Ordered {
                     header.set(RequestConstant.HEADER_LOG_ID, setLogId);
                 }).build();
 
-        return gatewayService.filter(exchange, chain).doFinally(e -> RequestUtil.remove());
+        return gatewayService.filter(exchange, chain);
     }
 
     @Override
     public int getOrder() {
-        return LOWEST_PRECEDENCE;
+        return HIGHEST_PRECEDENCE + 1;
     }
 }

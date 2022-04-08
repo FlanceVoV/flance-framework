@@ -1,6 +1,8 @@
 package com.flance.web.gateway.config;
 
 import com.flance.web.utils.AssertException;
+import com.flance.web.utils.RequestUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.web.ErrorProperties;
 import org.springframework.boot.autoconfigure.web.ResourceProperties;
 import org.springframework.boot.autoconfigure.web.reactive.error.DefaultErrorWebExceptionHandler;
@@ -21,6 +23,7 @@ import java.util.Map;
  * 网关异常处理
  * @author jhf
  */
+@Slf4j
 public class GatewayExceptionHandler extends DefaultErrorWebExceptionHandler {
 
     public GatewayExceptionHandler(ErrorAttributes errorAttributes, ResourceProperties resourceProperties, ErrorProperties errorProperties, ApplicationContext applicationContext) {
@@ -44,7 +47,8 @@ public class GatewayExceptionHandler extends DefaultErrorWebExceptionHandler {
             code = ((AssertException) error).getCode();
             msg = ((AssertException) error).getMsg();
         }
-
+        log.error("清除threadLocal");
+        RequestUtil.remove();
         return response(code + "", msg);
     }
 
@@ -83,6 +87,7 @@ public class GatewayExceptionHandler extends DefaultErrorWebExceptionHandler {
             put("data", null);
             put("success", false);
         }};
+
         return map;
     }
 

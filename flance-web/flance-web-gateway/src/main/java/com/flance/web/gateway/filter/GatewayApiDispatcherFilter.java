@@ -50,6 +50,9 @@ public class GatewayApiDispatcherFilter implements GatewayFilter, Ordered {
     @Resource
     FilteringWebHandler filteringWebHandler;
 
+    @Resource
+    RefreshCacheFilter refreshCacheFilter;
+
     @Override
     public int getOrder() {
         return HIGHEST_PRECEDENCE;
@@ -119,6 +122,7 @@ public class GatewayApiDispatcherFilter implements GatewayFilter, Ordered {
                 filters.add(getFilter(filterName));
             }
         }
+        filters.add(refreshCacheFilter);
         return filters;
     }
 
