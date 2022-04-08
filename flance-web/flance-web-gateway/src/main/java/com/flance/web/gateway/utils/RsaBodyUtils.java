@@ -65,11 +65,11 @@ import static com.flance.web.utils.AssertException.ErrCode.*;
 @Slf4j
 public class RsaBodyUtils {
 
-    public static Mono<Void> readBody(ServerHttpRequest request, ServerWebExchange exchange, GatewayFilterChain chain, AppModel appModel, String logId) {
+    public static Mono<Void> readBody(ServerWebExchange exchange, GatewayFilterChain chain, AppModel appModel, String logId) {
 
         try {
             RequestUtil.setLogId(logId);
-            MediaType mediaType = request.getHeaders().getContentType();
+            MediaType mediaType = exchange.getRequest().getHeaders().getContentType();
             // ModifyRequestBodyGatewayFilterFactory
             ServerRequest serverRequest = ServerRequest.create(exchange, HandlerStrategies.withDefaults().messageReaders());
 
@@ -83,13 +83,13 @@ public class RsaBodyUtils {
                     });
             BodyInserter<Mono<String>, ReactiveHttpOutputMessage> bodyInserter = BodyInserters.fromPublisher(modifyBody, String.class);
             HttpHeaders headers = new HttpHeaders();
-            headers.putAll(request.getHeaders());
+            headers.putAll(exchange.getRequest().getHeaders());
             headers.remove(HttpHeaders.CONTENT_LENGTH);
 
             CachedBodyOutputMessage outputMessage = new CachedBodyOutputMessage(exchange, headers);
             return bodyInserter.insert(outputMessage, new BodyInserterContext())
                     .then(Mono.defer(() -> {
-                        RsaRequestDecorator requestHandler = new RsaRequestDecorator(request, RequestUtil.getLogId(), outputMessage);
+                        RsaRequestDecorator requestHandler = new RsaRequestDecorator(exchange.getRequest(), RequestUtil.getLogId(), outputMessage);
 //                        RsaResponseDecorator responseDecorator = new RsaResponseDecorator(exchange.getResponse(), appModel, RequestUtil.getLogId());
                         return chain.filter(exchange.mutate().request(requestHandler).build());
                     }));
