@@ -37,7 +37,7 @@ public class GlobalGatewayFilter implements GlobalFilter, Ordered {
         }
         final String setLogId = logId;
         RequestUtil.setLogId(setLogId);
-        log.info("gateway-global-filter：请求标识[{}]，请求路径[({}){}]，url标识[{}]", setLogId, method, uri, requestId);
+        log.info("gateway-global-filter：请求路径[({}){}]，url标识[{}]", method, uri, requestId);
         final String token = exchange.getRequest().getHeaders().getFirst(RequestConstant.HEADER_TOKEN);
 
         // 设置下游传递参数

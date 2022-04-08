@@ -16,6 +16,7 @@ public class RsaRequestDecorator extends ServerHttpRequestDecorator {
 
     private final CachedBodyOutputMessage outputMessage;
 
+
     public RsaRequestDecorator(ServerHttpRequest delegate, String logId, CachedBodyOutputMessage outputMessage) {
         super(delegate);
         this.logId = logId;

@@ -15,12 +15,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.factory.rewrite.CachedBodyOutputMessage;
 import org.springframework.cloud.gateway.support.BodyInserterContext;
+import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ReactiveHttpOutputMessage;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.util.Base64Utils;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.web.reactive.function.BodyInserter;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.server.HandlerStrategies;
@@ -28,6 +30,7 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 
 import static com.flance.web.utils.AssertException.ErrCode.*;
@@ -66,39 +69,48 @@ import static com.flance.web.utils.AssertException.ErrCode.*;
 public class RsaBodyUtils {
 
     public static Mono<Void> readBody(ServerWebExchange exchange, GatewayFilterChain chain, AppModel appModel, String logId) {
+        RequestUtil.setLogId(logId);
+        MediaType mediaType = exchange.getRequest().getHeaders().getContentType();
+        // ModifyRequestBodyGatewayFilterFactory
+        ServerRequest serverRequest = ServerRequest.create(exchange, HandlerStrategies.withDefaults().messageReaders());
 
-        try {
-            RequestUtil.setLogId(logId);
-            MediaType mediaType = exchange.getRequest().getHeaders().getContentType();
-            // ModifyRequestBodyGatewayFilterFactory
-            ServerRequest serverRequest = ServerRequest.create(exchange, HandlerStrategies.withDefaults().messageReaders());
+        Mono<String> modifyBody = serverRequest.bodyToMono(String.class)
+                .flatMap(body -> {
+                    log.info("【解密-解密前数据:{}】", body);
+                    if (MediaType.APPLICATION_JSON.isCompatibleWith(mediaType)) {
+                        return Mono.just(decodeBody(body, appModel.getAppRsaPubKey(), appModel.getSysRsaPriKey()));
+                    }
+                    return Mono.just(body);
+                }).switchIfEmpty(Mono.defer(() -> {
+                    log.error("无法读取请求体，无法解密，可能解密filter顺序错误");
+                    return Mono.empty();
+                }));
+        BodyInserter<Mono<String>, ReactiveHttpOutputMessage> bodyInserter = BodyInserters.fromPublisher(modifyBody, String.class);
+        HttpHeaders headers = new HttpHeaders();
+        headers.putAll(exchange.getRequest().getHeaders());
+        headers.remove(HttpHeaders.CONTENT_LENGTH);
 
-            Mono<String> modifyBody = serverRequest.bodyToMono(String.class)
-                    .flatMap(body -> {
-                        log.info("【解密-解密前数据:{}】", body);
-                        if (MediaType.APPLICATION_JSON.isCompatibleWith(mediaType)) {
-                            return Mono.just(decodeBody(body, appModel.getAppRsaPubKey(), appModel.getSysRsaPriKey()));
-                        }
-                        return Mono.just(body);
-                    });
-            BodyInserter<Mono<String>, ReactiveHttpOutputMessage> bodyInserter = BodyInserters.fromPublisher(modifyBody, String.class);
-            HttpHeaders headers = new HttpHeaders();
-            headers.putAll(exchange.getRequest().getHeaders());
-            headers.remove(HttpHeaders.CONTENT_LENGTH);
-
-            CachedBodyOutputMessage outputMessage = new CachedBodyOutputMessage(exchange, headers);
-            return bodyInserter.insert(outputMessage, new BodyInserterContext())
-                    .then(Mono.defer(() -> {
-                        RsaRequestDecorator requestHandler = new RsaRequestDecorator(exchange.getRequest(), RequestUtil.getLogId(), outputMessage);
+        CachedBodyOutputMessage outputMessage = new CachedBodyOutputMessage(exchange, headers);
+        return bodyInserter.insert(outputMessage, new BodyInserterContext())
+                .then(Mono.defer(() -> {
+                    RsaRequestDecorator requestHandler = new RsaRequestDecorator(exchange.getRequest(), RequestUtil.getLogId(), outputMessage);
 //                        RsaResponseDecorator responseDecorator = new RsaResponseDecorator(exchange.getResponse(), appModel, RequestUtil.getLogId());
-                        return chain.filter(exchange.mutate().request(requestHandler).build());
-                    }));
-        } catch (Exception e) {
-            return null;
-        } finally {
-            RequestUtil.remove();
-        }
+                    return chain.filter(exchange.mutate().request(requestHandler).build());
+                })).onErrorResume(e -> {
+                    e.printStackTrace();
+                    return release(exchange, outputMessage, e);
+                });
+    }
 
+    private static Mono<Void> release(ServerWebExchange exchange, CachedBodyOutputMessage outputMessage, Throwable throwable) {
+        Field cached = ReflectionUtils.findField(outputMessage.getClass(), "cached");
+        cached.setAccessible(true);
+        try {
+            return (boolean)cached.get(outputMessage) ? outputMessage.getBody().map(DataBufferUtils::release).then(Mono.error(throwable)) : Mono.error(throwable);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
@@ -110,44 +122,34 @@ public class RsaBodyUtils {
      * @param appModel app
      */
     public static void encodeBody(WebResponse response, AppModel appModel, String logId) {
+        RequestUtil.setLogId(logId);
+        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+        Long timestamp = System.currentTimeMillis();
+        response.setTimestamp(timestamp);
+
+        String data = gson.toJson(response.getData());
+        // 原数据base64 byte
+        byte[] dataBytes = Base64Utils.encode(data.getBytes(StandardCharsets.UTF_8));
+        // 签名base64 str
+        String signData = Base64Utils.encodeToString(dataBytes) + timestamp;
+        log.info("【加密-响应体-原数据json串:{}】", data);
         try {
-            RequestUtil.setLogId(logId);
-            Gson gson = new GsonBuilder().disableHtmlEscaping().create();
-            Long timestamp = System.currentTimeMillis();
-            response.setTimestamp(timestamp);
 
-            String data = gson.toJson(response.getData());
-            // 原数据base64 byte
-            byte[] dataBytes = Base64Utils.encode(data.getBytes(StandardCharsets.UTF_8));
-            // 签名base64 str
-            String signData = Base64Utils.encodeToString(dataBytes) + timestamp;
-            log.info("【加密-响应体-原数据json串:{}】", data);
-            try {
+            // 加签
+            byte[] signBytes = RsaUtil.sign(signData.getBytes(StandardCharsets.UTF_8), appModel.getSysRsaPriKey());
+            String sign = Base64Utils.encodeToString(signBytes);
+            response.setSign(sign);
+            log.info("【加密-响应体-签名:{}】", sign);
 
-                // 加签
-                byte[] signBytes = RsaUtil.sign(signData.getBytes(StandardCharsets.UTF_8), appModel.getSysRsaPriKey());
-                String sign = Base64Utils.encodeToString(signBytes);
-                response.setSign(sign);
-                log.info("【加密-响应体-签名:{}】", sign);
+            // 加密
+            byte[] encodeDataBytes = RsaUtil.encryptByPublicKey(dataBytes, appModel.getAppRsaPubKey());
+            String dataResponse = Base64Utils.encodeToString(encodeDataBytes);
+            response.setData(dataResponse);
+            log.info("【加密-响应体-密文:{}】", dataResponse);
 
-                // 加密
-                byte[] encodeDataBytes = RsaUtil.encryptByPublicKey(dataBytes, appModel.getAppRsaPubKey());
-                String dataResponse = Base64Utils.encodeToString(encodeDataBytes);
-                response.setData(dataResponse);
-                log.info("【加密-响应体-密文:{}】", dataResponse);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                AssertUtil.throwError(AssertException.getByEnum(SYS_GATEWAY_ENCODE_ERROR));
-            }
-
-        } catch (AssertException e) {
-            throw e;
         } catch (Exception e) {
             e.printStackTrace();
-            AssertUtil.throwError(AssertException.getByEnum(SYS_GATEWAY_ENCODE_BASE64_ERROR));
-        } finally {
-            RequestUtil.remove();
+            AssertUtil.throwError(AssertException.getByEnum(SYS_GATEWAY_ENCODE_ERROR));
         }
     }
 

@@ -31,7 +31,7 @@ public class RsaEncodeFilter implements GatewayFilter, Ordered {
 
     @Override
     public int getOrder() {
-        return Ordered.HIGHEST_PRECEDENCE;
+        return Ordered.LOWEST_PRECEDENCE;
     }
 
     @Override
