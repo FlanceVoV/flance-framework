@@ -68,15 +68,7 @@ public class GatewayApiDispatcherFilter implements GatewayFilter, Ordered {
         String apiId =  exchange.getRequest().getHeaders().getFirst(RequestConstant.HEADER_REQUEST_ID);
         String version =  exchange.getRequest().getHeaders().getFirst(RequestConstant.HEADER_REQUEST_VERSION);
         String headerLogId = exchange.getRequest().getHeaders().getFirst(RequestConstant.HEADER_LOG_ID);
-        String logId = RequestUtil.getLogId();
-        if (null == logId) {
-            logId = headerLogId;
-        }
-        if (null == logId) {
-            logId = UUID.randomUUID().toString();
-        }
-        final String setLogId = logId;
-        RequestUtil.setLogId(setLogId);
+        RequestUtil.getLogId(headerLogId);
         if (StringUtils.isEmpty(apiId)) {
             apiId =  exchange.getRequest().getQueryParams().getFirst(RequestConstant.HEADER_REQUEST_ID);
         }

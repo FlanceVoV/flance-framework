@@ -2,10 +2,7 @@ package com.flance.web.gateway.filter;
 
 import com.flance.web.gateway.service.RouteApiService;
 import com.flance.web.gateway.service.RouteService;
-import com.flance.web.utils.AssertException;
-import com.flance.web.utils.AssertUtil;
-import com.flance.web.utils.RedisUtils;
-import com.flance.web.utils.RequestConstant;
+import com.flance.web.utils.*;
 import com.flance.web.utils.route.RouteApiModel;
 import com.flance.web.utils.route.RouteModel;
 import lombok.extern.slf4j.Slf4j;
@@ -44,13 +41,13 @@ public class LimitApiFilter implements GatewayFilter, Ordered {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-
         String uri = exchange.getRequest().getURI().getPath();
         String method = exchange.getRequest().getMethodValue();
         String apiId = exchange.getRequest().getHeaders().getFirst(RequestConstant.HEADER_REQUEST_ID);
         String appId = exchange.getRequest().getHeaders().getFirst(RequestConstant.HEADER_APP_ID);
         String version =  exchange.getRequest().getHeaders().getFirst(RequestConstant.HEADER_REQUEST_VERSION);
-
+        String headerLogId = exchange.getRequest().getHeaders().getFirst(RequestConstant.HEADER_LOG_ID);
+        RequestUtil.getLogId(headerLogId);
         // 校验接口编号
         if (StringUtils.isEmpty(apiId)) {
             apiId =  exchange.getRequest().getQueryParams().getFirst(RequestConstant.HEADER_REQUEST_ID);

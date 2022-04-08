@@ -40,7 +40,8 @@ public class RsaEncodeFilter implements GatewayFilter, Ordered {
         String method = exchange.getRequest().getMethodValue();
         String requestId = exchange.getRequest().getHeaders().getFirst(RequestConstant.HEADER_REQUEST_ID);
         String appId = exchange.getRequest().getHeaders().getFirst(RequestConstant.HEADER_APP_ID);
-
+        String headerLogId = exchange.getRequest().getHeaders().getFirst(RequestConstant.HEADER_LOG_ID);
+        RequestUtil.getLogId(headerLogId);
         if (StringUtils.isEmpty(appId)) {
             log.error("appId为空，无法进行参数加密【method:{}】【uri:{}】【api_id:{}】", method, uri, requestId);
             return Mono.error(new NotFoundException("appId为空"));

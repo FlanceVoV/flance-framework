@@ -2,6 +2,9 @@ package com.flance.web.utils;
 
 import com.alibaba.ttl.TransmittableThreadLocal;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.StringUtils;
+
+import java.util.UUID;
 
 @Slf4j
 public class RequestUtil {
@@ -10,6 +13,18 @@ public class RequestUtil {
 
     public static String getLogId() {
         return REQUEST_ID.get();
+    }
+
+    public static String getLogId(String headerLogId) {
+        String logId = getLogId();
+        if (null == logId) {
+            logId = headerLogId;
+        }
+        if (null == logId) {
+            logId = UUID.randomUUID().toString();
+            setLogId(logId);
+        }
+        return logId;
     }
 
     public static void remove() {

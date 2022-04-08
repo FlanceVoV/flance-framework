@@ -3,6 +3,7 @@ package com.flance.web.gateway.filter;
 import com.flance.web.gateway.service.AppService;
 import com.flance.web.gateway.service.RouteApiService;
 import com.flance.web.utils.RequestConstant;
+import com.flance.web.utils.RequestUtil;
 import com.flance.web.utils.route.AppModel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -38,7 +39,8 @@ public class AppAuthFilter implements GatewayFilter, Ordered {
         String method = exchange.getRequest().getMethodValue();
         String apiId = exchange.getRequest().getHeaders().getFirst(RequestConstant.HEADER_REQUEST_ID);
         String appId = exchange.getRequest().getHeaders().getFirst(RequestConstant.HEADER_APP_ID);
-
+        String headerLogId = exchange.getRequest().getHeaders().getFirst(RequestConstant.HEADER_LOG_ID);
+        RequestUtil.getLogId(headerLogId);
         if (StringUtils.isEmpty(appId)) {
             log.error("appId为空，无法进行权限校验【method:{}】【uri:{}】【api_id:{}】", method, uri, apiId);
             return Mono.error(new NotFoundException("appId为空"));

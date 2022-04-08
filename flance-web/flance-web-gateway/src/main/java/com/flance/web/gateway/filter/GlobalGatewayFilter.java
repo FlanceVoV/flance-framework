@@ -28,15 +28,7 @@ public class GlobalGatewayFilter implements GlobalFilter, Ordered {
         String method = exchange.getRequest().getMethodValue();
         String requestId =  exchange.getRequest().getHeaders().getFirst(RequestConstant.HEADER_REQUEST_ID);
         String headerLogId = exchange.getRequest().getHeaders().getFirst(RequestConstant.HEADER_LOG_ID);
-        String logId = RequestUtil.getLogId();
-        if (null == logId) {
-            logId = headerLogId;
-        }
-        if (null == logId) {
-            logId = UUID.randomUUID().toString();
-        }
-        final String setLogId = logId;
-        RequestUtil.setLogId(setLogId);
+        String setLogId = RequestUtil.getLogId(headerLogId);
         log.info("gateway-global-filter：请求路径[({}){}]，url标识[{}]", method, uri, requestId);
         final String token = exchange.getRequest().getHeaders().getFirst(RequestConstant.HEADER_TOKEN);
 

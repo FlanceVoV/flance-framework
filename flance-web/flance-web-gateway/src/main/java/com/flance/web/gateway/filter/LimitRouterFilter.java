@@ -2,10 +2,7 @@ package com.flance.web.gateway.filter;
 
 import com.flance.web.gateway.service.RouteApiService;
 import com.flance.web.gateway.service.RouteService;
-import com.flance.web.utils.AssertException;
-import com.flance.web.utils.AssertUtil;
-import com.flance.web.utils.RedisUtils;
-import com.flance.web.utils.RequestConstant;
+import com.flance.web.utils.*;
 import com.flance.web.utils.route.RouteApiModel;
 import com.flance.web.utils.route.RouteModel;
 import lombok.extern.slf4j.Slf4j;
@@ -52,7 +49,8 @@ public class LimitRouterFilter implements GatewayFilter, Ordered {
         String method = exchange.getRequest().getMethodValue();
         String requestId = exchange.getRequest().getHeaders().getFirst(RequestConstant.HEADER_REQUEST_ID);
         String appId = exchange.getRequest().getHeaders().getFirst(RequestConstant.HEADER_APP_ID);
-
+        String headerLogId = exchange.getRequest().getHeaders().getFirst(RequestConstant.HEADER_LOG_ID);
+        RequestUtil.getLogId(headerLogId);
         if (StringUtils.isEmpty(appId)) {
             log.error("appId为空，无法进行route限流【method:{}】【uri:{}】【api_id:{}】", method, uri, requestId);
             return Mono.error(new NotFoundException("appId为空"));
