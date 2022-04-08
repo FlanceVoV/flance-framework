@@ -54,6 +54,6 @@ public class GlobalGatewayFilter implements GlobalFilter, Ordered {
 
     @Override
     public int getOrder() {
-        return 0;
+        return LOWEST_PRECEDENCE;
     }
 }

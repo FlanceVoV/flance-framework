@@ -13,6 +13,7 @@ import org.springframework.cloud.gateway.route.Route;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.support.NotFoundException;
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.Ordered;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -35,7 +36,7 @@ import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.G
  */
 @Slf4j
 @Component
-public class GatewayApiDispatcherFilter implements GatewayFilter {
+public class GatewayApiDispatcherFilter implements GatewayFilter, Ordered {
 
     @Resource
     RouteLocator routeLocator;
@@ -48,6 +49,11 @@ public class GatewayApiDispatcherFilter implements GatewayFilter {
 
     @Resource
     FilteringWebHandler filteringWebHandler;
+
+    @Override
+    public int getOrder() {
+        return HIGHEST_PRECEDENCE;
+    }
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {

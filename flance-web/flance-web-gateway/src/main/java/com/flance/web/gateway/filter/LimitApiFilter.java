@@ -39,7 +39,7 @@ public class LimitApiFilter implements GatewayFilter, Ordered {
 
     @Override
     public int getOrder() {
-        return HIGHEST_PRECEDENCE + 1;
+        return HIGHEST_PRECEDENCE + 2;
     }
 
     @Override
