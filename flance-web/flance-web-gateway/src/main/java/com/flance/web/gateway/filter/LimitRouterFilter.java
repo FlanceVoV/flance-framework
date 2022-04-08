@@ -67,7 +67,7 @@ public class LimitRouterFilter implements GatewayFilter, Ordered {
         RouteModel routeModel = routeService.getRouteModelById(apiModel.getRouteId());
         if (null == routeModel) {
             log.error("找不到route【{}】，请确认是否启用【method:{}】【uri:{}】【api_id:{}】", appId, method, uri, requestId);
-            return Mono.error(new NotFoundException("找不到route【" + routeModel.getRouteId() + "】"));
+            return Mono.error(new NotFoundException("找不到route【" + apiModel.getRouteId() + "】"));
         }
 
         log.info("开始服务限流");
