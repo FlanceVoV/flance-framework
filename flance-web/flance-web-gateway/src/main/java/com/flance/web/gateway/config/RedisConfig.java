@@ -11,19 +11,20 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
  * redis配置
  * @author jhf
  */
+@Deprecated
 @Configuration
 public class RedisConfig {
 
-    @Bean
-    public RedisTemplate<String, String> redisTemplate(LettuceConnectionFactory connectionFactory) {
-        RedisTemplate<String, String> redisTemplate = new RedisTemplate<>();
-        RedisSerializer<String> stringSerializer = new StringRedisSerializer();
-        redisTemplate.setKeySerializer(stringSerializer);
-        redisTemplate.setValueSerializer(stringSerializer);
-        redisTemplate.setHashKeySerializer(stringSerializer);
-        redisTemplate.setHashValueSerializer(stringSerializer);
-        redisTemplate.setConnectionFactory(connectionFactory);
-        return redisTemplate;
-    }
+//    @Bean
+//    public RedisTemplate<String, String> redisTemplate(LettuceConnectionFactory connectionFactory) {
+//        RedisTemplate<String, String> redisTemplate = new RedisTemplate<>();
+//        RedisSerializer<String> stringSerializer = new StringRedisSerializer();
+//        redisTemplate.setKeySerializer(stringSerializer);
+//        redisTemplate.setValueSerializer(stringSerializer);
+//        redisTemplate.setHashKeySerializer(stringSerializer);
+//        redisTemplate.setHashValueSerializer(stringSerializer);
+//        redisTemplate.setConnectionFactory(connectionFactory);
+//        return redisTemplate;
+//    }
 
 }
