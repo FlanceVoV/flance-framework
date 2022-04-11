@@ -21,7 +21,7 @@ import java.util.Optional;
 @Configuration
 public class GlobalInterceptorConfig implements WebMvcConfigurer {
 
-    @Value("${flance.global.interceptor:logInterceptor}")
+    @Value("${flance.global.interceptor:logInterceptor,tokenInterceptor}")
     private List<String> interceptors;
 
     @Resource
