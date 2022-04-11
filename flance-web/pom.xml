@@ -22,6 +22,7 @@
         <module>flance-web-security</module>
         <module>flance-web-security-common</module>
         <module>flance-web-request</module>
+        <module>flance-web-router</module>
     </modules>
 
 </project>

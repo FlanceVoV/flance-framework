@@ -2,9 +2,11 @@ package com.flance.web.utils.config;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.flance.web.utils.GsonUtils;
 import com.flance.web.utils.UrlMatchUtil;
 import com.flance.web.utils.web.response.WebResponse;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
@@ -16,6 +18,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 import java.util.List;
 
+@Slf4j
 @ControllerAdvice
 public class GlobalResponseBodyAdvice implements ResponseBodyAdvice<Object> {
 
@@ -44,7 +47,7 @@ public class GlobalResponseBodyAdvice implements ResponseBodyAdvice<Object> {
         } else {
             result = WebResponse.getSucceed(body, "请求成功");
         }
-
+        log.info("接口响应：" + GsonUtils.toJSONString(result));
         return result;
     }
 
