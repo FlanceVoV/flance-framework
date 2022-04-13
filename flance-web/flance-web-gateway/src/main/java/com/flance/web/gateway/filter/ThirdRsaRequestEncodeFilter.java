@@ -2,10 +2,12 @@ package com.flance.web.gateway.filter;
 
 import com.flance.web.gateway.common.GatewayBodyEnum;
 import com.flance.web.gateway.service.AppService;
+import com.flance.web.gateway.service.RouteApiService;
 import com.flance.web.gateway.utils.RsaBodyUtils;
 import com.flance.web.utils.RequestConstant;
 import com.flance.web.utils.RequestUtil;
 import com.flance.web.utils.route.AppModel;
+import com.flance.web.utils.route.RouteApiModel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -29,6 +31,9 @@ public class ThirdRsaRequestEncodeFilter implements GatewayFilter, Ordered {
     @Resource
     AppService appService;
 
+    @Resource
+    RouteApiService routeApiService;
+
     @Override
     public int getOrder() {
         return HIGHEST_PRECEDENCE + 4;
@@ -41,13 +46,15 @@ public class ThirdRsaRequestEncodeFilter implements GatewayFilter, Ordered {
         String requestId = exchange.getRequest().getHeaders().getFirst(RequestConstant.HEADER_REQUEST_ID);
         String appId = exchange.getRequest().getHeaders().getFirst(RequestConstant.HEADER_APP_ID);
         String headerLogId = exchange.getRequest().getHeaders().getFirst(RequestConstant.HEADER_LOG_ID);
+        String version =  exchange.getRequest().getHeaders().getFirst(RequestConstant.HEADER_REQUEST_VERSION);
         RequestUtil.getLogId(headerLogId);
         if (StringUtils.isEmpty(appId)) {
             log.error("appId为空，无法进行third加密【method:{}】【uri:{}】【api_id:{}】", method, uri, requestId);
             return Mono.error(new NotFoundException("appId为空"));
         }
-
-        AppModel appModel = appService.getAppByAppId(appId);
+        RouteApiModel routeApiModel = routeApiService.getOneByApiIdAndVersion(requestId, version);
+        log.info("third加密-转换 app_id 【app_id:{}】 => 【app_id:{}】", appId, routeApiModel.getAppId());
+        AppModel appModel = appService.getAppByAppId(routeApiModel.getAppId());
         if (null == appModel) {
             log.error("找不到app【{}】，请确认是否启用【method:{}】【uri:{}】【api_id:{}】", appId, method, uri, requestId);
             return Mono.error(new NotFoundException("找不到app【" + appId + "】"));

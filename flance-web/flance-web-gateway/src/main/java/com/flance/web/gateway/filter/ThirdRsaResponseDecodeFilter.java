@@ -3,9 +3,11 @@ package com.flance.web.gateway.filter;
 import com.flance.web.gateway.common.GatewayBodyEnum;
 import com.flance.web.gateway.decorator.RsaResponseDecorator;
 import com.flance.web.gateway.service.AppService;
+import com.flance.web.gateway.service.RouteApiService;
 import com.flance.web.utils.RequestConstant;
 import com.flance.web.utils.RequestUtil;
 import com.flance.web.utils.route.AppModel;
+import com.flance.web.utils.route.RouteApiModel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -30,6 +32,9 @@ public class ThirdRsaResponseDecodeFilter implements GatewayFilter, Ordered {
     @Resource
     AppService appService;
 
+    @Resource
+    RouteApiService routeApiService;
+
     @Override
     public int getOrder() {
         return Ordered.HIGHEST_PRECEDENCE + 5;
@@ -43,13 +48,17 @@ public class ThirdRsaResponseDecodeFilter implements GatewayFilter, Ordered {
         String requestId = exchange.getRequest().getHeaders().getFirst(RequestConstant.HEADER_REQUEST_ID);
         String appId = exchange.getRequest().getHeaders().getFirst(RequestConstant.HEADER_APP_ID);
         String headerLogId = exchange.getRequest().getHeaders().getFirst(RequestConstant.HEADER_LOG_ID);
+        String version =  exchange.getRequest().getHeaders().getFirst(RequestConstant.HEADER_REQUEST_VERSION);
         RequestUtil.getLogId(headerLogId);
         if (StringUtils.isEmpty(appId)) {
             log.error("third-response appId为空，无法进行参数解密【method:{}】【uri:{}】【api_id:{}】", method, uri, requestId);
             return Mono.error(new NotFoundException("appId为空"));
         }
 
-        AppModel appModel = appService.getAppByAppId(appId);
+        RouteApiModel routeApiModel = routeApiService.getOneByApiIdAndVersion(requestId, version);
+        log.info("third-response app_id 【app_id:{}】 => 【app_id:{}】", appId, routeApiModel.getAppId());
+        AppModel appModel = appService.getAppByAppId(routeApiModel.getAppId());
+
         if (null == appModel) {
             log.error("third-response 找不到app【{}】，请确认是否启用【method:{}】【uri:{}】【api_id:{}】", appId, method, uri, requestId);
             return Mono.error(new NotFoundException("third-response 找不到app【" + appId + "】"));

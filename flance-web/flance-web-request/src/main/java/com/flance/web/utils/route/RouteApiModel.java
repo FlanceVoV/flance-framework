@@ -24,6 +24,12 @@ public interface RouteApiModel {
      */
     String getApiName();
 
+    /**
+     * 资源接口所属app
+     * @return  返回App配置
+     */
+    String getAppId();
+
 
     /**
      * 资源接口uri
