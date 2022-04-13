@@ -52,8 +52,10 @@ import static com.flance.web.utils.AssertException.ErrCode.*;
  * 1. 读取请求体 签名参数 => sign
  * 2. 获取app公钥 => appPubKey
  * 3. 验签：密文+time
- * 3. 解密数据deCodeData
- * 4. deCodeData转json字符串 => jsonStr
+ * 4. 密文对象：data
+ * 5. 密文 data 进行 base64 编码处理 base64Data => Base64Utils.decode(data.getBytes(UTF8))
+ * 6. base64Data 解密数据 deCodeData => Rsa私钥解密 RsaUtil.decryptByPrivateKey
+ * 7. deCodeData转json字符串 => jsonStr
  *
  * <p>
  * <p>
