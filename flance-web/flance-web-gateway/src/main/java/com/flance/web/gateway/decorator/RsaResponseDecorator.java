@@ -1,5 +1,6 @@
 package com.flance.web.gateway.decorator;
 
+import com.flance.web.gateway.common.GatewayBodyEnum;
 import com.flance.web.gateway.utils.RsaBodyUtils;
 import com.flance.web.utils.route.AppModel;
 import com.flance.web.utils.web.response.WebResponse;
@@ -31,13 +32,16 @@ public class RsaResponseDecorator extends ServerHttpResponseDecorator {
 
     private final String logId;
 
+    private final GatewayBodyEnum bodyType;
+
     private static final Joiner JOINER = Joiner.on("");
 
-    public RsaResponseDecorator(ServerHttpResponse delegate, AppModel appModel, String logId) {
+    public RsaResponseDecorator(ServerHttpResponse delegate, AppModel appModel, String logId, GatewayBodyEnum bodyType) {
         super(delegate);
         this.appModel = appModel;
         this.response = delegate;
         this.logId = logId;
+        this.bodyType = bodyType;
     }
 
     @Override
@@ -61,7 +65,17 @@ public class RsaResponseDecorator extends ServerHttpResponseDecorator {
 
                 // 如果响应业务数据不为空 则加签/加密
                 if (null != webResponse.getData()) {
-                    RsaBodyUtils.encodeBody(webResponse, appModel, logId);
+                    switch (bodyType) {
+                        case RSA_ENCODE:
+                            RsaBodyUtils.encodeBody(webResponse, appModel, logId);
+                            break;
+                        case RSA_DECODE:
+                            RsaBodyUtils.decodeResponseBody(webResponse, appModel, logId);
+                            break;
+                        default:
+                            break;
+                    }
+
                 }
                 byte[] uppedContent = new String(gson.toJson(webResponse).getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8).getBytes();
                 headerSetting(response.getHeaders());

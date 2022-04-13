@@ -1,8 +1,8 @@
 package com.flance.web.gateway.filter;
 
 import com.flance.web.gateway.common.GatewayBodyEnum;
-import com.flance.web.gateway.decorator.RsaResponseDecorator;
 import com.flance.web.gateway.service.AppService;
+import com.flance.web.gateway.utils.RsaBodyUtils;
 import com.flance.web.utils.RequestConstant;
 import com.flance.web.utils.RequestUtil;
 import com.flance.web.utils.route.AppModel;
@@ -11,7 +11,6 @@ import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.support.NotFoundException;
 import org.springframework.core.Ordered;
-import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
@@ -20,19 +19,19 @@ import reactor.core.publisher.Mono;
 import javax.annotation.Resource;
 
 /**
- * rsa加密
+ * 第三方请求rsa加密
  * @author jhf
  */
 @Slf4j
 @Component
-public class RsaEncodeFilter implements GatewayFilter, Ordered {
+public class ThirdRsaRequestEncodeFilter implements GatewayFilter, Ordered {
 
     @Resource
     AppService appService;
 
     @Override
     public int getOrder() {
-        return Ordered.HIGHEST_PRECEDENCE + 3;
+        return HIGHEST_PRECEDENCE + 3;
     }
 
     @Override
@@ -44,7 +43,7 @@ public class RsaEncodeFilter implements GatewayFilter, Ordered {
         String headerLogId = exchange.getRequest().getHeaders().getFirst(RequestConstant.HEADER_LOG_ID);
         RequestUtil.getLogId(headerLogId);
         if (StringUtils.isEmpty(appId)) {
-            log.error("appId为空，无法进行参数加密【method:{}】【uri:{}】【api_id:{}】", method, uri, requestId);
+            log.error("appId为空，无法进行third加密【method:{}】【uri:{}】【api_id:{}】", method, uri, requestId);
             return Mono.error(new NotFoundException("appId为空"));
         }
 
@@ -54,8 +53,18 @@ public class RsaEncodeFilter implements GatewayFilter, Ordered {
             return Mono.error(new NotFoundException("找不到app【" + appId + "】"));
         }
 
-        ServerHttpResponse response = exchange.getResponse();
-        RsaResponseDecorator rsaResponseDecorator = new RsaResponseDecorator(response, appModel, RequestUtil.getLogId(), GatewayBodyEnum.RSA_ENCODE);
-        return chain.filter(exchange.mutate().response(rsaResponseDecorator).build()).doFinally(obj -> RequestUtil.remove());
+        log.info("third加密-开始 【app_id:{}】【api_id:{}】【method:{}】【uri:{}】", appId, requestId, method, uri);
+        try {
+            Mono<Void> mono = RsaBodyUtils.readBody(exchange, chain, appModel, GatewayBodyEnum.RSA_ENCODE);
+            log.info("third加密-结束 【app_id:{}】【api_id:{}】【method:{}】【uri:{}】", appId, requestId, method, uri);
+            return mono;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Mono.error(new NotFoundException("third加密失败【" + appId + "】:【" + appId + "】"));
+        }
     }
+
+
+
+
 }

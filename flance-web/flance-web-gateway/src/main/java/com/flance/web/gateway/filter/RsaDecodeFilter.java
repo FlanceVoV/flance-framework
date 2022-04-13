@@ -1,12 +1,12 @@
 package com.flance.web.gateway.filter;
 
+import com.flance.web.gateway.common.GatewayBodyEnum;
 import com.flance.web.gateway.service.AppService;
 import com.flance.web.gateway.utils.RsaBodyUtils;
 import com.flance.web.utils.RequestConstant;
 import com.flance.web.utils.RequestUtil;
 import com.flance.web.utils.route.AppModel;
 import lombok.extern.slf4j.Slf4j;
-import org.bouncycastle.cert.ocsp.Req;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.support.NotFoundException;
@@ -55,7 +55,7 @@ public class RsaDecodeFilter implements GatewayFilter, Ordered {
 
         log.info("解密-开始 【app_id:{}】【api_id:{}】【method:{}】【uri:{}】", appId, requestId, method, uri);
         try {
-            Mono<Void> mono = RsaBodyUtils.readBody(exchange, chain, appModel, RequestUtil.getLogId());
+            Mono<Void> mono = RsaBodyUtils.readBody(exchange, chain, appModel, GatewayBodyEnum.RSA_DECODE);
             log.info("解密-结束 【app_id:{}】【api_id:{}】【method:{}】【uri:{}】", appId, requestId, method, uri);
             return mono;
         } catch (Exception e) {

@@ -1,7 +1,7 @@
 package com.flance.web.gateway.utils;
 
+import com.flance.web.gateway.common.GatewayBodyEnum;
 import com.flance.web.gateway.decorator.RsaRequestDecorator;
-import com.flance.web.gateway.decorator.RsaResponseDecorator;
 import com.flance.web.utils.AssertException;
 import com.flance.web.utils.AssertUtil;
 import com.flance.web.utils.RequestUtil;
@@ -19,8 +19,6 @@ import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ReactiveHttpOutputMessage;
-import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.util.Base64Utils;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.web.reactive.function.BodyInserter;
@@ -53,10 +51,10 @@ import static com.flance.web.utils.AssertException.ErrCode.*;
  * 验签流程：
  * 1. 读取请求体 签名参数 => sign
  * 2. 获取app公钥 => appPubKey
+ * 3. 验签：密文+time
  * 3. 解密数据deCodeData
  * 4. deCodeData转json字符串 => jsonStr
- * 5. jsonStr拼接时间戳 => j+time
- * 6. 对j+time用公钥验签
+ *
  * <p>
  * <p>
  * 响应签名流程：同签名流程（WebResponse.data）
@@ -68,16 +66,23 @@ import static com.flance.web.utils.AssertException.ErrCode.*;
 @Slf4j
 public class RsaBodyUtils {
 
-    public static Mono<Void> readBody(ServerWebExchange exchange, GatewayFilterChain chain, AppModel appModel, String logId) {
+    public static Mono<Void> readBody(ServerWebExchange exchange, GatewayFilterChain chain, AppModel appModel, GatewayBodyEnum readBody) {
         MediaType mediaType = exchange.getRequest().getHeaders().getContentType();
         // ModifyRequestBodyGatewayFilterFactory
         ServerRequest serverRequest = ServerRequest.create(exchange, HandlerStrategies.withDefaults().messageReaders());
 
         Mono<String> modifyBody = serverRequest.bodyToMono(String.class)
                 .flatMap(body -> {
-                    log.info("【解密-解密前数据:{}】", body);
+                    log.info("【编码前数据:{}】", body);
                     if (MediaType.APPLICATION_JSON.isCompatibleWith(mediaType)) {
-                        return Mono.just(decodeBody(body, appModel.getAppRsaPubKey(), appModel.getSysRsaPriKey()));
+                        switch (readBody) {
+                            case RSA_DECODE:
+                                return Mono.just(decodeBody(body, appModel.getAppRsaPubKey(), appModel.getSysRsaPriKey()));
+                            case RSA_ENCODE:
+                                return Mono.just(encodeRequestBody(body, appModel.getAppRsaPubKey(), appModel.getSysRsaPriKey()));
+                            default:
+                                return Mono.just(body);
+                        }
                     }
                     return Mono.just(body);
                 }).switchIfEmpty(Mono.defer(() -> {
@@ -127,30 +132,76 @@ public class RsaBodyUtils {
         response.setTimestamp(timestamp);
 
         String data = gson.toJson(response.getData());
-        // 原数据base64 byte
+        // 原明文数据base64 byte
         byte[] dataBytes = Base64Utils.encode(data.getBytes(StandardCharsets.UTF_8));
-        // 签名base64 str
-        String signData = Base64Utils.encodeToString(dataBytes) + timestamp;
+
         log.info("【加密-响应体-原数据json串:{}】", data);
         try {
-
-            // 加签
-            byte[] signBytes = RsaUtil.sign(signData.getBytes(StandardCharsets.UTF_8), appModel.getSysRsaPriKey());
-            String sign = Base64Utils.encodeToString(signBytes);
-            response.setSign(sign);
-            log.info("【加密-响应体-签名:{}】", sign);
-
             // 加密
             byte[] encodeDataBytes = RsaUtil.encryptByPublicKey(dataBytes, appModel.getAppRsaPubKey());
             String dataResponse = Base64Utils.encodeToString(encodeDataBytes);
             response.setData(dataResponse);
             log.info("【加密-响应体-密文:{}】", dataResponse);
 
+            // 加签
+            String signData = dataResponse + timestamp;
+            byte[] signBytes = RsaUtil.sign(signData.getBytes(StandardCharsets.UTF_8), appModel.getSysRsaPriKey());
+            String sign = Base64Utils.encodeToString(signBytes);
+            response.setSign(sign);
+            log.info("【加密-响应体-签名:{}】", sign);
+
         } catch (Exception e) {
             e.printStackTrace();
             AssertUtil.throwError(AssertException.getByEnum(SYS_GATEWAY_ENCODE_ERROR));
         }
     }
+
+    /**
+     * 请求体加密
+     * @param requestBody   请求体
+     * @param pubKey        第三方公钥
+     * @param priKey        己方私钥
+     * @return              返回请求报文
+     */
+    public static String encodeRequestBody(String requestBody, String pubKey, String priKey) {
+        log.info("【加密-请求体:{}】", requestBody);
+        String result = null;
+        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+        GatewayRequest gatewayRequest = new GatewayRequest();
+        Long timestamp = System.currentTimeMillis();
+        gatewayRequest.setTimestamp(timestamp);
+
+        // 原数据base64 byte
+        byte[] dataBytes = Base64Utils.encode(requestBody.getBytes(StandardCharsets.UTF_8));
+
+        log.info("【加密-请求体-原数据json串:{}】", requestBody);
+        try {
+
+            // 加密
+            byte[] encodeDataBytes = RsaUtil.encryptByPublicKey(dataBytes, pubKey);
+            String dataResponse = Base64Utils.encodeToString(encodeDataBytes);
+            gatewayRequest.setData(dataResponse);
+            log.info("【加密-请求体-密文:{}】", dataResponse);
+
+            // 加签
+            String signData = dataResponse + timestamp;
+            byte[] signBytes = RsaUtil.sign(signData.getBytes(StandardCharsets.UTF_8), priKey);
+            String sign = Base64Utils.encodeToString(signBytes);
+            gatewayRequest.setSign(sign);
+            log.info("【加密-请求体-签名:{}】", sign);
+
+            result = gson.toJson(gatewayRequest);
+        } catch (AssertException e) {
+            throw e;
+        } catch (Exception e) {
+            log.error("【加密-请求体-异常:{}】", e.getMessage());
+            e.printStackTrace();
+            AssertUtil.throwError(AssertException.getByEnum(SYS_GATEWAY_DECODE_ERROR));
+        }
+        log.info("【加密-请求体-结果:{}】", result);
+        return result;
+    }
+
 
     public static String decodeBody(String gatewayBody, String pubKey, String priKey) {
         log.info("【解密-请求体:{}】", gatewayBody);
@@ -172,13 +223,13 @@ public class RsaBodyUtils {
             byte[] signDataBytes = (encodeData + timestamp).getBytes(StandardCharsets.UTF_8);
             String signData = new String(signDataBytes);
 
-            log.info("【解密-签名:{}】", sign);
-            log.info("【解密-密文:{}】", encodeData);
-            log.info("【解密-验签数据:{}】", signData);
+            log.info("【解密-请求体-签名:{}】", sign);
+            log.info("【解密-请求体-密文:{}】", encodeData);
+            log.info("【解密-请求体-验签数据:{}】", signData);
 
             // dataBase64 + timestamp = 待验签数据
             boolean flag = RsaUtil.verify(signDataBytes, sign, pubKey);
-            log.info("【解密-验签结果:{}】", flag);
+            log.info("【解密-请求体-验签结果:{}】", flag);
             // 解密
             if (flag) {
                 byte[] bytes = RsaUtil.decryptByPrivateKey(dataBytes, priKey);
@@ -189,12 +240,51 @@ public class RsaBodyUtils {
         } catch (AssertException e) {
             throw e;
         } catch (Exception e) {
-            log.error("【解密-异常:{}】", e.getMessage());
+            log.error("【解密-请求体-异常:{}】", e.getMessage());
             e.printStackTrace();
             AssertUtil.throwError(AssertException.getByEnum(SYS_GATEWAY_DECODE_ERROR));
         }
-        log.info("【解密-明文:{}】", result);
+        log.info("【解密-请求体-明文:{}】", result);
         return result;
+    }
+
+    public static void decodeResponseBody(WebResponse response, AppModel appModel, String logId) {
+        RequestUtil.setLogId(logId);
+        try {
+            String encodeData = response.getData().toString();
+            String sign = response.getSign();
+            Long timestamp = response.getTimestamp();
+
+            // 参数校验
+            AssertUtil.notEmpty(encodeData, AssertException.getByEnum(SYS_GATEWAY_DECODE_EMPTY_DATA));
+            AssertUtil.notEmpty(sign, AssertException.getByEnum(SYS_GATEWAY_DECODE_EMPTY_SIGN));
+            AssertUtil.notNull(timestamp, AssertException.getByEnum(SYS_GATEWAY_DECODE_EMPTY_TIMESTAMP));
+
+            byte[] dataBytes = Base64Utils.decode(encodeData.getBytes(StandardCharsets.UTF_8));
+            byte[] signDataBytes = (encodeData + timestamp).getBytes(StandardCharsets.UTF_8);
+            String signData = new String(signDataBytes);
+
+            log.info("【解密-响应体-签名:{}】", sign);
+            log.info("【解密-响应体-密文:{}】", encodeData);
+            log.info("【解密-响应体-验签数据:{}】", signData);
+
+            // dataBase64 + timestamp = 待验签数据
+            boolean flag = RsaUtil.verify(signDataBytes, sign, appModel.getAppRsaPubKey());
+            log.info("【解密-响应体-验签结果:{}】", flag);
+            // 解密
+            if (flag) {
+                byte[] bytes = RsaUtil.decryptByPrivateKey(dataBytes, appModel.getSysRsaPriKey());
+                String data = new String(Base64Utils.decode(bytes), StandardCharsets.UTF_8);
+                response.setData(data);
+            } else {
+                AssertUtil.throwError(AssertException.getByEnum(SYS_GATEWAY_SIGN_CHECK_ERROR));
+            }
+        } catch (AssertException e) {
+            throw e;
+        } catch (Exception e) {
+            e.printStackTrace();
+            AssertUtil.throwError(AssertException.getByEnum(SYS_GATEWAY_ENCODE_ERROR));
+        }
     }
 
 

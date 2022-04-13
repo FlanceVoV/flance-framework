@@ -20,12 +20,12 @@ import reactor.core.publisher.Mono;
 import javax.annotation.Resource;
 
 /**
- * rsa加密
+ * 第三方响应rsa解密
  * @author jhf
  */
 @Slf4j
 @Component
-public class RsaEncodeFilter implements GatewayFilter, Ordered {
+public class ThirdRsaResponseDecodeFilter implements GatewayFilter, Ordered {
 
     @Resource
     AppService appService;
@@ -37,6 +37,7 @@ public class RsaEncodeFilter implements GatewayFilter, Ordered {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+
         String uri = exchange.getRequest().getURI().getPath();
         String method = exchange.getRequest().getMethodValue();
         String requestId = exchange.getRequest().getHeaders().getFirst(RequestConstant.HEADER_REQUEST_ID);
@@ -44,18 +45,21 @@ public class RsaEncodeFilter implements GatewayFilter, Ordered {
         String headerLogId = exchange.getRequest().getHeaders().getFirst(RequestConstant.HEADER_LOG_ID);
         RequestUtil.getLogId(headerLogId);
         if (StringUtils.isEmpty(appId)) {
-            log.error("appId为空，无法进行参数加密【method:{}】【uri:{}】【api_id:{}】", method, uri, requestId);
+            log.error("third-response appId为空，无法进行参数解密【method:{}】【uri:{}】【api_id:{}】", method, uri, requestId);
             return Mono.error(new NotFoundException("appId为空"));
         }
 
         AppModel appModel = appService.getAppByAppId(appId);
         if (null == appModel) {
-            log.error("找不到app【{}】，请确认是否启用【method:{}】【uri:{}】【api_id:{}】", appId, method, uri, requestId);
-            return Mono.error(new NotFoundException("找不到app【" + appId + "】"));
+            log.error("third-response 找不到app【{}】，请确认是否启用【method:{}】【uri:{}】【api_id:{}】", appId, method, uri, requestId);
+            return Mono.error(new NotFoundException("third-response 找不到app【" + appId + "】"));
         }
 
         ServerHttpResponse response = exchange.getResponse();
-        RsaResponseDecorator rsaResponseDecorator = new RsaResponseDecorator(response, appModel, RequestUtil.getLogId(), GatewayBodyEnum.RSA_ENCODE);
+        RsaResponseDecorator rsaResponseDecorator = new RsaResponseDecorator(response, appModel, RequestUtil.getLogId(), GatewayBodyEnum.RSA_DECODE);
         return chain.filter(exchange.mutate().response(rsaResponseDecorator).build()).doFinally(obj -> RequestUtil.remove());
+
     }
+
+
 }
