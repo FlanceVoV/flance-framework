@@ -32,7 +32,7 @@ public class ThirdRsaResponseDecodeFilter implements GatewayFilter, Ordered {
 
     @Override
     public int getOrder() {
-        return Ordered.HIGHEST_PRECEDENCE + 3;
+        return Ordered.HIGHEST_PRECEDENCE + 5;
     }
 
     @Override

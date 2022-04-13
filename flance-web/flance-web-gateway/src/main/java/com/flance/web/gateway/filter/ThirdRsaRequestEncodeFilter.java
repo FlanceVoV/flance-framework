@@ -31,7 +31,7 @@ public class ThirdRsaRequestEncodeFilter implements GatewayFilter, Ordered {
 
     @Override
     public int getOrder() {
-        return HIGHEST_PRECEDENCE + 3;
+        return HIGHEST_PRECEDENCE + 4;
     }
 
     @Override
