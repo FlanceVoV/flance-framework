@@ -70,7 +70,7 @@ public class InitServerConfig {
             return;
         }
 
-        if (null != redisUtils.get(BizConstant.ROUTER_KEY)) {
+        if (redisUtils.keys(BizConstant.ROUTER_KEY + ":*").size() > 0) {
             return;
         }
 
@@ -92,6 +92,13 @@ public class InitServerConfig {
      * 初始化api
      */
     public void initApi() {
+        if (null == routeService) {
+            return;
+        }
+
+        if (redisUtils.keys(BizConstant.API_KEY + ":*").size() > 0) {
+            return;
+        }
         List<? extends RouteApiModel> apis = routeApiService.getAllApi();
         Gson gson = new Gson();
         apis.forEach(item -> {
@@ -106,6 +113,13 @@ public class InitServerConfig {
      * 初始化app
      */
     public void initApp() {
+        if (null == routeService) {
+            return;
+        }
+
+        if (redisUtils.keys(BizConstant.APP_KEY + ":*").size() > 0) {
+            return;
+        }
         List<? extends AppModel> apps = appService.getApps();
         Gson gson = new Gson();
         apps.forEach(item -> {
