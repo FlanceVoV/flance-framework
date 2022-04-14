@@ -37,7 +37,10 @@ public class GlobalResponseBodyAdvice implements ResponseBodyAdvice<Object> {
                                   ServerHttpRequest request,
                                   ServerHttpResponse response) {
         Object result;
-
+        if(mediaType.includes(MediaType.APPLICATION_OCTET_STREAM)){
+            return body;
+        }
+        response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
         if (body instanceof WebResponse ||
                 ignore(request.getURI().toString())) {
             result = body;
@@ -50,6 +53,8 @@ public class GlobalResponseBodyAdvice implements ResponseBodyAdvice<Object> {
         log.info("接口响应：" + GsonUtils.toJSONString(result));
         return result;
     }
+
+
 
     private boolean ignore(String url) {
         return UrlMatchUtil.matchUrl(url, ignoreUrl);
