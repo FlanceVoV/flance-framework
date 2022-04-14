@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @ControllerAdvice
@@ -36,7 +37,7 @@ public class GlobalResponseBodyAdvice implements ResponseBodyAdvice<Object> {
                                   MediaType mediaType, Class<? extends HttpMessageConverter<?>> clazz,
                                   ServerHttpRequest request,
                                   ServerHttpResponse response) {
-        Object result;
+        Object result  = null;
         if(mediaType.includes(MediaType.APPLICATION_OCTET_STREAM)){
             return body;
         }
@@ -47,8 +48,15 @@ public class GlobalResponseBodyAdvice implements ResponseBodyAdvice<Object> {
         } else if (body instanceof String) {
             ObjectMapper mapper = new ObjectMapper();
             result = mapper.writeValueAsString(WebResponse.getSucceed(body, "请求成功"));
+        } else if (body instanceof Map) {
+            Object status = ((Map<?, ?>) body).get("status");
+            if (null != status && !status.toString().equals("200")) {
+                result = WebResponse.getFailed(body, "-1", "请求失败");
+            } else {
+                result = WebResponse.getSucceed(body, "请求成功");
+            }
         } else {
-            result = WebResponse.getSucceed(body, "请求成功");
+            result = WebResponse.getFailed(body, "-1", "请求失败，响应无法解析");
         }
         log.info("接口响应：" + GsonUtils.toJSONString(result));
         return result;

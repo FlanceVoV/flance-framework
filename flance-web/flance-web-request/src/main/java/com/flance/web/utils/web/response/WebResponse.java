@@ -53,6 +53,10 @@ public class WebResponse {
         return WebResponse.builder().code(code).success(false).msg(msg).build();
     }
 
+    public static WebResponse getFailed(Object data, String code, String msg) {
+        return WebResponse.builder().data(data).code(code).success(false).msg(msg).build();
+    }
+
     public <T> T getResultData(Class<T> clazz) {
         if (null == data) {
             return null;
