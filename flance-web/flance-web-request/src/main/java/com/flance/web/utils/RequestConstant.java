@@ -14,6 +14,8 @@ public interface RequestConstant {
 
     String HEADER_TOKEN = "access_token";
 
+    String HEADER_USER_ID = "user_id";
+
     String SYS_TOKEN_KEY = "sys:user:token:";
 
     String LIMIT_ROUTE_KEY = "limit_router_id";
