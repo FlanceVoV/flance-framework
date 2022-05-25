@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <modules>
+        <module>flance-tx-datasource</module>
+        <module>flance-tx-tcserver</module>
+        <module>flance-tx-config</module>
+        <module>flance-tx-core</module>
+        <module>flance-tx-netty</module>
+        <module>flance-tx-common</module>
+    </modules>
+    <parent>
+        <artifactId>flance-parent</artifactId>
+        <groupId>com.flance</groupId>
+        <version>1.0</version>
+    </parent>
+
+    <artifactId>flance-tx</artifactId>
+    <version>1.0</version>
+    <packaging>pom</packaging>
+
+
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>

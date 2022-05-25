@@ -22,6 +22,8 @@
         <module>flance-components-logs</module>
         <module>flance-components-minio</module>
         <module>flance-components-kafka</module>
+        <module>flance-components-oss</module>
+        <module>flance-components-jobs</module>
     </modules>
 
 

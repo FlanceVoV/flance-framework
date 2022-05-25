@@ -44,12 +44,19 @@
         <flance-web-security-common.version>1.0</flance-web-security-common.version>
         <flance-web-oauth-security.version>1.0</flance-web-oauth-security.version>
         <flance-web-utils.version>1.0</flance-web-utils.version>
+        <flance-tx-config.version>1.0</flance-tx-config.version>
+        <flance-tx-core.version>1.0</flance-tx-core.version>
+        <flance-tx-datasource.version>1.0</flance-tx-datasource.version>
+        <flance-tx-netty.version>1.0</flance-tx-netty.version>
+        <flance-tx-common.version>1.0</flance-tx-common.version>
+        <flance-tx-tcserver.version>1.0</flance-tx-tcserver.version>
         <flance-components-fastdfs.version>1.0</flance-components-fastdfs.version>
         <flance-components-form.version>1.0</flance-components-form.version>
         <flance-components-questionbank>1.0</flance-components-questionbank>
         <flance-components-kafka>1.0</flance-components-kafka>
         <flance-web-request>1.0</flance-web-request>
         <alibaba-transmittable.version>2.2.0</alibaba-transmittable.version>
+        <cglib.version>3.1</cglib.version>
     </properties>
 
     <dependencyManagement>
@@ -267,6 +274,36 @@
                 <version>${flance-web-request}</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.flance</groupId>
+                <artifactId>flance-tx-config</artifactId>
+                <version>1.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.flance</groupId>
+                <artifactId>flance-tx-core</artifactId>
+                <version>${flance-tx-core.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.flance</groupId>
+                <artifactId>flance-tx-config</artifactId>
+                <version>${flance-tx-config.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.flance</groupId>
+                <artifactId>flance-tx-datasource</artifactId>
+                <version>${flance-tx-datasource.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.flance</groupId>
+                <artifactId>flance-tx-common</artifactId>
+                <version>${flance-tx-common.version}</version>
+            </dependency>
+
             <!-- flance end -->
 
             <!-- common -->
@@ -287,6 +324,14 @@
                 <artifactId>transmittable-thread-local</artifactId>
                 <version>${alibaba-transmittable.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>cglib</groupId>
+                <artifactId>cglib</artifactId>
+                <version>${cglib.version}</version>
+            </dependency>
+
+
 
         </dependencies>
     </dependencyManagement>
