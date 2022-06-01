@@ -15,6 +15,8 @@ import org.springframework.context.ApplicationContextAware;
 @Slf4j
 public class FlanceGlobalTxScanner extends AbstractAutoProxyCreator implements InitializingBean, ApplicationContextAware {
 
+    private static final int ORDER_NUM = 1024;
+
     private ApplicationContext applicationContext;
 
     private final String txServiceGroup;
@@ -27,6 +29,8 @@ public class FlanceGlobalTxScanner extends AbstractAutoProxyCreator implements I
         this.txServiceGroup = txServiceGroup;
         this.applicationId = applicationId;
         this.failureHandler = failureHandler;
+        setOrder(ORDER_NUM);
+        setProxyTargetClass(true);
     }
 
     @Override

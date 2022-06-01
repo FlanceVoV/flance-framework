@@ -22,7 +22,7 @@ public class FlanceDataSourceConfiguration {
     @Bean
     @ConditionalOnMissingBean(FlanceDataSourceBeanPostProcessor.class)
     public FlanceDataSourceBeanPostProcessor flanceDataSourceBeanPostProcessor() {
-        return null;
+        return new FlanceDataSourceBeanPostProcessor();
     }
 
 

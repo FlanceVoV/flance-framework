@@ -1,4 +1,5 @@
 # Auto Configure
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.flance.tx.config.configs.FlanceTxConfigs,\
 com.flance.tx.config.datasource.FlanceDataSourceConfiguration,\
 com.flance.tx.config.tx.FlanceTxAutoConfiguration
