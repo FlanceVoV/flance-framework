@@ -10,6 +10,8 @@
         <module>flance-tx-core</module>
         <module>flance-tx-netty</module>
         <module>flance-tx-common</module>
+        <module>flance-tx-demo1</module>
+        <module>flance-tx-starter</module>
     </modules>
     <parent>
         <artifactId>flance-parent</artifactId>
@@ -32,6 +34,12 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>

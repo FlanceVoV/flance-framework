@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>flance-tx-config</artifactId>
+    <artifactId>flance-tx-demo1</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -17,30 +17,22 @@
     </properties>
 
     <dependencies>
-        <!--spring-->
+
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-autoconfigure</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-configuration-processor</artifactId>
-            <optional>true</optional>
+            <groupId>com.flance</groupId>
+            <artifactId>flance-web-common</artifactId>
         </dependency>
 
         <dependency>
             <groupId>com.flance</groupId>
-            <artifactId>flance-tx-common</artifactId>
+            <artifactId>flance-web-utils</artifactId>
         </dependency>
 
         <dependency>
             <groupId>com.flance</groupId>
-            <artifactId>flance-tx-datasource</artifactId>
+            <artifactId>flance-tx-starter</artifactId>
+            <version>1.0</version>
         </dependency>
-
-
-
 
     </dependencies>
 

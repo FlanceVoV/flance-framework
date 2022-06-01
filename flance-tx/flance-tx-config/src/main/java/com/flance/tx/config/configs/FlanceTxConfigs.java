@@ -26,6 +26,10 @@ public class FlanceTxConfigs {
      */
     private String applicationId;
 
+    /**
+     * 事务服务组
+     */
+    private String txServiceGroup;
 
 
 }
