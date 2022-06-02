@@ -40,6 +40,11 @@
             <artifactId>spring-aop</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.flance</groupId>
+            <artifactId>flance-tx-common</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>

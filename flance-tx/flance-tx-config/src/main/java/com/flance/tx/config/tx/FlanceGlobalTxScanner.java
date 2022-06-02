@@ -1,12 +1,22 @@
 package com.flance.tx.config.tx;
 
+import com.flance.tx.common.utils.CollectionUtils;
+import com.flance.tx.common.utils.SpringProxyUtils;
+import com.flance.tx.core.annotation.FlanceGlobalLock;
+import com.flance.tx.core.annotation.FlanceGlobalTransactional;
 import lombok.extern.slf4j.Slf4j;
+import org.aopalliance.intercept.MethodInterceptor;
+import org.springframework.aop.Advisor;
 import org.springframework.aop.TargetSource;
+import org.springframework.aop.framework.AdvisedSupport;
 import org.springframework.aop.framework.autoproxy.AbstractAutoProxyCreator;
+import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+
+import java.lang.reflect.Method;
 
 /**
  * 全局事务扫描
@@ -16,6 +26,9 @@ import org.springframework.context.ApplicationContextAware;
 public class FlanceGlobalTxScanner extends AbstractAutoProxyCreator implements InitializingBean, ApplicationContextAware {
 
     private static final int ORDER_NUM = 1024;
+
+    private MethodInterceptor interceptor;
+    private MethodInterceptor flanceGlobalTxInterceptor;
 
     private ApplicationContext applicationContext;
 
@@ -33,25 +46,97 @@ public class FlanceGlobalTxScanner extends AbstractAutoProxyCreator implements I
         setProxyTargetClass(true);
     }
 
+    /**
+     * 获取所有适用于当前Bean 的 Advisors
+     * 用于增强bean
+     */
     @Override
     protected Object[] getAdvicesAndAdvisorsForBean(Class<?> aClass, String s, TargetSource targetSource) throws BeansException {
-        return new Object[0];
+        return new Object[]{interceptor};
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        log.info("全局事务扫描-afterPropertiesSet");
+        initClient();
     }
 
     @Override
     protected Object wrapIfNecessary(Object bean, String beanName, Object cacheKey) {
-        return super.wrapIfNecessary(bean, beanName, cacheKey);
+        try {
+            Class<?> serviceInterface = SpringProxyUtils.findTargetClass(bean);
+            Class<?>[] interfacesIfJdk = SpringProxyUtils.findInterfaces(bean);
+
+            /*
+                不带全局事务、全局锁注解的直接返回bean
+             */
+            if (existsAnnotation(new Class[]{serviceInterface}) && existsAnnotation(interfacesIfJdk)) {
+                return bean;
+            }
+            log.info("检测到全局事务-[{}]", beanName);
+
+            // 初始化全局事务方法拦截器
+            if (flanceGlobalTxInterceptor == null) {
+                flanceGlobalTxInterceptor = new FlanceGlobalTxInterceptor(failureHandler);
+            }
+            interceptor = flanceGlobalTxInterceptor;
+            /*
+                判断是否是aop代理
+             */
+            if (!AopUtils.isAopProxy(bean)) {
+                bean = super.wrapIfNecessary(bean, beanName, cacheKey);
+            } else {
+                AdvisedSupport advised = SpringProxyUtils.getAdvisedSupport(bean);
+                Advisor[] advisor = buildAdvisors(beanName, getAdvicesAndAdvisorsForBean(null, null, null));
+                for (Advisor avr : advisor) {
+                    advised.addAdvisor(0, avr);
+                }
+            }
+            return bean;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("TODO");
+        }
     }
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
         this.setBeanFactory(applicationContext);
+    }
+
+
+
+    /**
+     * 扫描所有带事务注解的，进行代理设置
+     * @param classes   spring加载的bean
+     * @return          返回是否加了注解
+     */
+    private boolean existsAnnotation(Class<?>[] classes) {
+        if (CollectionUtils.isNotEmpty(classes)) {
+            for (Class<?> clazz : classes) {
+                if (clazz == null) {
+                    continue;
+                }
+                FlanceGlobalTransactional trxAnno = clazz.getAnnotation(FlanceGlobalTransactional.class);
+                if (trxAnno != null) {
+                    return false;
+                }
+                Method[] methods = clazz.getMethods();
+                for (Method method : methods) {
+                    trxAnno = method.getAnnotation(FlanceGlobalTransactional.class);
+                    if (trxAnno != null) {
+                        return false;
+                    }
+
+                    FlanceGlobalLock lockAnno = method.getAnnotation(FlanceGlobalLock.class);
+                    if (lockAnno != null) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     /**
@@ -62,5 +147,4 @@ public class FlanceGlobalTxScanner extends AbstractAutoProxyCreator implements I
     private void initClient() {
 
     }
-
 }

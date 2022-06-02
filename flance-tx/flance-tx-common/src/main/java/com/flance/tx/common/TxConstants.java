@@ -17,4 +17,21 @@ public interface TxConstants {
      */
     String BEAN_NAME_SPRING_APPLICATION_CONTEXT_PROVIDER = "springApplicationContextProvider";
 
+    /**
+     * bean name 数据源代理工厂
+     */
+    String BEAN_NAME_DATA_SOURCE_PROXY_CREATOR = "flanceDataSourceProxyCreator";
+
+    /**
+     * 默认字符集
+     */
+    String DEFAULT_CHARSET_NAME = "UTF-8";
+
+
+    /**
+     * 注解属性
+     */
+    String AUTO_DATA_SOURCE_PROXY_ATTRIBUTE_KEY_EXCLUDES = "excludes";
+
+
 }
