@@ -1,5 +1,6 @@
-package com.flance.tx.datasource.proxy;
+package com.flance.tx.datasource.proxy.datasource;
 
+import com.flance.tx.datasource.proxy.FlanceTxProxy;
 import com.google.common.collect.Lists;
 import org.springframework.aop.Advisor;
 import org.springframework.aop.TargetSource;
@@ -8,7 +9,6 @@ import org.springframework.aop.support.DefaultIntroductionAdvisor;
 import org.springframework.beans.BeansException;
 
 import javax.sql.DataSource;
-import java.util.ArrayList;
 import java.util.List;
 
 /**

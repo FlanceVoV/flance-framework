@@ -1,4 +1,4 @@
-package com.flance.tx.datasource.proxy;
+package com.flance.tx.datasource.proxy.datasource;
 
 import javax.sql.DataSource;
 

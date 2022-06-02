@@ -1,6 +1,6 @@
 package com.flance.tx.datasource.annotation;
 
-import com.flance.tx.datasource.proxy.AutoDataSourceProxyRegistrar;
+import com.flance.tx.datasource.proxy.datasource.AutoDataSourceProxyRegistrar;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.*;

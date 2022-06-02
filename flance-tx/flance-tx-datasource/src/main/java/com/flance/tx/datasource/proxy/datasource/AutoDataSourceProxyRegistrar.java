@@ -1,4 +1,4 @@
-package com.flance.tx.datasource.proxy;
+package com.flance.tx.datasource.proxy.datasource;
 
 import com.flance.tx.datasource.annotation.EnableAutoDataSourceProxy;
 import com.google.common.collect.Lists;
