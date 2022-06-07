@@ -226,11 +226,6 @@ public class RedisUtils {
     /**
      * 分布式锁
      *
-     * @param key
-     * @param timeout
-     * @param unit
-     * @param wait
-     * @return
      */
     public boolean lock(String key, long timeout, TimeUnit unit, Boolean wait) {
         long time = System.nanoTime();
