@@ -6,6 +6,12 @@ import java.sql.SQLException;
 
 public class DataSourceProxy extends AbstractDataSourceProxy {
 
+    private String jdbcUrl;
+
+    private String dbType;
+
+    private String userName;
+
     public DataSourceProxy() {
     }
 
@@ -21,5 +27,9 @@ public class DataSourceProxy extends AbstractDataSourceProxy {
     @Override
     public Connection getConnection(String username, String password) throws SQLException {
         return targetDataSource.getConnection(username, password);
+    }
+
+    public String getDbType() {
+        return dbType;
     }
 }
