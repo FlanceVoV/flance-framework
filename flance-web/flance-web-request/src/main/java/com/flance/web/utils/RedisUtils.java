@@ -5,11 +5,13 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
  * redis队列工具类
+ *
  * @author jhf
  */
 @Component
@@ -20,9 +22,10 @@ public class RedisUtils {
 
     /**
      * 左进
-     * @param key       队列key
-     * @param value     队列值
-     * @return          返回值
+     *
+     * @param key   队列key
+     * @param value 队列值
+     * @return 返回值
      */
     public Long putLeft(String key, String value) {
         return redisTemplate.opsForList().leftPush(key, value);
@@ -30,8 +33,9 @@ public class RedisUtils {
 
     /**
      * 左出
-     * @param key       队列key
-     * @return          返回值
+     *
+     * @param key 队列key
+     * @return 返回值
      */
     public String popLeft(String key) {
         return redisTemplate.opsForList().leftPop(key);
@@ -39,9 +43,10 @@ public class RedisUtils {
 
     /**
      * 左进
-     * @param key       队列key
-     * @param value     队列值
-     * @return          返回值
+     *
+     * @param key   队列key
+     * @param value 队列值
+     * @return 返回值
      */
     public Long putRight(String key, String value) {
         return redisTemplate.opsForList().rightPush(key, value);
@@ -49,8 +54,9 @@ public class RedisUtils {
 
     /**
      * 左出
-     * @param key       队列key
-     * @return          返回值
+     *
+     * @param key 队列key
+     * @return 返回值
      */
     public String popRight(String key) {
         return redisTemplate.opsForList().rightPop(key);
@@ -58,8 +64,9 @@ public class RedisUtils {
 
     /**
      * 获取长度
-     * @param key       队列key
-     * @return          队列长度
+     *
+     * @param key 队列key
+     * @return 队列长度
      */
     public Long getLengthList(String key) {
         return redisTemplate.opsForList().size(key);
@@ -67,8 +74,9 @@ public class RedisUtils {
 
     /**
      * 获取长度
-     * @param key       队列key
-     * @return          队列长度
+     *
+     * @param key 队列key
+     * @return 队列长度
      */
     public Long getLengthSet(String key) {
         return redisTemplate.opsForSet().size(key);
@@ -76,17 +84,19 @@ public class RedisUtils {
 
     /**
      * set保存
-     * @param key key
-     * @param value   值
+     *
+     * @param key   key
+     * @param value 值
      */
-    public void putSet(String key,String value) {
+    public void putSet(String key, String value) {
         redisTemplate.opsForSet().add(key, value);
     }
 
     /**
      * 取出对象
-     * @param key       key
-     * @return          值
+     *
+     * @param key key
+     * @return 值
      */
     public String get(String key) {
         return redisTemplate.opsForValue().get(key);
@@ -94,6 +104,7 @@ public class RedisUtils {
 
     /**
      * 存放对象
+     *
      * @param key
      * @param value
      * @return
@@ -105,6 +116,7 @@ public class RedisUtils {
 
     /**
      * 存放对象
+     *
      * @param key
      * @param value
      * @return
@@ -115,6 +127,7 @@ public class RedisUtils {
 
     /**
      * table put
+     *
      * @param mkey
      * @param ckey
      * @param value
@@ -125,6 +138,7 @@ public class RedisUtils {
 
     /**
      * table get
+     *
      * @param mkey
      * @param ckey
      * @return
@@ -135,6 +149,7 @@ public class RedisUtils {
 
     /**
      * table del
+     *
      * @param mkey
      * @param ckey
      */
@@ -144,6 +159,7 @@ public class RedisUtils {
 
     /**
      * table length
+     *
      * @param mkey
      * @return
      */
@@ -153,8 +169,9 @@ public class RedisUtils {
 
     /**
      * 获取对象集合长度
-     * @param key   key
-     * @return      长处
+     *
+     * @param key key
+     * @return 长处
      */
     public Long getLengthObject(String key) {
         return redisTemplate.opsForValue().size(key);
@@ -162,8 +179,9 @@ public class RedisUtils {
 
     /**
      * 删除key下所有数据
-     * @param key       key
-     * @return          删除成功与否
+     *
+     * @param key key
+     * @return 删除成功与否
      */
     public Boolean clear(String key) {
         Set<String> keys = redisTemplate.keys(key);
@@ -175,6 +193,7 @@ public class RedisUtils {
 
     /**
      * 判断key是否存在
+     *
      * @param key
      * @return
      */
@@ -184,6 +203,7 @@ public class RedisUtils {
 
     /**
      * 获取所有子key
+     *
      * @param key
      * @return
      */
@@ -194,12 +214,54 @@ public class RedisUtils {
 
     /**
      * 重置过期时间
+     *
      * @param key
      * @param time
      * @return
      */
     public Boolean setExp(String key, Long time) {
         return redisTemplate.expire(key, time, TimeUnit.SECONDS);
+    }
+
+    /**
+     * 分布式锁
+     *
+     * @param key
+     * @param timeout
+     * @param unit
+     * @param wait
+     * @return
+     */
+    public boolean lock(String key, long timeout, TimeUnit unit, Boolean wait) {
+        long time = System.nanoTime();
+        long end_time = time + unit.toNanos(timeout);
+        try {
+            while (System.nanoTime() < end_time) {
+                if (redisTemplate.opsForValue().setIfAbsent(key, String.valueOf(end_time), timeout, unit)) {
+                    return true;
+                } else {
+                    String lock_expired_time = redisTemplate.opsForValue().get(key);
+                    if (null != lock_expired_time && !"".equals(lock_expired_time) && time > Long.parseLong(lock_expired_time)) {
+                        redisTemplate.expire(key, timeout, unit);
+                        return true;
+                    }
+
+                    if (!wait) {  //不等待直接返回
+                        return false;
+                    }
+                }
+
+                //加随机时间防止活锁
+                Thread.sleep(100 + new Random().nextInt(20));
+            }
+        } catch (Exception e) {
+            unlock(key);
+        }
+        return false;
+    }
+
+    public void unlock(String key) {
+        redisTemplate.delete(key);
     }
 
 }
