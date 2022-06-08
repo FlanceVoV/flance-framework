@@ -6,6 +6,7 @@ import com.flance.web.utils.web.request.WebRequest;
 import com.flance.web.utils.web.response.WebResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -36,6 +37,18 @@ public class GlobalExceptionAdvice {
         log.error("请求方式不支持[{}]", ex.getMethod());
         ex.printStackTrace();
         return WebResponse.getFailed("-1", "请求方式不支持[{" + ex.getMethod() + "}]");
+    }
+
+
+    /**
+     * 参数校验异常，全局异常捕捉处理
+     */
+    @ResponseBody
+    @ExceptionHandler(value = MethodArgumentNotValidException.class)
+    public WebResponse errorHandler(MethodArgumentNotValidException ex) {
+        log.error("参数校验异常[{}]", ex.getMessage());
+        ex.printStackTrace();
+        return WebResponse.getFailed("-1", "参数校验异常[{" + ex.getMessage() + "}]");
     }
 
     @ResponseBody
