@@ -56,7 +56,13 @@ public class GlobalResponseBodyAdvice implements ResponseBodyAdvice<Object> {
                 result = WebResponse.getSucceed(body, "请求成功");
             }
         } else {
-            result = WebResponse.getFailed(body, "-1", "请求失败，响应无法解析");
+            try {
+                result = WebResponse.getSucceed(body, "请求成功");
+            } catch (Exception e) {
+                e.printStackTrace();
+                result = WebResponse.getFailed(body, "-1", "请求失败[" + e.getMessage() + "]");
+            }
+
         }
         log.info("接口响应：" + GsonUtils.toJSONString(result));
         return result;
