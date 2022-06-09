@@ -1,4 +1,8 @@
 package com.flance.tx.datasource.proxy.plugins;
 
-public interface FlanceMybatisPlugins {
+import org.apache.ibatis.plugin.Interceptor;
+
+public interface FlanceMybatisPlugins extends Interceptor {
+
+
 }

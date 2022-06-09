@@ -1,5 +1,6 @@
 package com.flance.tx.datasource.proxy.plugins;
 
+import com.flance.tx.datasource.proxy.FlanceTxProxy;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.Advisor;
 import org.springframework.aop.TargetSource;
@@ -24,6 +25,7 @@ public class FlanceMybatisPluginCreator extends AbstractAutoProxyCreator {
     @Override
     protected boolean shouldSkip(Class<?> beanClass, String beanName) {
         return !FlanceMybatisPlugins.class.isAssignableFrom(beanClass) ||
+                FlanceTxProxy.class.isAssignableFrom(beanClass) ||
                 MybatisPluginProxyAdvice.class.isAssignableFrom(beanClass);
     }
 

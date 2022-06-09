@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
         @Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class}),
         @Signature(type = Executor.class, method = "update", args = {MappedStatement.class, Object.class})
 })
-public class ATExecutorHandlerInterceptor  implements FlanceMybatisPlugins, Interceptor {
+public class ATExecutorHandlerInterceptor implements FlanceMybatisPlugins {
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
