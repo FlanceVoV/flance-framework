@@ -26,20 +26,15 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Proxy tools base on spring
- *
- * @author zhangsen
+ * spring 代理工具
+ * @author jhf
  */
 public class SpringProxyUtils {
     private SpringProxyUtils() {
     }
 
     /**
-     * Find target class class.
-     *
-     * @param proxy the proxy
-     * @return the class
-     * @throws Exception the exception
+     * 返回代理的目标类
      */
     public static Class<?> findTargetClass(Object proxy) throws Exception {
         if (proxy == null) {
@@ -52,6 +47,9 @@ public class SpringProxyUtils {
         return proxy.getClass();
     }
 
+    /**
+     * 返回代理的接口
+     */
     public static Class<?>[] findInterfaces(Object proxy) throws Exception {
         if (AopUtils.isJdkDynamicProxy(proxy)) {
             AdvisedSupport advised = getAdvisedSupport(proxy);
@@ -61,6 +59,9 @@ public class SpringProxyUtils {
         }
     }
 
+    /**
+     * 获取接口
+     */
     private static Class<?>[] getInterfacesByAdvised(AdvisedSupport advised) {
         Class<?>[] interfaces = advised.getProxiedInterfaces();
         if (interfaces.length > 0) {
@@ -71,11 +72,7 @@ public class SpringProxyUtils {
     }
 
     /**
-     * Gets advised support.
-     *
-     * @param proxy the proxy
-     * @return the advised support
-     * @throws Exception the exception
+     * 获取 AdvisedSupport
      */
     public static AdvisedSupport getAdvisedSupport(Object proxy) throws Exception {
         Field h;
@@ -92,11 +89,7 @@ public class SpringProxyUtils {
     }
 
     /**
-     * Get the target class , get the interface of its agent if it is a Proxy
-     *
-     * @param proxy the proxy
-     * @return target interface
-     * @throws Exception the exception
+     * 获取代理的接口
      */
     public static Class<?> getTargetInterface(Object proxy) throws Exception {
         if (proxy == null) {
@@ -113,11 +106,7 @@ public class SpringProxyUtils {
     }
 
     /**
-     * Get the class type of the proxy target object, if hadn't a target object, return the interface of the proxy
-     *
-     * @param proxy the proxy
-     * @return target interface
-     * @throws Exception the exception
+     * 获取代理的目标
      */
     protected static Class<?> getTargetClass(Object proxy) throws Exception {
         if (proxy == null) {
@@ -144,9 +133,7 @@ public class SpringProxyUtils {
     }
 
     /**
-     * get the all interfaces of bean, if the bean is null, then return empty array
-     * @param bean the bean
-     * @return target interface
+     * 获取bean的所有接口
      */
     public static Class<?>[] getAllInterfaces(Object bean) {
         Set<Class<?>> interfaces = new HashSet<>();

@@ -1,7 +1,6 @@
 package com.flance.tx.datasource.proxy.plugins;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.plugin.Interceptor;
 import org.springframework.aop.Advisor;
 import org.springframework.aop.TargetSource;
 import org.springframework.aop.framework.autoproxy.AbstractAutoProxyCreator;
@@ -15,7 +14,7 @@ public class FlanceMybatisPluginCreator extends AbstractAutoProxyCreator {
     private final Advisor advisor;
 
     public FlanceMybatisPluginCreator() {
-        advisor = new DefaultIntroductionAdvisor(new CTMybatisPluginProxyAdvice());
+        advisor = new DefaultIntroductionAdvisor(new DefaultMybatisPluginProxyAdvice());
     }
 
     /**
