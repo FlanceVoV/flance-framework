@@ -4,7 +4,9 @@ import com.flance.tx.datasource.annotation.EnableAutoDataSourceProxy;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 
+@ComponentScan({"com.flance.*"})
 @MapperScan("com.flance.*.*.mapper")
 @SpringBootApplication
 @EnableAutoDataSourceProxy
