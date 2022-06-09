@@ -1,6 +1,7 @@
 package com.flance.tx.datasource.proxy.connection;
 
 import com.flance.tx.datasource.proxy.datasource.DataSourceProxy;
+import com.flance.tx.datasource.proxy.statement.CTPreparedStatementProxy;
 import com.flance.tx.datasource.proxy.statement.PreparedStatementProxy;
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,10 +37,8 @@ public abstract class AbstractConnectionProxy implements Connection {
      * 用于执行静态sql语句并返回其生成的结果的对象
      */
     @Override
-    public PreparedStatementProxy prepareStatement(String sql) throws SQLException {
-        log.info("数据连接代理-[{}]", sql);
-        PreparedStatement targetPreparedStatement = targetConnection.prepareStatement(sql);
-        return new PreparedStatementProxy(this, targetPreparedStatement, sql);
+    public PreparedStatement prepareStatement(String sql) throws SQLException {
+        return targetConnection.prepareStatement(sql);
     }
 
     @Override

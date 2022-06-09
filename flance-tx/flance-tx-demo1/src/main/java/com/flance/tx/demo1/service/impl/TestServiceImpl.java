@@ -33,8 +33,13 @@ public class TestServiceImpl implements TestService {
     @FlanceGlobalTransactional
     public String test2(String param1, String param2) {
         log.info("TestServiceImpl - test2");
-        String sql = "select id from sys_flance_api where id = ? limit 0,1";
-        Object obj = jdbcTemplate.query(sql, preparedStatement -> preparedStatement.setString(1, param1), new BeanPropertyRowMapper<>(String.class));
-        return obj + param2;
+        int value = testMapper.testSelect2(param1, param2);
+        return param1 + param2;
+    }
+
+    @Override
+    public String test3() {
+        log.info("TestServiceImpl - test3");
+        return testMapper.testSelect("1") + "2";
     }
 }

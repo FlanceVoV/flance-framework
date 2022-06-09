@@ -33,5 +33,10 @@ public interface TxConstants {
      */
     String AUTO_DATA_SOURCE_PROXY_ATTRIBUTE_KEY_EXCLUDES = "excludes";
 
+    /**
+     * 模式
+     */
+    String AUTO_DATA_SOURCE_PROXY_ATTRIBUTE_KEY_MODULE = "module";
+
 
 }

@@ -1,5 +1,8 @@
 package com.flance.tx.datasource.proxy.datasource;
 
+import com.flance.tx.core.annotation.FlanceGlobalTransactional;
+import com.flance.tx.core.tx.TxThreadLocal;
+import com.flance.tx.datasource.annotation.EnableAutoDataSourceProxy;
 import com.flance.tx.datasource.proxy.FlanceTxProxy;
 import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInterceptor;
@@ -19,13 +22,9 @@ public class FlanceDataSourceProxyAdvice implements MethodInterceptor, Introduct
 
     private final Class<? extends FlanceDataSourceProxy> dataSourceProxyClazz;
 
+
     public FlanceDataSourceProxyAdvice() {
         this.dataSourceProxyClazz = DataSourceProxy.class;
-
-    }
-
-    public FlanceDataSourceProxyAdvice(Class<? extends FlanceDataSourceProxy> dataSourceProxyClazz) {
-        this.dataSourceProxyClazz = dataSourceProxyClazz;
     }
 
     /**
@@ -43,7 +42,22 @@ public class FlanceDataSourceProxyAdvice implements MethodInterceptor, Introduct
             if (methodInvocation.getThis() instanceof FlanceDataSourceProxy) {
                 dataSource = (FlanceDataSourceProxy) methodInvocation.getThis();
             } else {
-                dataSource = new DataSourceProxy((DataSource) methodInvocation.getThis());
+                FlanceGlobalTransactional.Module module = TxThreadLocal.getTxModule();
+                if (null == module) {
+                    return methodInvocation.proceed();
+                }
+                log.info("检测到全局事务 - 模式 - [{}]", module.getModule());
+                switch (module) {
+                    case CT:
+                        dataSource = new CTDataSourceProxy((DataSource) methodInvocation.getThis());
+                        break;
+                    case AT:
+                        dataSource = new DataSourceProxy((DataSource) methodInvocation.getThis());
+                        break;
+                    default:
+                        dataSource = (DataSource) methodInvocation.getThis();
+                        break;
+                }
             }
             return m.invoke(dataSource, args);
         } else {

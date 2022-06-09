@@ -39,5 +39,26 @@ public @interface FlanceGlobalTransactional {
     Class<? extends Throwable>[] noRollbackFor() default {};
 
 
+    Module module() default Module.CT;
+
+    enum Module {
+
+        CT("CT"),
+        AT("AT"),
+        ;
+
+
+        private final String module;
+
+        Module(String module) {
+            this.module = module;
+        }
+
+        public String getModule() {
+            return module;
+        }
+    }
+
+
 
 }

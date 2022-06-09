@@ -21,12 +21,14 @@ public class FlanceDataSourceProxyCreator extends AbstractAutoProxyCreator {
 
     private final List<String> excludes;
 
+
     /**
      * 构造函数，创建数据源代理切面
      */
     public FlanceDataSourceProxyCreator() {
         this.excludes = Lists.newArrayList();
         this.advisor = new DefaultIntroductionAdvisor(new FlanceDataSourceProxyAdvice());
+
     }
 
     public FlanceDataSourceProxyCreator(List<String> excludes) {

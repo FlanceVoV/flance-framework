@@ -1,6 +1,5 @@
 package com.flance.tx.datasource.proxy.datasource;
 
-import com.flance.tx.datasource.proxy.connection.ConnectionProxy;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -21,15 +20,13 @@ public class DataSourceProxy extends AbstractDataSourceProxy {
     }
 
     @Override
-    public ConnectionProxy getConnection() throws SQLException {
-        Connection targetConnection = targetDataSource.getConnection();
-        return  new ConnectionProxy(this, targetConnection);
+    public Connection getConnection() throws SQLException {
+        return targetDataSource.getConnection();
     }
 
     @Override
-    public ConnectionProxy getConnection(String username, String password) throws SQLException {
-        Connection targetConnection = targetDataSource.getConnection(username, password);
-        return new ConnectionProxy(this, targetConnection);
+    public Connection getConnection(String username, String password) throws SQLException {
+        return targetDataSource.getConnection(username, password);
     }
 
     public String getDbType() {

@@ -6,4 +6,6 @@ public interface TestService {
 
     String test2(String param1, String param2);
 
+    String test3();
+
 }

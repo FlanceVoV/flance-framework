@@ -28,4 +28,9 @@ public class TestController {
         return testService.test2(param1, param2);
     }
 
+    @GetMapping("/t3")
+    public String test3() {
+        return testService.test3();
+    }
+
 }
