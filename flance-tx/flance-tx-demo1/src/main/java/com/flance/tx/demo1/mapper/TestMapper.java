@@ -18,7 +18,7 @@ public interface TestMapper {
     @Select("select id from sys_flance_api where id = #{id, jdbcType=VARCHAR} limit 0,1")
     String testSelect(@Param("id") String id);
 
-    @Insert("insert into flance_test (id, name) values(#{name, jdbcType=VARCHAR}, #{name, jdbcType=VARCHAR})")
+    @Insert("insert into flance_test (id, name) values(#{id, jdbcType=VARCHAR}, #{name, jdbcType=VARCHAR})")
     int testSelect2(@Param("id") String id, @Param("name") String name);
 
     @Delete("delete * from flance_test where id = #{id}")

@@ -6,10 +6,13 @@ import com.flance.tx.core.annotation.FlanceGlobalTransactional;
 import com.flance.tx.core.tx.TxThreadLocal;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.plugin.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * CT 模式 executor 处理器
@@ -27,6 +30,11 @@ public class CTExecutorHandler implements ExecutorHandler {
 
         MappedStatement mappedStatement = (MappedStatement) invocation.getArgs()[0];
         Object params = invocation.getArgs()[1];
+
+        BoundSql boundSql = mappedStatement.getBoundSql(params);
+
+        String sql = boundSql.getSql();
+        Map<Object, Object> paramsMap = (HashMap) boundSql.getParameterObject();
 
         switch (mappedStatement.getSqlCommandType()) {
             case INSERT:

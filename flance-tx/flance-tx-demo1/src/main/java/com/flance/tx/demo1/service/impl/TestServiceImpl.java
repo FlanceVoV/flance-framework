@@ -33,10 +33,10 @@ public class TestServiceImpl implements TestService {
 
     @Override
     @FlanceGlobalTransactional
-    public String test2(String param1, String param2) {
+    public String test2() {
         log.info("TestServiceImpl - test2");
-        List<String> list = testMapper.testSelect3("1");
-        return GsonUtils.toJSONString(list) + "2";
+        int i = testMapper.testSelect2("1", "2");
+        return i + "2";
     }
 
     @Override

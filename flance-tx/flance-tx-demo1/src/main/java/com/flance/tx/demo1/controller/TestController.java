@@ -23,9 +23,8 @@ public class TestController {
     }
 
     @GetMapping("/t2")
-    public String test2(String param1, String param2) {
-
-        return testService.test2(param1, param2);
+    public String test2() {
+        return testService.test2();
     }
 
     @GetMapping("/t3")

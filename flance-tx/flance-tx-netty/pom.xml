@@ -18,6 +18,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
         </dependency>
@@ -31,6 +36,17 @@
             <groupId>com.flance</groupId>
             <artifactId>flance-jdbc-mybatis</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.flance</groupId>
+            <artifactId>flance-tx-common</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.flance</groupId>
+            <artifactId>flance-tx-datasource</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>
