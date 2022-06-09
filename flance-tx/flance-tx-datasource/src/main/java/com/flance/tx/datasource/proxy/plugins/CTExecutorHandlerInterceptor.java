@@ -10,15 +10,16 @@ import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.plugin.*;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-
+@Component
 @Intercepts({
         @Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class}),
         @Signature(type = Executor.class, method = "update", args = {MappedStatement.class, Object.class})
 })
-public class CTExecutorHandlerInterceptor implements Interceptor {
+public class CTExecutorHandlerInterceptor implements FlanceMybatisPlugins, Interceptor {
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {

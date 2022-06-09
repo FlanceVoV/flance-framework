@@ -24,8 +24,8 @@ public class FlanceMybatisPluginCreator extends AbstractAutoProxyCreator {
      */
     @Override
     protected boolean shouldSkip(Class<?> beanClass, String beanName) {
-        return !Interceptor.class.isAssignableFrom(beanClass) ||
-                FlanceMybatisPlugins.class.isAssignableFrom(beanClass);
+        return !FlanceMybatisPlugins.class.isAssignableFrom(beanClass) ||
+                MybatisPluginProxyAdvice.class.isAssignableFrom(beanClass);
     }
 
     @Override
