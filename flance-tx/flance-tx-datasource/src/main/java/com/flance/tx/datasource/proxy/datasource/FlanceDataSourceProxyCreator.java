@@ -1,6 +1,7 @@
 package com.flance.tx.datasource.proxy.datasource;
 
 import com.flance.tx.datasource.proxy.FlanceTxProxy;
+import com.flance.tx.datasource.proxy.datasource.FlanceDataSourceProxyAdvice;
 import com.google.common.collect.Lists;
 import org.springframework.aop.Advisor;
 import org.springframework.aop.TargetSource;
@@ -46,7 +47,6 @@ public class FlanceDataSourceProxyCreator extends AbstractAutoProxyCreator {
 
     /**
      * 跳过代理创建
-     * 只接受数据源的、实现FlanceTxProxy和excludes配置的
      */
     @Override
     protected boolean shouldSkip(Class<?> beanClass, String beanName) {

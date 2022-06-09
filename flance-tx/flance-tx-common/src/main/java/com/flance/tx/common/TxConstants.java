@@ -25,7 +25,7 @@ public interface TxConstants {
     /**
      *
      */
-    String TEST = "ctExecutorHandler";
+    String BEAN_NAME_MYBATIS_PLUGIN_CREATOR = "flanceMybatisPluginCreator";
 
     /**
      * 默认字符集
