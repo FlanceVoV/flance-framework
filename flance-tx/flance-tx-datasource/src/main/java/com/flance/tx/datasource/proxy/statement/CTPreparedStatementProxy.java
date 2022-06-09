@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
 /**
@@ -65,6 +66,8 @@ public class CTPreparedStatementProxy extends PreparedStatementProxy {
         return super.execute(sql, columnNames);
     }
 
-
-
+    @Override
+    public ResultSetMetaData getMetaData() throws SQLException {
+        return super.getMetaData();
+    }
 }

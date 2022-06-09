@@ -33,4 +33,10 @@ public class TestController {
         return testService.test3();
     }
 
+    @GetMapping("/t4")
+    public String test4() {
+        testService.test4();
+        return "11";
+    }
+
 }

@@ -22,6 +22,11 @@
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.flance</groupId>
+            <artifactId>flance-jdbc-mybatis</artifactId>
+        </dependency>
+
         <!-- spring  -->
         <dependency>
             <groupId>org.springframework</groupId>

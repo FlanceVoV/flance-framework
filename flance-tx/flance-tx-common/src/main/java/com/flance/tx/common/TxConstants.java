@@ -23,6 +23,11 @@ public interface TxConstants {
     String BEAN_NAME_DATA_SOURCE_PROXY_CREATOR = "flanceDataSourceProxyCreator";
 
     /**
+     *
+     */
+    String TEST = "ctExecutorHandler";
+
+    /**
      * 默认字符集
      */
     String DEFAULT_CHARSET_NAME = "UTF-8";

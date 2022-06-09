@@ -8,4 +8,6 @@ public interface TestService {
 
     String test3();
 
+    void test4();
+
 }
