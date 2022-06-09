@@ -55,8 +55,7 @@ public class FlanceDataSourceProxyAdvice implements MethodInterceptor, Introduct
                         dataSource = new DataSourceProxy((DataSource) methodInvocation.getThis());
                         break;
                     default:
-                        dataSource = (DataSource) methodInvocation.getThis();
-                        break;
+                        return methodInvocation.proceed();
                 }
             }
             return m.invoke(dataSource, args);

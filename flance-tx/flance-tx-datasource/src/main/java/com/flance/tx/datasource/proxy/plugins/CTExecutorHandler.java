@@ -5,24 +5,21 @@ import com.flance.tx.common.utils.GsonUtils;
 import com.flance.tx.core.annotation.FlanceGlobalTransactional;
 import com.flance.tx.core.tx.TxThreadLocal;
 import com.google.common.collect.Lists;
-import org.apache.ibatis.executor.Executor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.plugin.*;
-import org.apache.ibatis.session.ResultHandler;
-import org.apache.ibatis.session.RowBounds;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component("cTExecutorHandlerInterceptor")
-@Intercepts({
-        @Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class}),
-        @Signature(type = Executor.class, method = "update", args = {MappedStatement.class, Object.class})
-})
-public class CTExecutorHandlerInterceptor implements FlanceMybatisPlugins {
+/**
+ * CT 模式 executor 处理器
+ * @author jhf
+ */
+@Slf4j
+public class CTExecutorHandler implements ExecutorHandler {
 
-    @Override
-    public Object intercept(Invocation invocation) throws Throwable {
+    public static Object intercept(Invocation invocation) throws Throwable {
+        log.info("CT 模式 CTExecutorHandler");
         FlanceGlobalTransactional.Module module = TxThreadLocal.getTxModule();
         if (null == module) {
             return invocation.proceed();

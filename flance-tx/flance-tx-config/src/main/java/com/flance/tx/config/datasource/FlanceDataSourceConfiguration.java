@@ -2,7 +2,6 @@ package com.flance.tx.config.datasource;
 
 import com.flance.tx.config.configs.FlanceTxConfigs;
 import com.flance.tx.datasource.proxy.datasource.FlanceDataSourceProxyCreator;
-import com.flance.tx.datasource.proxy.plugins.FlanceMybatisPluginCreator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
@@ -26,12 +25,6 @@ public class FlanceDataSourceConfiguration {
     @ConditionalOnMissingBean(FlanceDataSourceProxyCreator.class)
     public FlanceDataSourceProxyCreator flanceDataSourceProxyCreator(FlanceTxConfigs flanceTxConfigs) {
         return new FlanceDataSourceProxyCreator();
-    }
-
-    @Bean(BEAN_NAME_MYBATIS_PLUGIN_CREATOR)
-    @ConditionalOnMissingBean(FlanceMybatisPluginCreator.class)
-    public FlanceMybatisPluginCreator ctExecutorHandler() {
-        return new FlanceMybatisPluginCreator();
     }
 
 }
