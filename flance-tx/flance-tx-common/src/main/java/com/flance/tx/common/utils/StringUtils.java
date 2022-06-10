@@ -21,27 +21,12 @@ public class StringUtils {
     private StringUtils() {
     }
 
-    /**
-     * empty string
-     */
     public static final String EMPTY = "";
 
-    /**
-     * Is empty boolean.
-     *
-     * @param str the str
-     * @return the boolean
-     */
     public static boolean isNullOrEmpty(String str) {
         return (str == null) || (str.isEmpty());
     }
 
-    /**
-     * Is blank string ?
-     *
-     * @param str the str
-     * @return boolean boolean
-     */
     public static boolean isBlank(String str) {
         int length;
 
@@ -56,23 +41,10 @@ public class StringUtils {
         return true;
     }
 
-    /**
-     * Is Not blank string ?
-     *
-     * @param str the str
-     * @return boolean boolean
-     */
     public static boolean isNotBlank(String str) {
         return !isBlank(str);
     }
 
-    /**
-     * Equals boolean.
-     *
-     * @param a the a
-     * @param b the b
-     * @return boolean
-     */
     public static boolean equals(String a, String b) {
         if (a == null) {
             return b == null;
@@ -80,13 +52,6 @@ public class StringUtils {
         return a.equals(b);
     }
 
-    /**
-     * Equals ignore case boolean.
-     *
-     * @param a the a
-     * @param b the b
-     * @return the boolean
-     */
     public static boolean equalsIgnoreCase(String a, String b) {
         if (a == null) {
             return b == null;
@@ -94,12 +59,6 @@ public class StringUtils {
         return a.equalsIgnoreCase(b);
     }
 
-    /**
-     * Input stream 2 string string.
-     *
-     * @param is the is
-     * @return the string
-     */
     public static String inputStream2String(InputStream is) {
         if (is == null) {
             return null;
@@ -116,12 +75,6 @@ public class StringUtils {
         }
     }
 
-    /**
-     * Input stream to byte array
-     *
-     * @param is the is
-     * @return the byte array
-     */
     public static byte[] inputStream2Bytes(InputStream is) {
         if (is == null) {
             return null;
@@ -138,12 +91,6 @@ public class StringUtils {
         }
     }
 
-    /**
-     * Object.toString()
-     *
-     * @param obj the obj
-     * @return string string
-     */
     public static String toString(Object obj) {
         if (obj == null) {
             return "null";
@@ -206,44 +153,31 @@ public class StringUtils {
         return sb.toString();
     }
 
-    /**
-     * Trim string to null if empty("").
-     *
-     * @param str the String to be trimmed, may be null
-     * @return the trimmed String
-     */
     public static String trimToNull(final String str) {
         final String ts = trim(str);
         return isEmpty(ts) ? null : ts;
     }
 
-    /**
-     * Trim string, or null if string is null.
-     *
-     * @param str the String to be trimmed, may be null
-     * @return the trimmed string, {@code null} if null String input
-     */
     public static String trim(final String str) {
         return str == null ? null : str.trim();
     }
 
-    /**
-     * Checks if a CharSequence is empty ("") or null.
-     *
-     * @param cs the CharSequence to check, may be null
-     * @return {@code true} if the CharSequence is empty or null
-     */
+
     public static boolean isEmpty(final CharSequence cs) {
         return cs == null || cs.length() == 0;
     }
 
-    /**
-     * Checks if a CharSequence is not empty ("") and not null.
-     *
-     * @param cs the CharSequence to check, may be null
-     * @return {@code true} if the CharSequence is not empty and not null
-     */
+
     public static boolean isNotEmpty(final CharSequence cs) {
         return !isEmpty(cs);
+    }
+
+    public static boolean isNumeric(String str) {
+        for (int i = str.length(); --i >= 0; ) {
+            if (!Character.isDigit(str.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
     }
 }
