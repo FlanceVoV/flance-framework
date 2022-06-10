@@ -1,6 +1,5 @@
-package com.flance.tx.datasource.annotation;
+package com.flance.tx.config.tx;
 
-import com.flance.tx.datasource.proxy.datasource.AutoDataSourceProxyRegistrar;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.*;
@@ -10,10 +9,12 @@ import java.lang.annotation.*;
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Import(AutoDataSourceProxyRegistrar.class)
+@Import(EnableFlanceTxRegistrar.class)
 @Documented
-public @interface EnableAutoDataSourceProxy {
+public @interface EnableFlanceTx {
 
     String[] excludes() default {};
+
+    boolean enableDataSourceProxy() default true;
 
 }

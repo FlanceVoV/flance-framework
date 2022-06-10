@@ -3,7 +3,10 @@ flance:
     enabled: true
     enable-datasource-proxy: true
     application-id: flance-tx-demo1
+    server-module: netty
 
+server:
+  port: 8081
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/flance_elearning?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true

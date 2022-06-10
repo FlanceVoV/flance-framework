@@ -1,6 +1,5 @@
 package com.flance.tx.config.configs;
 
-import com.flance.tx.config.configs.FlanceTxConfigs;
 import com.flance.tx.config.tx.DefaultFailureHandler;
 import com.flance.tx.config.tx.FailureHandler;
 import com.flance.tx.config.tx.FlanceGlobalTxScanner;
@@ -31,7 +30,7 @@ public class FlanceTxAutoConfiguration {
     @ConditionalOnMissingBean(FlanceGlobalTxScanner.class)
     public FlanceGlobalTxScanner globalTransactionScanner(FlanceTxConfigs flanceTxConfigs, FailureHandler failureHandler) {
         log.info("自动装配-flance全局事务扫描器-FlanceGlobalTxScanner");
-        return new FlanceGlobalTxScanner(flanceTxConfigs.getApplicationId(), flanceTxConfigs.getTxServiceGroup(), failureHandler);
+        return new FlanceGlobalTxScanner(flanceTxConfigs, failureHandler);
     }
 
 

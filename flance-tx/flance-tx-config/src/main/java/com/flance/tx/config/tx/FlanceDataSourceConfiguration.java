@@ -1,4 +1,4 @@
-package com.flance.tx.config.datasource;
+package com.flance.tx.config.tx;
 
 import com.flance.tx.config.configs.FlanceTxConfigs;
 import com.flance.tx.datasource.proxy.datasource.FlanceDataSourceProxyCreator;

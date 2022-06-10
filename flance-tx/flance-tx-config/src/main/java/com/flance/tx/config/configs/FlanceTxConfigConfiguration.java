@@ -1,6 +1,6 @@
 package com.flance.tx.config.configs;
 
-import com.flance.tx.config.datasource.FlanceDataSourceConfiguration;
+import com.flance.tx.config.tx.FlanceDataSourceConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

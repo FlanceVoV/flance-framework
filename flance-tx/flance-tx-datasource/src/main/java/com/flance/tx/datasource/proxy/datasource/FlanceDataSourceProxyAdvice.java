@@ -2,7 +2,6 @@ package com.flance.tx.datasource.proxy.datasource;
 
 import com.flance.tx.core.annotation.FlanceGlobalTransactional;
 import com.flance.tx.core.tx.TxThreadLocal;
-import com.flance.tx.datasource.annotation.EnableAutoDataSourceProxy;
 import com.flance.tx.datasource.proxy.FlanceTxProxy;
 import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInterceptor;

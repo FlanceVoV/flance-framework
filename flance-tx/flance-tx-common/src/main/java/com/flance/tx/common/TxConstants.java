@@ -38,10 +38,12 @@ public interface TxConstants {
      */
     String AUTO_DATA_SOURCE_PROXY_ATTRIBUTE_KEY_EXCLUDES = "excludes";
 
-    /**
-     * 模式
-     */
-    String AUTO_DATA_SOURCE_PROXY_ATTRIBUTE_KEY_MODULE = "module";
+    String ENABLE_AUTO_DATA_SOURCE_PROXY = "enableDataSourceProxy";
 
+
+    /**
+     * 服务模式
+     */
+    String TX_CENTER_MODULE_NETTY = "netty";
 
 }

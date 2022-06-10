@@ -1,7 +1,6 @@
 package com.flance.tx.datasource.proxy.datasource;
 
 import com.flance.tx.datasource.proxy.FlanceTxProxy;
-import com.flance.tx.datasource.proxy.datasource.FlanceDataSourceProxyAdvice;
 import com.google.common.collect.Lists;
 import org.springframework.aop.Advisor;
 import org.springframework.aop.TargetSource;

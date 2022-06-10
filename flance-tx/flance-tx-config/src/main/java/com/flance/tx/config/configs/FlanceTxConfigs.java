@@ -36,5 +36,10 @@ public class FlanceTxConfigs {
      */
     private String txServiceGroup;
 
+    /**
+     * 服务模式
+     */
+    private String serverModule;
+
 
 }

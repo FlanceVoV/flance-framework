@@ -1,7 +1,10 @@
 package com.flance.tx.config.tx;
 
+import com.flance.tx.common.client.netty.CTNettyClient;
 import com.flance.tx.common.utils.CollectionUtils;
 import com.flance.tx.common.utils.SpringProxyUtils;
+import com.flance.tx.config.configs.FlanceTxConfigs;
+import com.flance.tx.config.rpc.netty.NettyClientStart;
 import com.flance.tx.core.annotation.FlanceGlobalLock;
 import com.flance.tx.core.annotation.FlanceGlobalTransactional;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +21,8 @@ import org.springframework.context.ApplicationContextAware;
 
 import java.lang.reflect.Method;
 
+import static com.flance.tx.common.TxConstants.*;
+
 /**
  * 全局事务扫描
  * @author jhf
@@ -26,6 +31,8 @@ import java.lang.reflect.Method;
 public class FlanceGlobalTxScanner extends AbstractAutoProxyCreator implements InitializingBean, ApplicationContextAware {
 
     private static final int ORDER_NUM = 1024;
+
+    private final FlanceTxConfigs flanceTxConfigs;
 
     private MethodInterceptor interceptor;
     private MethodInterceptor flanceGlobalTxInterceptor;
@@ -38,9 +45,10 @@ public class FlanceGlobalTxScanner extends AbstractAutoProxyCreator implements I
 
     private final FailureHandler failureHandler;
 
-    public FlanceGlobalTxScanner(String txServiceGroup, String applicationId, FailureHandler failureHandler) {
-        this.txServiceGroup = txServiceGroup;
-        this.applicationId = applicationId;
+    public FlanceGlobalTxScanner(FlanceTxConfigs flanceTxConfigs, FailureHandler failureHandler) {
+        this.flanceTxConfigs = flanceTxConfigs;
+        this.txServiceGroup = flanceTxConfigs.getTxServiceGroup();
+        this.applicationId = flanceTxConfigs.getApplicationId();
         this.failureHandler = failureHandler;
         setOrder(ORDER_NUM);
         setProxyTargetClass(true);
@@ -118,14 +126,14 @@ public class FlanceGlobalTxScanner extends AbstractAutoProxyCreator implements I
                 if (clazz == null) {
                     continue;
                 }
-                FlanceGlobalTransactional trxAnno = clazz.getAnnotation(FlanceGlobalTransactional.class);
-                if (trxAnno != null) {
+                FlanceGlobalTransactional globalTransactional = clazz.getAnnotation(FlanceGlobalTransactional.class);
+                if (globalTransactional != null) {
                     return false;
                 }
                 Method[] methods = clazz.getMethods();
                 for (Method method : methods) {
-                    trxAnno = method.getAnnotation(FlanceGlobalTransactional.class);
-                    if (trxAnno != null) {
+                    globalTransactional = method.getAnnotation(FlanceGlobalTransactional.class);
+                    if (globalTransactional != null) {
                         return false;
                     }
 
@@ -145,6 +153,12 @@ public class FlanceGlobalTxScanner extends AbstractAutoProxyCreator implements I
      * RM 客户端
      */
     private void initClient() {
-
+        switch (flanceTxConfigs.getServerModule()) {
+            case TX_CENTER_MODULE_NETTY:
+                NettyClientStart.startNettyClient();
+                break;
+            default:
+                return;
+        }
     }
 }
