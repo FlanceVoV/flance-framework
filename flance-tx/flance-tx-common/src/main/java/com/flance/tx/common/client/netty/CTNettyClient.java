@@ -6,7 +6,10 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.LineBasedFrameDecoder;
+import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
+import io.netty.handler.timeout.ReadTimeoutHandler;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,14 +32,16 @@ public class CTNettyClient implements NettyClient {
     public void start() throws Exception {
         final EventLoopGroup group = new NioEventLoopGroup();
         Bootstrap b = new Bootstrap();
-        b.group(group).channel(NioSocketChannel.class)  // 使用NioSocketChannel来作为连接用的channel类
+        b.group(group)
+                .channel(NioSocketChannel.class)  // 使用NioSocketChannel来作为连接用的channel类
                 .handler(new ChannelInitializer<SocketChannel>() { // 绑定连接初始化器
                     @Override
                     public void initChannel(SocketChannel ch) throws Exception {
                         System.out.println("正在连接中...");
                         ChannelPipeline pipeline = ch.pipeline();
+                        pipeline.addLast(new LineBasedFrameDecoder(1024));
                         pipeline.addLast(new StringEncoder()); //编码request
-                        pipeline.addLast(new StringEncoder()); //解码response
+                        pipeline.addLast(new StringDecoder()); //解码response
                         pipeline.addLast(new CTNettyHandler()); //客户端处理类
 
                     }

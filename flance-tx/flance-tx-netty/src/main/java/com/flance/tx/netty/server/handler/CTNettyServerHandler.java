@@ -1,5 +1,9 @@
 package com.flance.tx.netty.server.handler;
 
+import com.flance.tx.common.client.netty.data.NettyRequest;
+import com.flance.tx.common.client.netty.data.NettyResponse;
+import com.flance.tx.common.utils.GsonUtils;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -12,11 +16,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 @Slf4j
-public class TxHandler extends SimpleChannelInboundHandler {
+public class CTNettyServerHandler extends SimpleChannelInboundHandler<String> {
 
     private DataSource dataSource;
 
-    public TxHandler(DataSource dataSource) {
+    public CTNettyServerHandler(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
@@ -38,22 +42,20 @@ public class TxHandler extends SimpleChannelInboundHandler {
     }
 
     @Override
-    public void channelRead0(ChannelHandlerContext channelHandlerContext, Object msg) throws Exception {
+    public void channelRead0(ChannelHandlerContext channelHandlerContext, String msg) throws Exception {
         log.info("读取信息");
         if(msg instanceof String) {
-            log.info(msg.toString());
-            Connection connection = dataSource.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(msg.toString());
-            preparedStatement.execute();
-            ResultSet resultSet = preparedStatement.getResultSet();
+            NettyRequest request = GsonUtils.fromString(msg.toString(), NettyRequest.class);
+            if (request.getIsHeartBeat()) {
+                NettyResponse response = new NettyResponse();
+                response.setIsHeartBeat(true);
+                response.setData("成功");
+                response.setMessageId(request.getMessageId());
+                response.setSuccess(true);
+                channelHandlerContext.writeAndFlush(GsonUtils.toJSONString(response) + "\r\n").addListener(ChannelFutureListener.CLOSE_ON_FAILURE);
+                return;
+            }
 
-        }
-    }
-
-    @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        log.info("读取信息");
-        if(msg instanceof String) {
             log.info(msg.toString());
             Connection connection = dataSource.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(msg.toString());

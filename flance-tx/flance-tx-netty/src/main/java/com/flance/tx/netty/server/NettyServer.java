@@ -1,11 +1,10 @@
 package com.flance.tx.netty.server;
 
-import com.flance.tx.netty.server.handler.TxHandler;
+import com.flance.tx.netty.server.handler.CTNettyServerHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
@@ -38,14 +37,13 @@ public class NettyServer {
             ServerBootstrap sb = new ServerBootstrap()
                     .group(boss, worker)
                     .channel(NioServerSocketChannel.class)
-                    .option(ChannelOption.SO_BACKLOG, 128)
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
                             socketChannel.pipeline().addLast(new LineBasedFrameDecoder(1024));
-                            socketChannel.pipeline().addLast(new StringDecoder());
                             socketChannel.pipeline().addLast(new StringEncoder());
-                            socketChannel.pipeline().addLast(new TxHandler(dataSource));
+                            socketChannel.pipeline().addLast(new StringDecoder());
+                            socketChannel.pipeline().addLast(new CTNettyServerHandler(dataSource));
                         }
                     });
             future = sb.bind(port).sync();
