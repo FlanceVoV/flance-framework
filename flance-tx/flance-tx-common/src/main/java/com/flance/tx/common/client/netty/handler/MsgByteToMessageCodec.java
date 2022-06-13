@@ -11,6 +11,9 @@ import java.util.List;
 @Slf4j
 public class MsgByteToMessageCodec extends ByteToMessageCodec<Object> {
 
+    /**
+     * 处理粘包问题
+     */
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf buf, List<Object> out) throws Exception {
         int msgLength = 10;
