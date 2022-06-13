@@ -1,19 +1,16 @@
 package com.flance.tx.netty.server.handler;
 
-import com.flance.tx.common.client.netty.data.NettyRequest;
+import com.flance.tx.common.client.netty.data.DataUtils;
 import com.flance.tx.common.client.netty.data.NettyResponse;
-import com.flance.tx.common.utils.GsonUtils;
+import com.flance.tx.common.client.netty.handler.MsgHandler;
+import com.flance.tx.common.utils.StringUtils;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.nio.charset.StandardCharsets;
 
 @Slf4j
 public class CTNettyServerHandler extends SimpleChannelInboundHandler<String> {
@@ -42,27 +39,50 @@ public class CTNettyServerHandler extends SimpleChannelInboundHandler<String> {
     }
 
     @Override
-    public void channelRead0(ChannelHandlerContext channelHandlerContext, String msg) throws Exception {
-        log.info("读取信息");
-        if(msg instanceof String) {
-            NettyRequest request = GsonUtils.fromString(msg.toString(), NettyRequest.class);
-            if (request.getIsHeartBeat()) {
-                NettyResponse response = new NettyResponse();
-                response.setIsHeartBeat(true);
-                response.setData("成功");
-                response.setMessageId(request.getMessageId());
-                response.setSuccess(true);
-                channelHandlerContext.writeAndFlush(GsonUtils.toJSONString(response) + "\r\n").addListener(ChannelFutureListener.CLOSE_ON_FAILURE);
+    public void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
+        int len = 10;
+        NettyResponse response;
+        String writeMsg = "";
+        String recieve = "";
+        try {
+            recieve = (String) msg;
+            log.info("服务端接收到的内容为:{}", msg);
+            //小于64位不处理
+            if (recieve.length() < len) {
+                log.info("报文小于10位");
+                ctx.close();
+                return;
+            }
+            String length = recieve.substring(0, 10);
+            //非数字不处理
+            log.info("报文前十位[{}]", length);
+            if (!StringUtils.isNumeric(length)) {
+                log.error("报文前十位非数字[{}]", length);
+                return;
+            }
+            //报文长度小于前四位指定的长度 不处理
+            log.info("数据报文长度[{}]", recieve.getBytes(StandardCharsets.UTF_8).length);
+            log.info("业务报文长度[{}]", recieve.getBytes(StandardCharsets.UTF_8).length - len);
+            if (recieve.getBytes(StandardCharsets.UTF_8).length - len < Integer.parseInt(length)) {
+                log.info("报文长度不够");
+                ctx.close();
                 return;
             }
 
-            log.info(msg.toString());
-            Connection connection = dataSource.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(msg.toString());
-            preparedStatement.execute();
-            ResultSet resultSet = preparedStatement.getResultSet();
-
+            byte[] msgBytes = recieve.getBytes(StandardCharsets.UTF_8);
+            //截取报文前十位长度的报文
+            byte[] tempMsg = new byte[Integer.parseInt(length)];
+            System.arraycopy(msgBytes, 10, tempMsg, 0, tempMsg.length);
+            MsgHandler msgHandler = new MsgHandler();
+            response = msgHandler.handler(new String(tempMsg, StandardCharsets.UTF_8));
+            writeMsg = DataUtils.getStr(response);
+            log.info("服务端响应的的内容为:{}", response);
+        } catch (Exception e) {
+            log.error("报文解析异常，报文内容为:" + msg, e);
+        } finally {
+            ctx.writeAndFlush(writeMsg.getBytes(StandardCharsets.UTF_8)).addListener(ChannelFutureListener.CLOSE_ON_FAILURE);
         }
+
     }
 
     @Override

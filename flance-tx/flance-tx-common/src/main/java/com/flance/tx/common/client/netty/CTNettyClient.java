@@ -1,6 +1,7 @@
 package com.flance.tx.common.client.netty;
 
 import com.flance.tx.common.client.netty.handler.CTNettyHandler;
+import com.flance.tx.common.client.netty.handler.MsgByteToMessageCodec;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -39,7 +40,7 @@ public class CTNettyClient implements NettyClient {
                     public void initChannel(SocketChannel ch) throws Exception {
                         System.out.println("正在连接中...");
                         ChannelPipeline pipeline = ch.pipeline();
-                        pipeline.addLast(new LineBasedFrameDecoder(1024));
+                        pipeline.addLast(new MsgByteToMessageCodec());
                         pipeline.addLast(new StringEncoder()); //编码request
                         pipeline.addLast(new StringDecoder()); //解码response
                         pipeline.addLast(new CTNettyHandler()); //客户端处理类

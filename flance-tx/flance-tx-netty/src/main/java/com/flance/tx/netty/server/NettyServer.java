@@ -1,5 +1,6 @@
 package com.flance.tx.netty.server;
 
+import com.flance.tx.common.client.netty.handler.MsgByteToMessageCodec;
 import com.flance.tx.netty.server.handler.CTNettyServerHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
@@ -40,7 +41,7 @@ public class NettyServer {
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
-                            socketChannel.pipeline().addLast(new LineBasedFrameDecoder(1024));
+                            socketChannel.pipeline().addLast(new MsgByteToMessageCodec());
                             socketChannel.pipeline().addLast(new StringEncoder());
                             socketChannel.pipeline().addLast(new StringDecoder());
                             socketChannel.pipeline().addLast(new CTNettyServerHandler(dataSource));

@@ -9,6 +9,6 @@ public class NettyRequest {
 
     private Boolean isHeartBeat;
 
-    private Object data;
+    private String data;
 
 }
