@@ -13,4 +13,9 @@ public class NettyRequest {
 
     private String data;
 
+    /**
+     * 客户端自己的信息
+     */
+    private ServerData serverData;
+
 }
