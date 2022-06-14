@@ -1,24 +1,23 @@
-package com.flance.tx.netty.server.handler;
+package com.flance.tx.common.client.netty.handler;
 
-import com.flance.tx.common.client.netty.data.DataUtils;
-import com.flance.tx.common.client.netty.data.NettyResponse;
-import com.flance.tx.common.client.netty.handler.MsgHandler;
+import com.flance.tx.common.utils.GsonUtils;
 import com.flance.tx.common.utils.StringUtils;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.sql.DataSource;
 import java.nio.charset.StandardCharsets;
 
 @Slf4j
-public class CTNettyServerHandler extends SimpleChannelInboundHandler<String> {
+public abstract class NettyChannelInboundHandler<T, R> extends SimpleChannelInboundHandler<String> {
 
-    private DataSource dataSource;
+    private final IReceiveHandler<T, R> iReceiveHandler;
 
-    public CTNettyServerHandler(DataSource dataSource) {
-        this.dataSource = dataSource;
+    protected T message;
+
+    public NettyChannelInboundHandler(IReceiveHandler<T, R> iReceiveHandler) {
+        this.iReceiveHandler = iReceiveHandler;
     }
 
     @Override
@@ -41,19 +40,18 @@ public class CTNettyServerHandler extends SimpleChannelInboundHandler<String> {
     @Override
     public void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
         int len = 10;
-        NettyResponse response;
-        String writeMsg = "";
-        String recieve = "";
+        T message = null;
+        String receive = "";
         try {
-            recieve = (String) msg;
+            receive = (String) msg;
             log.info("服务端接收到的内容为:{}", msg);
             //小于64位不处理
-            if (recieve.length() < len) {
+            if (receive.length() < len) {
                 log.info("报文小于10位");
                 ctx.close();
                 return;
             }
-            String length = recieve.substring(0, 10);
+            String length = receive.substring(0, 10);
             //非数字不处理
             log.info("报文前十位[{}]", length);
             if (!StringUtils.isNumeric(length)) {
@@ -61,26 +59,28 @@ public class CTNettyServerHandler extends SimpleChannelInboundHandler<String> {
                 return;
             }
             //报文长度小于前四位指定的长度 不处理
-            log.info("数据报文长度[{}]", recieve.getBytes(StandardCharsets.UTF_8).length);
-            log.info("业务报文长度[{}]", recieve.getBytes(StandardCharsets.UTF_8).length - len);
-            if (recieve.getBytes(StandardCharsets.UTF_8).length - len < Integer.parseInt(length)) {
+            log.info("数据报文长度[{}]", receive.getBytes(StandardCharsets.UTF_8).length);
+            log.info("业务报文长度[{}]", receive.getBytes(StandardCharsets.UTF_8).length - len);
+            if (receive.getBytes(StandardCharsets.UTF_8).length - len < Integer.parseInt(length)) {
                 log.info("报文长度不够");
                 ctx.close();
                 return;
             }
 
-            byte[] msgBytes = recieve.getBytes(StandardCharsets.UTF_8);
+            byte[] msgBytes = receive.getBytes(StandardCharsets.UTF_8);
             //截取报文前十位长度的报文
             byte[] tempMsg = new byte[Integer.parseInt(length)];
             System.arraycopy(msgBytes, 10, tempMsg, 0, tempMsg.length);
-            MsgHandler msgHandler = new MsgHandler();
-            response = msgHandler.handler(new String(tempMsg, StandardCharsets.UTF_8));
-            writeMsg = DataUtils.getStr(response);
-            log.info("服务端响应的的内容为:{}", response);
+
+            String receiveMsg = new String(tempMsg, StandardCharsets.UTF_8);
+            log.info("服务端响应的的内容为:{}", receiveMsg);
+            message = iReceiveHandler.handler(receiveMsg);
+            this.message = message;
+            if (null != message) {
+                log.info("服务端响应解析[{}]", GsonUtils.toJSONString(message));
+            }
         } catch (Exception e) {
             log.error("报文解析异常，报文内容为:" + msg, e);
-        } finally {
-            ctx.writeAndFlush(writeMsg.getBytes(StandardCharsets.UTF_8)).addListener(ChannelFutureListener.CLOSE_ON_FAILURE);
         }
 
     }
@@ -90,4 +90,10 @@ public class CTNettyServerHandler extends SimpleChannelInboundHandler<String> {
         log.info("链接异常");
         super.exceptionCaught(ctx, cause);
     }
+
+
+    protected void writeTo(ChannelHandlerContext ctx, String writeMsg) {
+        ctx.writeAndFlush(writeMsg.getBytes(StandardCharsets.UTF_8)).addListener(ChannelFutureListener.CLOSE_ON_FAILURE);
+    }
+
 }

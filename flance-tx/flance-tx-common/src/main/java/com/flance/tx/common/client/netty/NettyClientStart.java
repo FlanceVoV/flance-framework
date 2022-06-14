@@ -1,36 +1,35 @@
-package com.flance.tx.config.rpc.netty;
+package com.flance.tx.common.client.netty;
 
-import com.flance.tx.common.client.netty.CTNettyClient;
 import com.flance.tx.common.client.netty.data.DataUtils;
 import com.flance.tx.common.client.netty.data.NettyRequest;
-import com.flance.tx.common.utils.GsonUtils;
-import com.google.gson.Gson;
+import com.flance.tx.common.utils.SpringUtil;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
-import sun.misc.BASE64Encoder;
+import org.springframework.context.ApplicationContext;
 
-import javax.xml.crypto.Data;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
+
 public class NettyClientStart {
 
-    public static void startNettyClient() {
+
+    public static void startNettyClient(ApplicationContext applicationContext) {
         try {
-            CTNettyClient ctNettyClient = new CTNettyClient("127.0.0.1", 8899);
+            CTNettyClient ctNettyClient = new CTNettyClient("127.0.0.1", 8899, applicationContext);
             ctNettyClient.start();
-            new Thread(NettyClientStart::sendHeartBeat).start();
+            new Thread(() -> sendHeartBeat(applicationContext)).start();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static void sendHeartBeat() {
+    public static void sendHeartBeat(ApplicationContext applicationContext) {
 
         Channel heartChannel;
 
         try {
-            CTNettyClient ctNettyClient = new CTNettyClient("127.0.0.1", 8899);
+            CTNettyClient ctNettyClient = new CTNettyClient("127.0.0.1", 8899, applicationContext);
             ctNettyClient.start();
             heartChannel = ctNettyClient.getChannel();
         } catch (Exception e) {
@@ -39,6 +38,7 @@ public class NettyClientStart {
         }
         NettyRequest request = new NettyRequest();
         request.setIsHeartBeat(true);
+        request.setHandlerId("serverPingReceiverHandler");
         request.setData("心跳检查");
 
         while (true) {

@@ -1,18 +1,18 @@
 package com.flance.tx.common.client.netty;
 
-import com.flance.tx.common.client.netty.handler.CTNettyHandler;
+import com.flance.tx.common.client.netty.handler.CTSimpleNettyHandler;
 import com.flance.tx.common.client.netty.handler.MsgByteToMessageCodec;
+import com.flance.tx.common.utils.SpringUtil;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.LineBasedFrameDecoder;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
-import io.netty.handler.timeout.ReadTimeoutHandler;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationContext;
 
 @Data
 @Slf4j
@@ -22,11 +22,15 @@ public class CTNettyClient implements NettyClient {
 
     private final Integer serverPort;
 
+    private final ApplicationContext applicationContext;
+
     private Channel channel;
 
-    public CTNettyClient(String serverIp, Integer serverPort) {
+    public CTNettyClient(String serverIp, Integer serverPort, ApplicationContext applicationContext) {
         this.serverIp = serverIp;
         this.serverPort = serverPort;
+        this.applicationContext = applicationContext;
+        SpringUtil.setApplicationContextByOut(applicationContext);
     }
 
     @Override
@@ -43,7 +47,7 @@ public class CTNettyClient implements NettyClient {
                         pipeline.addLast(new MsgByteToMessageCodec());
                         pipeline.addLast(new StringEncoder()); //编码request
                         pipeline.addLast(new StringDecoder()); //解码response
-                        pipeline.addLast(new CTNettyHandler()); //客户端处理类
+                        pipeline.addLast(new CTSimpleNettyHandler()); //客户端处理类
 
                     }
                 });
