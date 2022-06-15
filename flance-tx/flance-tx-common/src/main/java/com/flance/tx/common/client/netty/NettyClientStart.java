@@ -6,7 +6,6 @@ import com.flance.tx.common.utils.ThreadUtils;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
 import lombok.extern.slf4j.Slf4j;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.context.ApplicationContext;
 
 import java.nio.charset.StandardCharsets;
