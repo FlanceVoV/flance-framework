@@ -3,7 +3,7 @@ package com.flance.tx.config.tx;
 import com.flance.tx.common.utils.CollectionUtils;
 import com.flance.tx.common.utils.SpringProxyUtils;
 import com.flance.tx.config.configs.FlanceTxConfigs;
-import com.flance.tx.common.client.netty.NettyClientStart;
+import com.flance.tx.client.netty.NettyClientStart;
 import com.flance.tx.core.annotation.FlanceGlobalLock;
 import com.flance.tx.core.annotation.FlanceGlobalTransactional;
 import lombok.extern.slf4j.Slf4j;

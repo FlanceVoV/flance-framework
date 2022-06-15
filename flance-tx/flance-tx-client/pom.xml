@@ -16,4 +16,16 @@
         <maven.compiler.target>8</maven.compiler.target>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.flance</groupId>
+            <artifactId>flance-tx-common</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.flance</groupId>
+            <artifactId>flance-tx-netty</artifactId>
+        </dependency>
+    </dependencies>
+
 </project>
