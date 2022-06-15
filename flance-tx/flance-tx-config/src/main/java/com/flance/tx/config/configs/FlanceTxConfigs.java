@@ -41,5 +41,19 @@ public class FlanceTxConfigs {
      */
     private String serverModule;
 
+    /**
+     * 事务服务ip（负载均衡地址）
+     */
+    private String txServerIp;
+
+    /**
+     * 事务服务端口号（负载均衡地址）
+     */
+    private int txServerPort;
+
+    /**
+     * 事务服务连接重试次数，当设置小于等于0时表示不进行重试
+     */
+    private int txServerReTryTimes;
 
 }

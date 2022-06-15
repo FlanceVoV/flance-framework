@@ -153,8 +153,13 @@ public class FlanceGlobalTxScanner extends AbstractAutoProxyCreator implements I
      */
     private void initClient() {
         switch (flanceTxConfigs.getServerModule()) {
+
             case TX_CENTER_MODULE_NETTY:
-                NettyClientStart.startNettyClient(applicationContext);
+                NettyClientStart.sendHeartBeat(flanceTxConfigs.getTxServerIp(),
+                        flanceTxConfigs.getTxServerPort(),
+                        flanceTxConfigs.getTxServerReTryTimes(),
+                        applicationContext);
+
                 break;
             default:
                 return;
