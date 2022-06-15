@@ -12,6 +12,8 @@
         <module>flance-tx-common</module>
         <module>flance-tx-demo1</module>
         <module>flance-tx-starter</module>
+        <module>flance-tx-client</module>
+        <module>flance-tx-server</module>
     </modules>
     <parent>
         <artifactId>flance-parent</artifactId>

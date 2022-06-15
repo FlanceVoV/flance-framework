@@ -9,26 +9,11 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>flance-tx-starter</artifactId>
+    <artifactId>flance-tx-client</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
     </properties>
-
-    <dependencies>
-        <dependency>
-            <groupId>com.flance</groupId>
-            <artifactId>flance-tx-config</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.flance</groupId>
-            <artifactId>flance-tx-client</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-aop</artifactId>
-        </dependency>
-    </dependencies>
 
 </project>
