@@ -7,6 +7,7 @@ import com.flance.tx.common.utils.Base64Utils;
 import com.flance.tx.common.utils.GsonUtils;
 import com.flance.tx.common.utils.SpringUtil;
 import com.flance.tx.netty.handler.IReceiveHandler;
+import io.netty.channel.Channel;
 import lombok.extern.slf4j.Slf4j;
 
 import java.nio.charset.StandardCharsets;
@@ -15,7 +16,7 @@ import java.nio.charset.StandardCharsets;
 public class ServerReceiveHandler implements IReceiveHandler<NettyResponse, NettyRequest> {
 
     @Override
-    public NettyResponse handler(String msg) {
+    public NettyResponse handler(String msg, Channel channel) {
         NettyResponse response;
         log.info("收到的报文内容为[{}]", msg);
         try {
@@ -23,7 +24,7 @@ public class ServerReceiveHandler implements IReceiveHandler<NettyResponse, Nett
             NettyRequest request = GsonUtils.fromString(string, NettyRequest.class);
             if (null != request.getHandlerId()) {
                 IBizHandler<NettyResponse, NettyRequest> bizHandler = SpringUtil.getBean(request.getHandlerId(), IBizHandler.class);
-                response = bizHandler.doBizHandler(request);
+                response = bizHandler.doBizHandler(request, channel);
             } else {
                 response = null;
             }
@@ -35,7 +36,7 @@ public class ServerReceiveHandler implements IReceiveHandler<NettyResponse, Nett
     }
 
     @Override
-    public NettyResponse handler(NettyRequest msg) {
+    public NettyResponse handler(NettyRequest msg, Channel channel) {
         return null;
     }
 }

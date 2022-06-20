@@ -74,7 +74,7 @@ public abstract class NettyChannelInboundHandler<T, R> extends SimpleChannelInbo
 
             String receiveMsg = new String(tempMsg, StandardCharsets.UTF_8);
             log.info("服务端响应的的内容为:{}", receiveMsg);
-            message = iReceiveHandler.handler(receiveMsg);
+            message = iReceiveHandler.handler(receiveMsg, ctx.channel());
             this.message = message;
             if (null != message) {
                 log.info("服务端响应解析[{}]", GsonUtils.toJSONString(message));

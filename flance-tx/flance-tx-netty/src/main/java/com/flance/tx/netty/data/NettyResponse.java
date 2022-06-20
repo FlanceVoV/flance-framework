@@ -9,6 +9,8 @@ public class NettyResponse {
 
     private String messageId;
 
+    private String roomId;
+
     private String handlerId;
 
     private Boolean isHeartBeat;

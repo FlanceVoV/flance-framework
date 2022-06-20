@@ -3,6 +3,7 @@ package com.flance.tx.client.netty.biz;
 import com.flance.tx.netty.biz.IBizHandler;
 import com.flance.tx.netty.data.NettyRequest;
 import com.flance.tx.netty.data.NettyResponse;
+import io.netty.channel.Channel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Component;
 public class ClientPongReceiverHandler implements IBizHandler<NettyRequest, NettyResponse> {
 
     @Override
-    public NettyRequest doBizHandler(NettyResponse response) {
+    public NettyRequest doBizHandler(NettyResponse response, Channel channel) {
         log.info("get pong success");
         return null;
     }

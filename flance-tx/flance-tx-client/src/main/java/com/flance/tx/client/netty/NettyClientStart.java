@@ -3,6 +3,7 @@ package com.flance.tx.client.netty;
 import com.flance.tx.netty.data.DataUtils;
 import com.flance.tx.netty.data.NettyRequest;
 import com.flance.tx.common.utils.ThreadUtils;
+import com.flance.tx.netty.data.ServerData;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class NettyClientStart {
 
     private static final AtomicInteger count = new AtomicInteger(-1);
+
+    private static final String TEST = UUID.randomUUID().toString();
 
     public static void startNettyClient(ApplicationContext applicationContext) {
         try {
@@ -61,6 +64,14 @@ public class NettyClientStart {
             request.setIsHeartBeat(true);
             request.setHandlerId("serverPingReceiverHandler");
             request.setData("心跳检查");
+            request.setRoomId(TEST);
+            ServerData clientData = new ServerData();
+            clientData.setId(TEST);
+            clientData.setIp("127.0.0.1");
+            clientData.setPort(8080);
+            clientData.setApplicationId("flance-tx-demo1");
+            request.setServerData(clientData);
+
 
             while (true) {
                 request.setMessageId(UUID.randomUUID().toString());
