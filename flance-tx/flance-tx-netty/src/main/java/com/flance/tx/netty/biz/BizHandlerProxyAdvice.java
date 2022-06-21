@@ -41,7 +41,15 @@ public class BizHandlerProxyAdvice implements MethodInterceptor {
             putResponse(response, channel);
         }
 
-        return methodInvocation.proceed();
+        Object result = null;
+
+        try {
+            result = methodInvocation.proceed();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return result;
     }
 
     private void putRequest(NettyRequest request, Channel channel) {

@@ -22,13 +22,13 @@ public abstract class NettyChannelInboundHandler<T, R> extends SimpleChannelInbo
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        log.info("激活管道");
+        log.debug("激活管道");
         super.channelActive(ctx);
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        log.info("断开链接");
+        log.debug("断开链接");
         super.channelInactive(ctx);
     }
 
@@ -44,7 +44,7 @@ public abstract class NettyChannelInboundHandler<T, R> extends SimpleChannelInbo
         String receive = "";
         try {
             receive = (String) msg;
-            log.info("服务端接收到的内容为:{}", msg);
+            log.debug("读取到报文 - 原文:{}", msg);
             //小于64位不处理
             if (receive.length() < len) {
                 log.info("报文小于10位");
@@ -53,16 +53,16 @@ public abstract class NettyChannelInboundHandler<T, R> extends SimpleChannelInbo
             }
             String length = receive.substring(0, 10);
             //非数字不处理
-            log.info("报文前十位[{}]", length);
+            log.debug("报文前十位[{}]", length);
             if (!StringUtils.isNumeric(length)) {
                 log.error("报文前十位非数字[{}]", length);
                 return;
             }
             //报文长度小于前四位指定的长度 不处理
-            log.info("数据报文长度[{}]", receive.getBytes(StandardCharsets.UTF_8).length);
-            log.info("业务报文长度[{}]", receive.getBytes(StandardCharsets.UTF_8).length - len);
+            log.debug("数据报文长度[{}]", receive.getBytes(StandardCharsets.UTF_8).length);
+            log.debug("业务报文长度[{}]", receive.getBytes(StandardCharsets.UTF_8).length - len);
             if (receive.getBytes(StandardCharsets.UTF_8).length - len < Integer.parseInt(length)) {
-                log.info("报文长度不够");
+                log.warn("报文长度不够");
                 ctx.close();
                 return;
             }
@@ -73,11 +73,11 @@ public abstract class NettyChannelInboundHandler<T, R> extends SimpleChannelInbo
             System.arraycopy(msgBytes, 10, tempMsg, 0, tempMsg.length);
 
             String receiveMsg = new String(tempMsg, StandardCharsets.UTF_8);
-            log.info("服务端响应的的内容为:{}", receiveMsg);
+            log.debug("业务报文 - 原文:{}", receiveMsg);
             message = iReceiveHandler.handler(receiveMsg, ctx.channel());
             this.message = message;
             if (null != message) {
-                log.info("服务端响应解析[{}]", GsonUtils.toJSONString(message));
+                log.debug("业务报名 - 解码[{}]", GsonUtils.toJSONString(message));
             }
         } catch (Exception e) {
             log.error("报文解析异常，报文内容为:" + msg, e);

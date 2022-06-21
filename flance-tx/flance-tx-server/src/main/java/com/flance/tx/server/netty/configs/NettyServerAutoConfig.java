@@ -8,7 +8,7 @@ import static com.flance.tx.common.TxConstants.FLANCE_TX_PREFIX;
 
 @Slf4j
 @ComponentScan(basePackages = "com.flance.tx.server.netty.configs")
-@ConditionalOnProperty(prefix = FLANCE_TX_PREFIX, matchIfMissing = true)
+@ConditionalOnProperty(prefix = FLANCE_TX_PREFIX, name = "enabled", havingValue = "true", matchIfMissing = true)
 public class NettyServerAutoConfig {
 
 

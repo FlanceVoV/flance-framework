@@ -1,0 +1,4 @@
+# Auto Configure
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.flance.tx.server.netty.configs.NettyServerAutoConfig,\
+com.flance.tx.server.netty.configs.NettyServerConfig
