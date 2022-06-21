@@ -5,6 +5,7 @@ import com.flance.tx.netty.data.NettyRequest;
 import com.flance.tx.netty.data.NettyResponse;
 import com.flance.tx.netty.data.ServerData;
 import com.flance.tx.server.netty.configs.NettyServerConfig;
+import com.flance.tx.server.netty.utils.ServerUtil;
 import io.netty.channel.Channel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -22,17 +23,12 @@ public class ServerPingReceiverHandler implements IBizHandler<NettyResponse, Net
     @Override
     public NettyResponse doBizHandler(NettyRequest request, Channel channel) {
         NettyResponse response = new NettyResponse();
-        ServerData serverData = new ServerData();
-        serverData.setApplicationId(nettyServerConfig.getNettyServerId());
-        serverData.setId(nettyServerConfig.getNettyServerId());
-        serverData.setPort(nettyServerConfig.getNettyServerPort());
-        serverData.setIp(nettyServerConfig.getNettyServerIp());
         log.info("get ping success");
         response.setIsHeartBeat(request.getIsHeartBeat());
         response.setMessageId(request.getMessageId());
         response.setRequest(request);
         response.setHandlerId("clientPongReceiverHandler");
-        response.setServerData(serverData);
+        response.setServerData(ServerUtil.getServerData(nettyServerConfig));
         response.setRoomId(request.getRoomId());
         return response;
     }

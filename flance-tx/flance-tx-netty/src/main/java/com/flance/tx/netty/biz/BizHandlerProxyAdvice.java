@@ -24,7 +24,7 @@ public class BizHandlerProxyAdvice implements MethodInterceptor {
         NettyRequest request;
         NettyResponse response;
         Channel channel;
-
+        
         if (channelData instanceof Channel) {
             channel = (Channel) channelData;
         } else {

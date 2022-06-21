@@ -4,6 +4,7 @@ import com.flance.tx.netty.container.Room;
 import io.netty.channel.Channel;
 import lombok.Data;
 
+import java.sql.Connection;
 import java.util.Map;
 
 @Data
@@ -14,6 +15,8 @@ public abstract class BaseRoom implements Room {
     protected String roomName;
 
     protected Map<String, Channel> channels;
+
+    protected Connection connection;
 
     public BaseRoom(String roomId, String roomName, Map<String, Channel> channels) {
         this.roomId = roomId;

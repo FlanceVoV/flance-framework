@@ -51,4 +51,12 @@ public interface TxConstants {
      */
     String TX_CENTER_MODULE_NETTY = "netty";
 
+    String SQL_COMMAND_SELECT = "SELECT";
+
+    String SQL_COMMAND_INSERT = "INSERT";
+
+    String SQL_COMMAND_UPDATE = "UPDATE";
+
+    String SQL_COMMAND_DELETE = "DELETE";
+
 }

@@ -54,4 +54,9 @@ public class FlanceTransaction {
      */
     private String execSql;
 
+    /**
+     * sql指令
+     */
+    private String command;
+
 }
