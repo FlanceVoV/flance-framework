@@ -23,6 +23,11 @@ public interface TxConstants {
     String BEAN_NAME_DATA_SOURCE_PROXY_CREATOR = "flanceDataSourceProxyCreator";
 
     /**
+     * netty handler proxy
+     */
+    String BEAN_NAME_NETTY_BIZ_HANDLER_PROXY_CREATOR = "bizHandlerProxyCreator";
+
+    /**
      *
      */
     String BEAN_NAME_MYBATIS_PLUGIN_CREATOR = "flanceMybatisPluginCreator";
