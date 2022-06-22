@@ -25,6 +25,10 @@ public class MybatisExecutorHandlerInterceptor implements Interceptor {
 
         FlanceGlobalTransactional.Module module = TxThreadLocal.getTxModule();
 
+        if (null == module) {
+            module = FlanceGlobalTransactional.Module.NORMAL;
+        }
+
         switch (module) {
             case CT:
                 return CTExecutorHandler.intercept(invocation);

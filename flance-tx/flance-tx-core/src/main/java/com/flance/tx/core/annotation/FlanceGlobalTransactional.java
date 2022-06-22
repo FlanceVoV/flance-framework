@@ -45,6 +45,7 @@ public @interface FlanceGlobalTransactional {
 
         CT("CT"),
         AT("AT"),
+        NORMAL("NORMAL"),
         ;
 
 

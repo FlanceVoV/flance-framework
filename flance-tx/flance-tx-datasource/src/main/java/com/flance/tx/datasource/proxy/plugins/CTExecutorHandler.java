@@ -21,6 +21,9 @@ import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.plugin.*;
+import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.type.TypeHandlerRegistry;
 
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -46,6 +49,9 @@ public class CTExecutorHandler implements ExecutorHandler {
         }
 
         MappedStatement mappedStatement = (MappedStatement) invocation.getArgs()[0];
+        Configuration configuration = mappedStatement.getConfiguration();
+        TypeHandlerRegistry typeHandlerRegistry = configuration.getTypeHandlerRegistry();
+
         Object params = invocation.getArgs()[1];
 
         BoundSql boundSql = mappedStatement.getBoundSql(params);
@@ -53,48 +59,66 @@ public class CTExecutorHandler implements ExecutorHandler {
         String sql = boundSql.getSql();
         Map<Object, Object> paramsMap = (HashMap) boundSql.getParameterObject();
         List<ParameterMapping> paramsMappings = boundSql.getParameterMappings();
-        Map<Integer, Object> txParamsMap = parseParams(paramsMap, paramsMappings);
+        Map<Integer, Object> txParamsMap = parseParams(configuration, paramsMap, paramsMappings);
 
         String messageId = UUID.randomUUID().toString();
         Channel channel = NettyClientStart.startNettyClient(SpringUtil.getApplicationContext());
         final ClientCallbackService clientCallbackService = new ClientCallbackService();
         CurrentNettyData.putCallback2DataMap(messageId, channel, clientCallbackService);
 
+        NettyRequest request = new NettyRequest();
+        ServerData serverData = new ServerData();
+        serverData.setIp("127.0.0.1");
+        serverData.setPort(8080);
+        serverData.setApplicationId("flance-demo");
+        serverData.setId("flance-demo");
+
+        FlanceTransaction flanceTransaction = new FlanceTransaction();
+        flanceTransaction.setExecSql(sql);
+
+        flanceTransaction.setParams(txParamsMap);
+
+        request.setHandlerId("serverStartTxHandler");
+        request.setServerData(serverData);
+        request.setRoomId(UUID.randomUUID().toString());
+        request.setMessageId(messageId);
+        request.setIsHeartBeat(false);
+        String msg = null;
+        NettyResponse data = null;
+
         switch (mappedStatement.getSqlCommandType()) {
             case INSERT:
                 // 调用CT服务端，并获取结果
-                int saveCount = 0;
-                return saveCount;
-            case DELETE:
-                // 调用CT服务端，并获取结果
-                int deleteCount = 0;
-                return deleteCount;
-            case UPDATE:
-                // 调用CT服务端，并获取结果
-                int updateCount = 0;
-                return updateCount;
-            case SELECT:
-                List result = Lists.newArrayList();
-                NettyRequest request = new NettyRequest();
-                ServerData serverData = new ServerData();
-                serverData.setIp("127.0.0.1");
-                serverData.setPort(8080);
-                serverData.setApplicationId("flance-demo");
-                serverData.setId("flance-demo");
-                FlanceTransaction flanceTransaction = new FlanceTransaction();
-                flanceTransaction.setExecSql(sql);
-                flanceTransaction.setCommand("SELECT");
-                flanceTransaction.setParams(txParamsMap);
-                request.setData(GsonUtils.toJSONStringWithNull(flanceTransaction));
-                request.setHandlerId("serverStartTxHandler");
-                request.setServerData(serverData);
-                request.setRoomId(UUID.randomUUID().toString());
-                request.setMessageId(messageId);
-                request.setIsHeartBeat(false);
-                String msg = DataUtils.getStr(request);
+                flanceTransaction.setCommand("INSERT");
+                msg = DataUtils.getStr(request);
                 channel.writeAndFlush(msg.getBytes(StandardCharsets.UTF_8));
                 clientCallbackService.awaitThread(15, TimeUnit.SECONDS);
-                NettyResponse data = clientCallbackService.getData();
+                data = clientCallbackService.getData();
+                return 0;
+            case DELETE:
+                // 调用CT服务端，并获取结果
+                flanceTransaction.setCommand("DELETE");
+                msg = DataUtils.getStr(request);
+                channel.writeAndFlush(msg.getBytes(StandardCharsets.UTF_8));
+                clientCallbackService.awaitThread(15, TimeUnit.SECONDS);
+                data = clientCallbackService.getData();
+                return 0;
+            case UPDATE:
+                // 调用CT服务端，并获取结果
+                flanceTransaction.setCommand("UPDATE");
+                msg = DataUtils.getStr(request);
+                channel.writeAndFlush(msg.getBytes(StandardCharsets.UTF_8));
+                clientCallbackService.awaitThread(15, TimeUnit.SECONDS);
+                data = clientCallbackService.getData();
+                return 0;
+            case SELECT:
+                flanceTransaction.setCommand("SELECT");
+                request.setData(GsonUtils.toJSONStringWithNull(flanceTransaction));
+                msg = DataUtils.getStr(request);
+                List result = Lists.newArrayList();
+                channel.writeAndFlush(msg.getBytes(StandardCharsets.UTF_8));
+                clientCallbackService.awaitThread(15, TimeUnit.SECONDS);
+                data = clientCallbackService.getData();
                 List<Map> findList = (List<Map>) GsonUtils.fromStringArray(data.getData(), Map.class);
 
                 Class<?> clazz = mappedStatement.getResultMaps().get(0).getType();
@@ -112,11 +136,11 @@ public class CTExecutorHandler implements ExecutorHandler {
         }
     }
 
-    private static Map<Integer, Object> parseParams(Map<Object, Object> paramsMap, List<ParameterMapping> paramsMappings) {
+    private static Map<Integer, Object> parseParams(Configuration configuration, Map<Object, Object> paramsMap, List<ParameterMapping> paramsMappings) {
+        MetaObject metaObject = configuration.newMetaObject(paramsMap);
         Map<Integer, Object> params = Maps.newHashMap();
         for (int i = 1; i <= paramsMappings.size(); i++) {
-            String property = paramsMappings.get(i - 1).getProperty();
-            params.put(i, paramsMap.get(property));
+            params.put(i, metaObject.getValue(paramsMappings.get(i - 1).getProperty()));
         }
         return params;
     }
