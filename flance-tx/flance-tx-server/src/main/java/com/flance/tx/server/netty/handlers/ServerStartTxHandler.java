@@ -27,9 +27,10 @@ import static com.flance.tx.common.TxConstants.*;
 
 /**
  * 开启事务处理器
+ *
  * @author jhf
  */
-@Component("startTxHandler")
+@Component("serverStartTxHandler")
 public class ServerStartTxHandler implements IBizHandler<NettyResponse, NettyRequest> {
 
     @Resource
@@ -49,19 +50,24 @@ public class ServerStartTxHandler implements IBizHandler<NettyResponse, NettyReq
         result.setIsHeartBeat(false);
         result.setMessageId(request.getMessageId());
 
+        Connection connection = null;
+
         try {
             ConnectionRoom connectionRoom = (ConnectionRoom) RoomContainer.getRoom(request.getRoomId());
-            Connection connection = dataSource.getConnection();
+            connection = dataSource.getConnection();
             connectionRoom.setConnection(connection);
             connection.setAutoCommit(false);
 
             FlanceTransaction tx = GsonUtils.fromString(request.getData(), FlanceTransaction.class);
+            Map<Integer, Object> params = tx.getParams();
             String sql = tx.getExecSql();
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-
+            for (Integer index : params.keySet()) {
+                preparedStatement.setObject(index, params.get(index));
+            }
             switch (tx.getCommand()) {
                 case SQL_COMMAND_SELECT:
-                    List<Map<Object,Object>> list = doSelect(preparedStatement);
+                    List<Map<Object, Object>> list = doSelect(preparedStatement);
                     result.setData(GsonUtils.toJSONString(list));
                     break;
                 case SQL_COMMAND_DELETE:
@@ -83,18 +89,24 @@ public class ServerStartTxHandler implements IBizHandler<NettyResponse, NettyReq
         } catch (Exception e) {
             e.printStackTrace();
             result.setSuccess(false);
-
+            try {
+                if (null != connection) {
+                    connection.close();
+                }
+            } catch (Exception ce) {
+                ce.printStackTrace();
+            }
         }
         return result;
     }
 
-    private List<Map<Object,Object>> doSelect(PreparedStatement preparedStatement) throws Exception {
+    private List<Map<Object, Object>> doSelect(PreparedStatement preparedStatement) throws Exception {
         ResultSet resultSet = preparedStatement.executeQuery();
-        ResultSetMetaData md =  resultSet.getMetaData();
+        ResultSetMetaData md = resultSet.getMetaData();
         List<Map<Object, Object>> list = Lists.newArrayList();
         while (resultSet.next()) {
             Map<Object, Object> dataMap = new HashMap<>();
-            for (int i = 0; i < md.getColumnCount(); i++) {
+            for (int i = 1; i <= md.getColumnCount(); i++) {
                 dataMap.put(md.getColumnName(i), resultSet.getObject(i));
             }
             list.add(dataMap);

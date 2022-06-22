@@ -20,8 +20,7 @@ public class ServerReceiveHandler implements IReceiveHandler<NettyResponse, Nett
         NettyResponse response;
         log.info("收到的报文内容为[{}]", msg);
         try {
-            String string = new String(Base64Utils.decode(msg), StandardCharsets.UTF_8);
-            NettyRequest request = GsonUtils.fromString(string, NettyRequest.class);
+            NettyRequest request = getOrigin(msg, channel);
             if (null != request.getHandlerId()) {
                 IBizHandler<NettyResponse, NettyRequest> bizHandler = SpringUtil.getBean(request.getHandlerId(), IBizHandler.class);
                 response = bizHandler.doBizHandler(request, channel);
@@ -38,5 +37,20 @@ public class ServerReceiveHandler implements IReceiveHandler<NettyResponse, Nett
     @Override
     public NettyResponse handler(NettyRequest msg, Channel channel) {
         return null;
+    }
+
+    @Override
+    public NettyRequest getOrigin(String msg, Channel channel) {
+        try {
+            String string = new String(Base64Utils.decode(msg), StandardCharsets.UTF_8);
+            return GsonUtils.fromString(string, NettyRequest.class);
+        } catch (Exception e) {
+            throw new RuntimeException("接收客户端请求异常！即将断开");
+        }
+    }
+
+    @Override
+    public NettyRequest getOrigin(NettyRequest msg, Channel channel) {
+        return msg;
     }
 }

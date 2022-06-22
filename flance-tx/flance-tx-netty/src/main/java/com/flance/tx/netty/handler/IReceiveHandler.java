@@ -9,4 +9,8 @@ public interface IReceiveHandler<T, R> {
 
     T handler(R msg, Channel channel);
 
+    R getOrigin(String msg, Channel channel);
+
+    R getOrigin(R msg, Channel channel);
+
 }

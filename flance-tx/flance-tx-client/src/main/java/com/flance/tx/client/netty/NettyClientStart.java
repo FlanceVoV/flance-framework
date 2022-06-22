@@ -11,6 +11,7 @@ import org.springframework.context.ApplicationContext;
 
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
@@ -21,19 +22,23 @@ public class NettyClientStart {
 
     private static final String TEST = UUID.randomUUID().toString();
 
-    public static void startNettyClient(ApplicationContext applicationContext) {
+    public static Channel startNettyClient(ApplicationContext applicationContext) {
         try {
             CTNettyClient ctNettyClient = new CTNettyClient("127.0.0.1", 8899, applicationContext);
             ctNettyClient.start();
+            return ctNettyClient.getChannel();
         } catch (Exception e) {
             e.printStackTrace();
+            throw new RuntimeException("事务服务连接失败");
         }
+
     }
 
     /**
      * 开启服务端心跳检测
      */
     public static void sendHeartBeat(String ip, int port, int reTryTimes, ApplicationContext applicationContext) {
+
 
         if (count.get() == -1) {
             count.set(reTryTimes);

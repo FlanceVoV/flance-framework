@@ -20,9 +20,7 @@ public class ClientReceiveHandler implements IReceiveHandler<NettyRequest, Netty
         log.info("收到服务端响应[{}]", msg);
         NettyRequest newRequest;
         try {
-            String string = new String(Base64Utils.decode(msg), StandardCharsets.UTF_8);
-            log.info("解析服务端响应[{}]", string);
-            NettyResponse response = GsonUtils.fromString(string, NettyResponse.class);
+            NettyResponse response = getOrigin(msg, channel);
             if (null != response.getHandlerId()) {
                 IBizHandler<NettyRequest, NettyResponse> handler = SpringUtil.getBean(response.getHandlerId(), IBizHandler.class);
                 newRequest = handler.doBizHandler(response, channel);
@@ -39,5 +37,22 @@ public class ClientReceiveHandler implements IReceiveHandler<NettyRequest, Netty
     @Override
     public NettyRequest handler(NettyResponse msg, Channel channel) {
         return null;
+    }
+
+    @Override
+    public NettyResponse getOrigin(String msg, Channel channel) {
+        try {
+            String string = new String(Base64Utils.decode(msg), StandardCharsets.UTF_8);
+            log.info("解析服务端响应[{}]", string);
+            return GsonUtils.fromString(string, NettyResponse.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("接收服务响应失败！即将断开连接");
+        }
+    }
+
+    @Override
+    public NettyResponse getOrigin(NettyResponse msg, Channel channel) {
+        return msg;
     }
 }

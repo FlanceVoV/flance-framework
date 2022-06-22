@@ -2,6 +2,8 @@ package com.flance.tx.core.tx;
 
 import lombok.Data;
 
+import java.util.Map;
+
 /**
  * 分布式 事务模型封装
  * @author jhf
@@ -53,6 +55,11 @@ public class FlanceTransaction {
      * 执行的sql
      */
     private String execSql;
+
+    /**
+     * sql参数
+     */
+    private Map<Integer, Object> params;
 
     /**
      * sql指令

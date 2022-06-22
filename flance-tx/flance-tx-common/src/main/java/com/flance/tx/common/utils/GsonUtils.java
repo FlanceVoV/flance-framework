@@ -20,6 +20,11 @@ public class GsonUtils {
         return gson.toJson(obj);
     }
 
+    public static String toJSONStringWithNull(Object obj) {
+        Gson gson = new GsonBuilder().serializeNulls().disableHtmlEscaping().create();
+        return gson.toJson(obj);
+    }
+
     public static <T> T fromString(String str, Class<T> clazz) {
         Gson gson = new GsonBuilder().disableHtmlEscaping().create();
         return gson.fromJson(str, clazz);

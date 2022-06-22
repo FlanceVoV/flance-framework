@@ -16,6 +16,8 @@ public abstract class NettyChannelInboundHandler<T, R> extends SimpleChannelInbo
 
     protected T message;
 
+    protected R respMessage;
+
     public NettyChannelInboundHandler(IReceiveHandler<T, R> iReceiveHandler) {
         this.iReceiveHandler = iReceiveHandler;
     }
@@ -40,7 +42,6 @@ public abstract class NettyChannelInboundHandler<T, R> extends SimpleChannelInbo
     @Override
     public void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
         int len = 10;
-        T message = null;
         String receive = "";
         try {
             receive = (String) msg;
@@ -74,10 +75,10 @@ public abstract class NettyChannelInboundHandler<T, R> extends SimpleChannelInbo
 
             String receiveMsg = new String(tempMsg, StandardCharsets.UTF_8);
             log.debug("业务报文 - 原文:{}", receiveMsg);
-            message = iReceiveHandler.handler(receiveMsg, ctx.channel());
-            this.message = message;
-            if (null != message) {
-                log.debug("业务报名 - 解码[{}]", GsonUtils.toJSONString(message));
+            this.message = iReceiveHandler.handler(receiveMsg, ctx.channel());
+            this.respMessage = iReceiveHandler.getOrigin(receiveMsg, ctx.channel());
+            if (null != this.message) {
+                log.debug("业务报名 - 解码[{}]", GsonUtils.toJSONString(this.message));
             }
         } catch (Exception e) {
             log.error("报文解析异常，报文内容为:" + msg, e);

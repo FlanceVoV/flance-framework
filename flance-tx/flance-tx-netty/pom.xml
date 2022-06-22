@@ -48,10 +48,14 @@
         </dependency>
 
         <dependency>
-            <groupId>com.flance</groupId>
-            <artifactId>flance-tx-datasource</artifactId>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.flance</groupId>
+            <artifactId>flance-jdbc-mybatis</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

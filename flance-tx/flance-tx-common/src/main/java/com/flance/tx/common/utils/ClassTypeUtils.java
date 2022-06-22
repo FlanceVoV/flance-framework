@@ -1,5 +1,6 @@
 package com.flance.tx.common.utils;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class ClassTypeUtils {
@@ -8,17 +9,19 @@ public class ClassTypeUtils {
 
         if (target instanceof Integer) {
             return true;
-        } else if (target instanceof String) {
+        } else if (target.equals(String.class)) {
             return true;
-        } else if (target instanceof Double) {
+        } else if (target.equals(Double.class)) {
             return true;
-        } else if (target instanceof Float) {
+        } else if (target.equals(Float.class)) {
             return true;
-        } else if (target instanceof Long) {
+        } else if (target.equals(Long.class)) {
             return true;
-        } else if (target instanceof Boolean) {
+        } else if (target.equals(Boolean.class)) {
             return true;
-        } else if (target instanceof Date) {
+        } else if (target.equals(Date.class)) {
+            return true;
+        } else if (target.equals(BigDecimal.class)) {
             return true;
         } else {
             return false;

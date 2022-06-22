@@ -2,8 +2,10 @@ package com.flance.tx.client.netty;
 
 import com.flance.tx.client.netty.handlers.CTSimpleNettyHandler;
 import com.flance.tx.netty.NettyClient;
+import com.flance.tx.netty.current.CurrentNettyData;
 import com.flance.tx.netty.handler.MsgByteToMessageCodec;
 import com.flance.tx.common.utils.SpringUtil;
+import com.google.common.collect.Maps;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -11,9 +13,12 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
+import io.netty.util.Attribute;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
+
+import java.util.Map;
 
 @Data
 @Slf4j
@@ -55,6 +60,9 @@ public class CTNettyClient implements NettyClient {
 
         //发起异步连接请求，绑定连接端口和host信息
         final ChannelFuture future = b.connect(serverIp, serverPort).sync();
+        Attribute<Map<String, Object>> attribute = future.channel().attr(CurrentNettyData.DATA_MAP_ATTRIBUTEKEY);
+        Map<String, Object> dataMap = Maps.newConcurrentMap();
+        attribute.set(dataMap);
 
         future.addListener((ChannelFutureListener) listener -> {
             if (future.isSuccess()) {
