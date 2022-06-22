@@ -24,6 +24,7 @@
         <module>flance-web-request</module>
         <module>flance-web-router</module>
         <module>flance-web-wx</module>
+        <module>flance-web-feign</module>
     </modules>
 
 </project>

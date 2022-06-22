@@ -1,4 +1,4 @@
-package com.flance.tx.demo1.mapper;
+package com.flance.tx.demo2.mapper;
 
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;

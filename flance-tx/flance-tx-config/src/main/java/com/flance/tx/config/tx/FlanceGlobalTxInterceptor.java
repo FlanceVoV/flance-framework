@@ -57,6 +57,7 @@ public class FlanceGlobalTxInterceptor implements MethodInterceptor {
 
     private void after(MethodInvocation methodInvocation) {
         log.info("FlanceGlobalTxInterceptor - 之后");
+
     }
 
 }

@@ -59,4 +59,6 @@ public interface TxConstants {
 
     String SQL_COMMAND_DELETE = "DELETE";
 
+    String HTTP_HEADER_TX_ID = "txId";
+
 }

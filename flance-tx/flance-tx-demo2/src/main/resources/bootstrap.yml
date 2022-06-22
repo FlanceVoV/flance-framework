@@ -1,6 +1,6 @@
 spring:
   application:
-    name: flance-tx-demo1
+    name: flance-tx-demo2
   cloud:
     nacos:
       username: nacos
@@ -16,7 +16,7 @@ spring:
         # 应用配置
         extension-configs[0]:
           group: dev
-          data-id: flance-tx-demo1.yml
+          data-id: flance-tx-demo2.yml
           file-extension: yml
         # redis配置
         extension-configs[1]:

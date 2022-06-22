@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>flance-tx-demo1</artifactId>
+    <artifactId>flance-tx-demo2</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -48,7 +48,6 @@
             <groupId>com.flance</groupId>
             <artifactId>flance-web-feign</artifactId>
         </dependency>
-
     </dependencies>
 
 </project>

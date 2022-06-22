@@ -1,15 +1,12 @@
 package com.flance.tx.core.tx;
 
+import com.alibaba.ttl.TransmittableThreadLocal;
 import com.flance.tx.core.annotation.FlanceGlobalTransactional;
-import com.google.common.collect.Maps;
-
-import java.util.Map;
 
 public class TxThreadLocal {
 
-    private static final ThreadLocal<FlanceGlobalTransactional.Module> TX_MODULE = new ThreadLocal<>();
+    private static final TransmittableThreadLocal<FlanceGlobalTransactional.Module> TX_MODULE = new TransmittableThreadLocal<>();
 
-    private static final Map<String, Object> TX_CONNECTION = Maps.newConcurrentMap();
 
     public static FlanceGlobalTransactional.Module getTxModule() {
         return TX_MODULE.get();
