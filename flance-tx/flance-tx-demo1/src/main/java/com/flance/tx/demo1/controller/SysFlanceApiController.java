@@ -1,6 +1,7 @@
 package com.flance.tx.demo1.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.flance.tx.core.annotation.FlanceGlobalTransactional;
 import com.flance.tx.demo1.entity.SysFlanceApi;
 import com.flance.tx.demo1.service.SysFlanceApiService;
@@ -39,6 +40,15 @@ public class SysFlanceApiController {
         lambdaQueryWrapper.eq(SysFlanceApi::getId, id);
         lambdaQueryWrapper.like(SysFlanceApi::getApiName, name);
         return sysFlanceApiService.list(lambdaQueryWrapper);
+    }
+
+    @FlanceGlobalTransactional
+    @PostMapping("/testPage")
+    public Page<SysFlanceApi> testPage(@RequestBody Page<SysFlanceApi> page, String id, String name) {
+        LambdaQueryWrapper<SysFlanceApi> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(SysFlanceApi::getId, id);
+        lambdaQueryWrapper.like(SysFlanceApi::getApiName, name);
+        return sysFlanceApiService.page(page, lambdaQueryWrapper);
     }
 
 
