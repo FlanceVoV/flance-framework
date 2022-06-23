@@ -126,8 +126,8 @@ public class CTExecutorHandler implements ExecutorHandler {
                     if (ClassTypeUtils.isBaseType(clazz)) {
                         o.forEach((key, value) -> result.add(value));
                     } else {
-                        String jstr = GsonUtils.toJSONString(o);
-                        result.add(GsonUtils.fromString(jstr, clazz));
+                        String jstr = GsonUtils.toJSONStringWithNull(o);
+                        result.add(GsonUtils.fromStringParse(jstr, clazz));
                     }
                 }
                 return result;
