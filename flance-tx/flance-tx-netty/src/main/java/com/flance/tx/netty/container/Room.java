@@ -3,9 +3,16 @@ package com.flance.tx.netty.container;
 import io.netty.channel.Channel;
 
 import java.sql.Connection;
+import java.util.Date;
 import java.util.Map;
 
+/**
+ * netty 连接 房间
+ * @author jhf
+ */
 public interface Room {
+
+    Date getCreateTime();
 
     Connection getConnection();
 
@@ -18,5 +25,7 @@ public interface Room {
     Map<String, Channel> getChannels();
 
     Channel getChannelById(String id);
+
+    void destroy();
 
 }
