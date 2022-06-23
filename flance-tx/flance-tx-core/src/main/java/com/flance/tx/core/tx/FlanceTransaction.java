@@ -17,9 +17,9 @@ public class FlanceTransaction {
     private String txGroupId;
 
     /**
-     * 事务id
+     * is leader
      */
-    private String txId;
+    private Boolean isLeader;
 
     /**
      * 事务编号
