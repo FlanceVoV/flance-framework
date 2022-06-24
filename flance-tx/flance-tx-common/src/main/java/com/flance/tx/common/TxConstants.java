@@ -7,6 +7,10 @@ public interface TxConstants {
      */
     String FLANCE_TX_PREFIX = "flance.tx";
 
+    String FLANCE_TX_SERVER_PREFIX = "flance.tx.server";
+
+    String FLANCE_TX_CLIENT_PREFIX = "flance.tx.client";
+
     /**
      * 全局事务代理自动装配失败处理器
      */

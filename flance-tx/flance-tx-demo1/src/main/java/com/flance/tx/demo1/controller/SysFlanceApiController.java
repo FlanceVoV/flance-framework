@@ -23,6 +23,7 @@ public class SysFlanceApiController {
         return sysFlanceApiService.save(sysFlanceApi);
     }
 
+    @FlanceGlobalTransactional
     @GetMapping("/testDelete")
     public boolean testDelete(String id) {
         return sysFlanceApiService.removeById(id);

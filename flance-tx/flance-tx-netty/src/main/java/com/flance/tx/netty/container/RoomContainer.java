@@ -1,5 +1,6 @@
 package com.flance.tx.netty.container;
 
+import com.alibaba.ttl.TransmittableThreadLocal;
 import com.google.common.collect.Maps;
 
 import java.util.Date;
@@ -13,6 +14,8 @@ public class RoomContainer {
 
     private static final Map<String, Room> CURRENT_ROOM = Maps.newConcurrentMap();
 
+    private static final TransmittableThreadLocal<String> CURRENT_ROOM_ID = new TransmittableThreadLocal<>();
+
     public static void createRoom(String roomId, Room room) {
         CURRENT_ROOM.put(roomId, room);
     }
@@ -24,6 +27,20 @@ public class RoomContainer {
     public static Room getRoom(String roomId) {
         return CURRENT_ROOM.get(roomId);
     }
+
+    public static void putRoomID(String roomId) {
+        CURRENT_ROOM_ID.set(roomId);
+    }
+
+    public static String getRoomId() {
+        return CURRENT_ROOM_ID.get();
+    }
+
+    public static void removeRoomId() {
+        CURRENT_ROOM_ID.remove();
+    }
+
+
 
     /**
      * 扫描超时任务，对连接进行关闭

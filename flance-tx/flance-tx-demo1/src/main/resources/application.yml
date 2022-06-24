@@ -2,8 +2,12 @@ flance:
   tx:
     enabled: true
     enable-datasource-proxy: true
-    application-id: flance-tx-demo1
     server-module: netty
     tx-server-ip: 127.0.0.1
     tx-server-port: 8899
     tx-server-re-try-times: 5
+    client:
+      enabled: true
+      netty-client-id: flance-tx-demo1
+      netty-client-ip: 127.0.0.1
+      netty-client-port: 8081

@@ -40,14 +40,11 @@ public class FlanceGlobalTxScanner extends AbstractAutoProxyCreator implements I
 
     private final String txServiceGroup;
 
-    private final String applicationId;
-
     private final FailureHandler failureHandler;
 
     public FlanceGlobalTxScanner(FlanceTxConfigs flanceTxConfigs, FailureHandler failureHandler) {
         this.flanceTxConfigs = flanceTxConfigs;
         this.txServiceGroup = flanceTxConfigs.getTxServiceGroup();
-        this.applicationId = flanceTxConfigs.getApplicationId();
         this.failureHandler = failureHandler;
         setOrder(ORDER_NUM);
         setProxyTargetClass(true);

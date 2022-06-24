@@ -1,7 +1,9 @@
 package com.flance.tx.datasource.proxy.plugins;
 
+import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import com.flance.tx.core.annotation.FlanceGlobalTransactional;
 import com.flance.tx.core.tx.TxThreadLocal;
+import com.flance.tx.datasource.sqlexe.SqlExec;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.plugin.Interceptor;
@@ -10,7 +12,10 @@ import org.apache.ibatis.plugin.Invocation;
 import org.apache.ibatis.plugin.Signature;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 
 
 @Component("mybatisExecutorHandlerInterceptor")
@@ -20,8 +25,15 @@ import org.springframework.stereotype.Component;
 })
 public class MybatisExecutorHandlerInterceptor implements Interceptor {
 
+    @Resource
+    ApplicationContext applicationContext;
+
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
+
+        PaginationInnerInterceptor paginationInnerInterceptor = new PaginationInnerInterceptor();
+
+        SqlExec sqlExec;
 
         FlanceGlobalTransactional.Module module = TxThreadLocal.getTxModule();
 
@@ -31,7 +43,8 @@ public class MybatisExecutorHandlerInterceptor implements Interceptor {
 
         switch (module) {
             case CT:
-                return CTExecutorHandler.intercept(invocation);
+                sqlExec = applicationContext.getBean("cTSqlExec", SqlExec.class);
+                return CTExecutorHandler.intercept(invocation, sqlExec);
             case AT:
                 return ATExecutorHandler.intercept(invocation);
             default:

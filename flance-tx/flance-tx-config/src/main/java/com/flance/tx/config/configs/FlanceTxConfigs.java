@@ -27,11 +27,6 @@ public class FlanceTxConfigs {
     private boolean enableDatasourceProxy = true;
 
     /**
-     * springboot 微服务id
-     */
-    private String applicationId;
-
-    /**
      * 事务服务组
      */
     private String txServiceGroup;

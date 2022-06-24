@@ -18,7 +18,7 @@ public class ServerReceiveHandler implements IReceiveHandler<NettyResponse, Nett
     @Override
     public NettyResponse handler(String msg, Channel channel) {
         NettyResponse response;
-        log.info("收到的报文内容为[{}]", msg);
+        log.debug("收到的报文内容为[{}]", msg);
         try {
             NettyRequest request = getOrigin(msg, channel);
             if (null != request.getHandlerId()) {

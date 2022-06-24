@@ -11,6 +11,7 @@ import com.flance.tx.server.netty.configs.NettyServerConfig;
 import com.flance.tx.server.netty.utils.ServerUtil;
 import com.google.common.collect.Lists;
 import io.netty.channel.Channel;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -30,6 +31,7 @@ import static com.flance.tx.common.TxConstants.*;
  *
  * @author jhf
  */
+@Slf4j
 @Component("serverStartTxHandler")
 public class ServerStartTxHandler implements IBizHandler<NettyResponse, NettyRequest> {
 
@@ -61,6 +63,7 @@ public class ServerStartTxHandler implements IBizHandler<NettyResponse, NettyReq
             FlanceTransaction tx = GsonUtils.fromString(request.getData(), FlanceTransaction.class);
             Map<Integer, Object> params = tx.getParams();
             String sql = tx.getExecSql();
+            log.info("执行sql - [{}]", sql);
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             for (Integer index : params.keySet()) {
                 preparedStatement.setObject(index, params.get(index));
@@ -73,6 +76,8 @@ public class ServerStartTxHandler implements IBizHandler<NettyResponse, NettyReq
                 case SQL_COMMAND_DELETE:
                     int deleteRows = doDelete(preparedStatement);
                     result.setData(deleteRows + "");
+                    connection.commit();
+                    connection.close();
                     break;
                 case SQL_COMMAND_INSERT:
                     int insertRows = doInsert(preparedStatement);

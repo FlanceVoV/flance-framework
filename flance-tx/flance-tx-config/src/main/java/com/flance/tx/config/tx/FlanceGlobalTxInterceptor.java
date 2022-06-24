@@ -2,12 +2,15 @@ package com.flance.tx.config.tx;
 
 import com.flance.tx.core.annotation.FlanceGlobalTransactional;
 import com.flance.tx.core.tx.TxThreadLocal;
+import com.flance.tx.netty.container.Room;
+import com.flance.tx.netty.container.RoomContainer;
 import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.beans.BeanUtils;
 
 import java.lang.reflect.Method;
+import java.util.UUID;
 
 /**
  * 全局事务 方法拦截器
@@ -34,10 +37,9 @@ public class FlanceGlobalTxInterceptor implements MethodInterceptor {
             ret = methodInvocation.proceed();
             after(methodInvocation);
         } catch (Exception e) {
-            e.printStackTrace();
             throw e;
         } finally {
-            TxThreadLocal.removeTxModule();
+            lastRefresh();
         }
         return ret;
     }
@@ -52,12 +54,19 @@ public class FlanceGlobalTxInterceptor implements MethodInterceptor {
         }
         FlanceGlobalTransactional.Module module = flanceGlobalTransactional.module();
         TxThreadLocal.setTxModule(module);
+        RoomContainer.putRoomID(UUID.randomUUID().toString());
     }
 
 
     private void after(MethodInvocation methodInvocation) {
         log.info("FlanceGlobalTxInterceptor - 之后");
+    }
 
+    private void lastRefresh() {
+        String roomId = RoomContainer.getRoomId();
+        RoomContainer.removeRoom(roomId);
+        TxThreadLocal.removeTxModule();
+        RoomContainer.removeRoomId();
     }
 
 }
