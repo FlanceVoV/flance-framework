@@ -7,6 +7,7 @@ import com.flance.tx.core.annotation.FlanceGlobalTransactional;
 import com.flance.tx.core.tx.TxThreadLocal;
 import com.flance.tx.datasource.sqlexe.CTSqlExec;
 import com.flance.tx.datasource.sqlexe.SqlExec;
+import com.flance.tx.datasource.utils.MybatisParamsUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +32,7 @@ import java.util.*;
 @Slf4j
 public class CTExecutorHandler implements ExecutorHandler {
 
-    public static Object intercept(Invocation invocation, SqlExec sqlExec) throws Throwable {
+    public static Object intercept(Invocation invocation, SqlExec sqlExec, PaginationInnerInterceptor paginationInnerInterceptor) throws Throwable {
 
 //        Semaphore semaphore = new Semaphore(1);
 //        semaphore.acquire();
@@ -53,9 +54,9 @@ public class CTExecutorHandler implements ExecutorHandler {
 
 
         String sql = boundSql.getSql();
-        Map<Object, Object> paramsMap = buildParams(boundSql);
+        Map<Object, Object> paramsMap = MybatisParamsUtil.buildParams(boundSql);
         List<ParameterMapping> paramsMappings = boundSql.getParameterMappings();
-        Map<Integer, Object> txParamsMap = parseParams(configuration, paramsMap, paramsMappings);
+        Map<Integer, Object> txParamsMap = MybatisParamsUtil.parseParams(configuration, paramsMap, paramsMappings);
 
 
         Class<?> clazz = mappedStatement.getResultMaps().get(0).getType();
@@ -71,8 +72,10 @@ public class CTExecutorHandler implements ExecutorHandler {
                 RowBounds rowBounds = (RowBounds) invocation.getArgs()[2];
                 ResultHandler resultHandler = (ResultHandler) invocation.getArgs()[3];
 
-//                paginationInnerInterceptor.willDoQuery(executor, mappedStatement, params, rowBounds, resultHandler, boundSql);
-//                paginationInnerInterceptor.beforeQuery(executor, mappedStatement, params, rowBounds, resultHandler, boundSql);
+                // 查询总数
+                paginationInnerInterceptor.willDoQuery(executor, mappedStatement, params, rowBounds, resultHandler, boundSql);
+                // 查询之前封装
+                paginationInnerInterceptor.beforeQuery(executor, mappedStatement, params, rowBounds, resultHandler, boundSql);
 
                 List result = Lists.newArrayList();
                 List<Map> findList = sqlExec.doSelect(sql, txParamsMap);
@@ -90,28 +93,7 @@ public class CTExecutorHandler implements ExecutorHandler {
         }
     }
 
-    private static Map<Object, Object> buildParams(BoundSql boundSql) {
-        Map<Object, Object> params = Maps.newHashMap();
-        Object obj = boundSql.getParameterObject();
-        if (ClassTypeUtils.isBaseType(obj.getClass())) {
-            List<ParameterMapping> list = boundSql.getParameterMappings();
-            list.forEach(mapping -> {
-                params.put(mapping.getProperty(), obj);
-            });
-        } else {
-            params.putAll((Map<?, ?>) obj);
-        }
-        return params;
-    }
 
-    private static Map<Integer, Object> parseParams(Configuration configuration, Map<Object, Object> paramsMap, List<ParameterMapping> paramsMappings) {
-        MetaObject metaObject = configuration.newMetaObject(paramsMap);
-        Map<Integer, Object> params = Maps.newHashMap();
-        for (int i = 1; i <= paramsMappings.size(); i++) {
-            params.put(i, metaObject.getValue(paramsMappings.get(i - 1).getProperty()));
-        }
-        return params;
-    }
 
 
 }

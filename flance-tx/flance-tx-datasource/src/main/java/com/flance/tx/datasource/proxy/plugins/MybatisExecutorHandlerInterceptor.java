@@ -1,6 +1,7 @@
 package com.flance.tx.datasource.proxy.plugins;
 
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
+import com.flance.tx.client.netty.configs.NettyClientConfig;
 import com.flance.tx.core.annotation.FlanceGlobalTransactional;
 import com.flance.tx.core.tx.TxThreadLocal;
 import com.flance.tx.datasource.sqlexe.SqlExec;
@@ -31,8 +32,6 @@ public class MybatisExecutorHandlerInterceptor implements Interceptor {
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
 
-        PaginationInnerInterceptor paginationInnerInterceptor = new PaginationInnerInterceptor();
-
         SqlExec sqlExec;
 
         FlanceGlobalTransactional.Module module = TxThreadLocal.getTxModule();
@@ -43,8 +42,9 @@ public class MybatisExecutorHandlerInterceptor implements Interceptor {
 
         switch (module) {
             case CT:
+                CTPaginationInnerInterceptor paginationInnerInterceptor = applicationContext.getBean("cTPaginationInnerInterceptor", CTPaginationInnerInterceptor.class);
                 sqlExec = applicationContext.getBean("cTSqlExec", SqlExec.class);
-                return CTExecutorHandler.intercept(invocation, sqlExec);
+                return CTExecutorHandler.intercept(invocation, sqlExec, paginationInnerInterceptor);
             case AT:
                 return ATExecutorHandler.intercept(invocation);
             default:

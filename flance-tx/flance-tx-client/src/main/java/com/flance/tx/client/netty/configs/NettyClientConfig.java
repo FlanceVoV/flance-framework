@@ -11,6 +11,8 @@ import static com.flance.tx.common.TxConstants.FLANCE_TX_CLIENT_PREFIX;
 @ConfigurationProperties(prefix = FLANCE_TX_CLIENT_PREFIX)
 public class NettyClientConfig {
 
+    private boolean enabled = true;
+
     private String nettyClientId;
 
     private String nettyClientIp;
