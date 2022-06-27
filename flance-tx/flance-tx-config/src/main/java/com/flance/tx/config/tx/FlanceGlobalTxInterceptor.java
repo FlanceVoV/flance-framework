@@ -67,6 +67,7 @@ public class FlanceGlobalTxInterceptor implements MethodInterceptor {
         log.info("FlanceGlobalTxInterceptor - 之后");
         if (null != RoomContainer.getIsRoomCreator() && RoomContainer.getIsRoomCreator()) {
             log.info("事务提交，发起提交指令");
+            
         } else {
             log.info("非事务发起者，不发起提交指令");
         }

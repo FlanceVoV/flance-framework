@@ -48,7 +48,7 @@ public class ServerStartTxHandler implements IBizHandler<NettyResponse, NettyReq
         result.setHandlerId("clientStartTxHandler");
         result.setRequest(request);
         result.setRoomId(request.getRoomId());
-        result.setServerData(ServerUtil.getServerData(nettyServerConfig));
+        result.setServerData(ServerUtil.getServerData());
         result.setIsHeartBeat(false);
         result.setMessageId(request.getMessageId());
 

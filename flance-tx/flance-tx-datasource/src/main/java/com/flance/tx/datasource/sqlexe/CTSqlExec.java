@@ -32,9 +32,6 @@ import java.util.concurrent.TimeUnit;
 @Component("cTSqlExec")
 public class CTSqlExec implements SqlExec {
 
-    @Resource
-    NettyClientConfig nettyClientConfig;
-
     @Override
     public List<Object> doSelectBase(String sql, Map<Integer, Object> params) {
         Channel channel = NettyClientStart.startNettyClient(SpringUtil.getApplicationContext());
@@ -103,7 +100,7 @@ public class CTSqlExec implements SqlExec {
         flanceTransaction.setExecSql(sql);
         flanceTransaction.setParams(params);
         flanceTransaction.setCommand(command);
-        request.setServerData(ClientUtil.getServerData(nettyClientConfig));
+        request.setServerData(ClientUtil.getServerData());
         request.setRoomId(roomId);
         request.setMessageId(messageId);
         request.setIsHeartBeat(false);

@@ -5,17 +5,17 @@ import com.flance.tx.server.netty.configs.NettyServerConfig;
 
 public class ServerUtil {
 
-    private static ServerData serverData = null;
+    private static ServerData serverData = new ServerData();;
 
-    public static ServerData getServerData(NettyServerConfig nettyServerConfig) {
-        if (null == serverData) {
-            serverData = new ServerData();
-            serverData.setApplicationId(nettyServerConfig.getNettyServerId());
-            serverData.setId(nettyServerConfig.getNettyServerId());
-            serverData.setPort(nettyServerConfig.getNettyServerPort());
-            serverData.setIp(nettyServerConfig.getNettyServerIp());
-        }
+    public static ServerData getServerData() {
         return serverData;
+    }
+
+    public static void setServerData(NettyServerConfig nettyServerConfig) {
+        serverData.setApplicationId(nettyServerConfig.getNettyServerId());
+        serverData.setId(nettyServerConfig.getNettyServerId());
+        serverData.setPort(nettyServerConfig.getNettyServerPort());
+        serverData.setIp(nettyServerConfig.getNettyServerIp());
     }
 
 }
