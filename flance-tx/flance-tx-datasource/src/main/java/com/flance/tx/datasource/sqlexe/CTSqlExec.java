@@ -7,7 +7,7 @@ import com.flance.tx.client.utils.ClientUtil;
 import com.flance.tx.common.utils.GsonUtils;
 import com.flance.tx.common.utils.SpringUtil;
 import com.flance.tx.core.tx.FlanceTransaction;
-import com.flance.tx.netty.container.RoomContainer;
+import com.flance.tx.common.netty.RoomContainer;
 import com.flance.tx.netty.current.CurrentNettyData;
 import com.flance.tx.netty.data.DataUtils;
 import com.flance.tx.netty.data.NettyRequest;

@@ -1,6 +1,6 @@
 package com.flance.tx.netty.biz;
 
-import com.flance.tx.netty.container.RoomContainer;
+import com.flance.tx.common.netty.RoomContainer;
 import com.flance.tx.netty.container.rooms.ConnectionRoom;
 import com.flance.tx.netty.data.NettyRequest;
 import com.flance.tx.netty.data.NettyResponse;

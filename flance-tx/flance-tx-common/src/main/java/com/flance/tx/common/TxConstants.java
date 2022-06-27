@@ -65,4 +65,6 @@ public interface TxConstants {
 
     String HTTP_HEADER_TX_ID = "txId";
 
+    String FEIGN_HEADER_TX_ROOM_ID = "roomId";
+
 }

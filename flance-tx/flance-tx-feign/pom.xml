@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>flance-tx-starter</artifactId>
+    <artifactId>flance-tx-feign</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -18,21 +18,32 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.flance</groupId>
-            <artifactId>flance-tx-config</artifactId>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.flance</groupId>
-            <artifactId>flance-tx-client</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-aop</artifactId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+
+        <!-- alibaba spring cloud nacos config -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+        </dependency>
+
+        <!-- alibaba spring cloud nacos discovery -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>com.flance</groupId>
-            <artifactId>flance-tx-feign</artifactId>
+            <artifactId>flance-tx-common</artifactId>
         </dependency>
+
     </dependencies>
 
 </project>

@@ -1,4 +1,4 @@
-package com.flance.tx.netty.container;
+package com.flance.tx.common.netty;
 
 import io.netty.channel.Channel;
 

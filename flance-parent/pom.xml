@@ -53,6 +53,7 @@
         <flance-tx-datasource.version>1.0</flance-tx-datasource.version>
         <flance-tx-netty.version>1.0</flance-tx-netty.version>
         <flance-tx-server.version>1.0</flance-tx-server.version>
+        <flance-tx-feign.version>1.0</flance-tx-feign.version>
         <flance-tx-common.version>1.0</flance-tx-common.version>
         <flance-tx-tcserver.version>1.0</flance-tx-tcserver.version>
         <flance-components-fastdfs.version>1.0</flance-components-fastdfs.version>
@@ -332,6 +333,12 @@
                 <groupId>com.flance</groupId>
                 <artifactId>flance-tx-server</artifactId>
                 <version>${flance-tx-server.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.flance</groupId>
+                <artifactId>flance-tx-feign</artifactId>
+                <version>${flance-tx-feign.version}</version>
             </dependency>
 
             <dependency>

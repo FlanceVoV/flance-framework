@@ -15,6 +15,7 @@
         <module>flance-tx-client</module>
         <module>flance-tx-server</module>
         <module>flance-tx-demo2</module>
+        <module>flance-tx-feign</module>
     </modules>
     <parent>
         <artifactId>flance-parent</artifactId>

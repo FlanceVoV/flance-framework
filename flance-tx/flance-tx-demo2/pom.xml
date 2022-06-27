@@ -44,10 +44,6 @@
             <version>1.0</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.flance</groupId>
-            <artifactId>flance-web-feign</artifactId>
-        </dependency>
     </dependencies>
 
 </project>

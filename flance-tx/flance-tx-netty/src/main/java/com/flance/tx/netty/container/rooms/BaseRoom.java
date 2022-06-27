@@ -1,6 +1,6 @@
 package com.flance.tx.netty.container.rooms;
 
-import com.flance.tx.netty.container.Room;
+import com.flance.tx.common.netty.Room;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
 import lombok.Data;

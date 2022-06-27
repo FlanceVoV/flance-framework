@@ -1,4 +1,4 @@
-package com.flance.tx.netty.container;
+package com.flance.tx.common.netty;
 
 import com.alibaba.ttl.TransmittableThreadLocal;
 import com.google.common.collect.Maps;
@@ -15,6 +15,8 @@ public class RoomContainer {
     private static final Map<String, Room> CURRENT_ROOM = Maps.newConcurrentMap();
 
     private static final TransmittableThreadLocal<String> CURRENT_ROOM_ID = new TransmittableThreadLocal<>();
+
+    private static final TransmittableThreadLocal<Boolean> IS_ROOM_CREATOR = new TransmittableThreadLocal<>();
 
     public static void createRoom(String roomId, Room room) {
         CURRENT_ROOM.put(roomId, room);
@@ -40,6 +42,17 @@ public class RoomContainer {
         CURRENT_ROOM_ID.remove();
     }
 
+    public static Boolean getIsRoomCreator() {
+        return IS_ROOM_CREATOR.get();
+    }
+
+    public static void putIsRoomCreator(Boolean flag) {
+        IS_ROOM_CREATOR.set(flag);
+    }
+
+    public static void removeIsRoomCreator() {
+        IS_ROOM_CREATOR.remove();
+    }
 
 
     /**
