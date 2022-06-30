@@ -25,11 +25,6 @@
 
         <dependency>
             <groupId>com.flance</groupId>
-            <artifactId>flance-web-utils</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.flance</groupId>
             <artifactId>flance-jdbc-mybatis</artifactId>
         </dependency>
 
@@ -41,7 +36,6 @@
         <dependency>
             <groupId>com.flance</groupId>
             <artifactId>flance-tx-starter</artifactId>
-            <version>1.0</version>
         </dependency>
 
     </dependencies>

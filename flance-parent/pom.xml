@@ -56,6 +56,7 @@
         <flance-tx-feign.version>1.0</flance-tx-feign.version>
         <flance-tx-common.version>1.0</flance-tx-common.version>
         <flance-tx-tcserver.version>1.0</flance-tx-tcserver.version>
+        <flance-tx-starter.version>1.0</flance-tx-starter.version>
         <flance-components-fastdfs.version>1.0</flance-components-fastdfs.version>
         <flance-components-form.version>1.0</flance-components-form.version>
         <flance-components-questionbank>1.0</flance-components-questionbank>
@@ -339,6 +340,12 @@
                 <groupId>com.flance</groupId>
                 <artifactId>flance-tx-feign</artifactId>
                 <version>${flance-tx-feign.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.flance</groupId>
+                <artifactId>flance-tx-starter</artifactId>
+                <version>${flance-tx-starter.version}</version>
             </dependency>
 
             <dependency>
