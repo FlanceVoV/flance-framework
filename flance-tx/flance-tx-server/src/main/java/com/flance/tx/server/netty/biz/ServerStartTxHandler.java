@@ -94,6 +94,7 @@ public class ServerStartTxHandler implements IBizHandler<NettyResponse, NettyReq
         } catch (Exception e) {
             e.printStackTrace();
             result.setSuccess(false);
+            result.setData(e.getMessage());
             try {
                 if (null != connection) {
                     connection.close();

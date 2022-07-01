@@ -12,6 +12,8 @@ import com.flance.tx.netty.current.CurrentNettyData;
 import com.flance.tx.netty.data.DataUtils;
 import com.flance.tx.netty.data.NettyRequest;
 import com.flance.tx.netty.data.NettyResponse;
+import com.flance.tx.netty.exception.NettyException;
+import com.flance.web.utils.AssertException;
 import com.google.common.collect.Lists;
 import io.netty.channel.Channel;
 import lombok.Data;
@@ -32,24 +34,6 @@ import java.util.concurrent.TimeUnit;
 @Component("cTSqlExec")
 public class CTSqlExec implements SqlExec {
 
-    @Override
-    public List<Object> doSelectBase(String sql, Map<Integer, Object> params) {
-        Channel channel = NettyClientStart.startNettyClient(SpringUtil.getApplicationContext());
-        String msg = null;
-        NettyResponse data = null;
-        final ClientCallbackService clientCallbackService = new ClientCallbackService();
-        try {
-            NettyRequest request = buildRequest(clientCallbackService, channel, "serverStartTxHandler", "SELECT", sql, params);
-            msg = DataUtils.getStr(request);
-            channel.writeAndFlush(msg.getBytes(StandardCharsets.UTF_8));
-            clientCallbackService.awaitThread(15, TimeUnit.SECONDS);
-            data = clientCallbackService.getData();
-            return (List<Object>) GsonUtils.fromStringArray(data.getData(), Object.class);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return Lists.newArrayList();
-    }
 
     @Override
     public List<Map> doSelect(String sql, Map<Integer, Object> params) {
@@ -63,11 +47,14 @@ public class CTSqlExec implements SqlExec {
             channel.writeAndFlush(msg.getBytes(StandardCharsets.UTF_8));
             clientCallbackService.awaitThread(15, TimeUnit.SECONDS);
             data = clientCallbackService.getData();
-            return (List) GsonUtils.fromStringArray(data.getData(), Map.class);
+            if (!data.isSuccess()) {
+                throw AssertException.getNormal("-1", data.getData());
+            }
+            return (List<Map>) GsonUtils.fromStringArray(data.getData(), Map.class);
         } catch (Exception e) {
             e.printStackTrace();
+            throw new NettyException(NettyException.NettyErrorEnum.NETTY_ERROR_TX_CANNOT_CONNECTION);
         }
-        return Lists.newArrayList();
     }
 
     @Override

@@ -23,6 +23,15 @@ public class GlobalExceptionAdvice {
     @ResponseBody
     @ExceptionHandler(value = Exception.class)
     public WebResponse errorHandler(Exception ex) {
+        if (ex instanceof AssertException) {
+            return errorHandler((AssertException)ex);
+        }
+        if (ex instanceof HttpRequestMethodNotSupportedException) {
+            return errorHandler((HttpRequestMethodNotSupportedException)ex);
+        }
+        if (ex instanceof MethodArgumentNotValidException) {
+            return errorHandler((MethodArgumentNotValidException)ex);
+        }
         log.error("log-id:{}-未知异常[{}]", RequestUtil.getLogId(), ex.toString());
         ex.printStackTrace();
         return WebResponse.getFailed("-1", "未知异常，请求失败[{" + RequestUtil.getLogId() + "}]");

@@ -6,8 +6,6 @@ import java.util.Map;
 
 public interface SqlExec {
 
-    List<Object> doSelectBase(String sql, Map<Integer, Object> params);
-
     List<Map> doSelect(String sql, Map<Integer, Object> params);
 
     int doUpdate(String sql, Map<Integer, Object> params);

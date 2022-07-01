@@ -36,7 +36,7 @@ public class FlanceGlobalTxInterceptor implements MethodInterceptor {
             after(methodInvocation);
         } catch (Exception e) {
             // 发起回滚指令
-
+            log.info("发生异常 发起回滚指令");
             throw e;
         } finally {
             lastRefresh();

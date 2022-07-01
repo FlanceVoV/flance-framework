@@ -14,9 +14,14 @@ public class AssertException extends RuntimeException {
 
     private String code;
 
-    private String methodName;
+    public AssertException() {
 
-    private String className;
+    }
+
+    public AssertException(String code, String msg) {
+        this.msg = msg;
+        this.code = code;
+    }
 
     public enum ErrCode {
 

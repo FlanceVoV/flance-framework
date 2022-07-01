@@ -4,6 +4,7 @@ import com.flance.tx.netty.data.DataUtils;
 import com.flance.tx.netty.data.NettyRequest;
 import com.flance.tx.common.utils.ThreadUtils;
 import com.flance.tx.netty.data.ServerData;
+import com.flance.tx.netty.exception.NettyException;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +30,7 @@ public class NettyClientStart {
             return ctNettyClient.getChannel();
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException("事务服务连接失败");
+            throw new NettyException(NettyException.NettyErrorEnum.NETTY_ERROR_TX_CANNOT_CONNECTION);
         }
 
     }
