@@ -14,13 +14,13 @@
     </parent>
 
     <modules>
-        <module>flance-web-oauth-security</module>
+<!--        <module>flance-web-oauth-security</module>-->
         <module>flance-web-gateway</module>
         <module>flance-web-common</module>
-        <module>flance-web-auth</module>
+<!--        <module>flance-web-auth</module>-->
         <module>flance-web-utils</module>
-        <module>flance-web-security</module>
-        <module>flance-web-security-common</module>
+<!--        <module>flance-web-security</module>-->
+<!--        <module>flance-web-security-common</module>-->
         <module>flance-web-request</module>
         <module>flance-web-router</module>
         <module>flance-web-wx</module>
