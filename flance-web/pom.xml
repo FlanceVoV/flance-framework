@@ -18,7 +18,7 @@
         <module>flance-web-gateway</module>
         <module>flance-web-common</module>
 <!--        <module>flance-web-auth</module>-->
-        <module>flance-web-stater</module>
+        <module>flance-web-starter</module>
 <!--        <module>flance-web-security</module>-->
 <!--        <module>flance-web-security-common</module>-->
         <module>flance-web-request</module>

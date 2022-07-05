@@ -14,7 +14,7 @@
     <dependencies>
         <dependency>
             <groupId>com.flance</groupId>
-            <artifactId>flance-web-stater</artifactId>
+            <artifactId>flance-web-starter</artifactId>
         </dependency>
 
         <dependency>

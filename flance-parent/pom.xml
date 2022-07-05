@@ -46,7 +46,7 @@
         <flance-web-security.version>1.0</flance-web-security.version>
         <flance-web-security-common.version>1.0</flance-web-security-common.version>
         <flance-web-oauth-security.version>1.0</flance-web-oauth-security.version>
-        <flance-web-stater.version>1.0</flance-web-stater.version>
+        <flance-web-starter.version>1.0</flance-web-starter.version>
         <flance-web-feign.version>1.0</flance-web-feign.version>
         <flance-tx-config.version>1.0</flance-tx-config.version>
         <flance-tx-client.version>1.0</flance-tx-client.version>
@@ -267,8 +267,8 @@
 
             <dependency>
                 <groupId>com.flance</groupId>
-                <artifactId>flance-web-stater</artifactId>
-                <version>${flance-web-stater.version}</version>
+                <artifactId>flance-web-starter</artifactId>
+                <version>${flance-web-starter.version}</version>
             </dependency>
 
             <dependency>
