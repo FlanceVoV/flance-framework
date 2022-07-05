@@ -19,7 +19,7 @@
 
         <dependency>
             <groupId>com.flance</groupId>
-            <artifactId>flance-web-utils</artifactId>
+            <artifactId>flance-web-stater</artifactId>
         </dependency>
 
         <dependency>
