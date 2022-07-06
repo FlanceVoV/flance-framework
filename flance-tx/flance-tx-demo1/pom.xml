@@ -38,6 +38,11 @@
             <artifactId>flance-tx-starter</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.flance</groupId>
+            <artifactId>flance-jdbc-binlog</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>

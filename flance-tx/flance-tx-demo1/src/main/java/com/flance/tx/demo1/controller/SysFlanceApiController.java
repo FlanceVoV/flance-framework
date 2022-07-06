@@ -39,7 +39,6 @@ public class SysFlanceApiController {
         return sysFlanceApiService.updateById(sysFlanceApi);
     }
 
-    @FlanceGlobalTransactional
     @GetMapping("/testList")
     public List<SysFlanceApi> testList(String id, String name) {
         LambdaQueryWrapper<SysFlanceApi> lambdaQueryWrapper = new LambdaQueryWrapper<>();

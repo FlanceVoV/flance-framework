@@ -1,5 +1,6 @@
 package com.flance.tx.demo1;
 
+import com.flance.jdbc.binlog.BinLogStarter;
 import com.flance.tx.config.tx.EnableFlanceTx;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -14,7 +15,7 @@ import org.springframework.context.annotation.ComponentScan;
 @ComponentScan({"com.flance.*"})
 @MapperScan("com.flance.*.*.mapper")
 @SpringBootApplication
-public class Demo1Application {
+public class Demo1Application extends BinLogStarter {
 
     public static void main(String[] args) {
 

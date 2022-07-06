@@ -11,3 +11,10 @@ flance:
       netty-client-id: flance-tx-demo1
       netty-client-ip: 127.0.0.1
       netty-client-port: 8081
+
+  binlog:
+    host: 127.0.0.1
+    port: 3306
+    username: root
+    password: root
+    server-id: 1

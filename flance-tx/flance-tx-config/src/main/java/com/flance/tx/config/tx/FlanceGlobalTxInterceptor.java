@@ -39,7 +39,9 @@ public class FlanceGlobalTxInterceptor implements MethodInterceptor {
             log.info("发生异常 发起回滚指令");
             throw e;
         } finally {
-            lastRefresh();
+            if (!showReturn(methodInvocation)) {
+                lastRefresh();
+            }
         }
         return ret;
     }
@@ -49,7 +51,7 @@ public class FlanceGlobalTxInterceptor implements MethodInterceptor {
         log.info("FlanceGlobalTxInterceptor - 之前");
         Method method = methodInvocation.getMethod();
         FlanceGlobalTransactional flanceGlobalTransactional = method.getAnnotation(FlanceGlobalTransactional.class);
-        if (null == flanceGlobalTransactional) {
+        if (showReturn(methodInvocation)) {
             return;
         }
         FlanceGlobalTransactional.Module module = flanceGlobalTransactional.module();
@@ -65,6 +67,9 @@ public class FlanceGlobalTxInterceptor implements MethodInterceptor {
 
     private void after(MethodInvocation methodInvocation) {
         log.info("FlanceGlobalTxInterceptor - 之后");
+        if (showReturn(methodInvocation)) {
+            return;
+        }
         if (null != RoomContainer.getIsRoomCreator() && RoomContainer.getIsRoomCreator()) {
             log.info("事务提交，发起提交指令");
             
@@ -80,6 +85,15 @@ public class FlanceGlobalTxInterceptor implements MethodInterceptor {
         TxThreadLocal.removeTxModule();
         RoomContainer.removeRoomId();
         RoomContainer.removeIsRoomCreator();
+    }
+
+    private boolean showReturn(MethodInvocation methodInvocation) {
+        Method method = methodInvocation.getMethod();
+        FlanceGlobalTransactional flanceGlobalTransactional = method.getAnnotation(FlanceGlobalTransactional.class);
+        if (null == flanceGlobalTransactional) {
+            return true;
+        }
+        return false;
     }
 
 }
