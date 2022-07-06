@@ -1,7 +1,6 @@
 package com.flance.components.questionbank.domain.question.model.entity;
 
 import lombok.Data;
-import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 
@@ -18,11 +17,9 @@ public class Option {
     private Long id;
 
     /** 选项名称 **/
-    @Length(max = 500)
     private String optionName;
 
     /** 选项内容 **/
-    @Length(max = 4000)
     private String optionContent;
 
     /** 选项编号，用于抽取随机选项 **/

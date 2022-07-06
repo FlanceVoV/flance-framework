@@ -1,7 +1,6 @@
 package com.flance.components.logs.domain.log.model.entity;
 
 import lombok.Data;
-import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -33,13 +32,11 @@ public class OperateLog {
     /**
      * 操作请求参数
      */
-    @Length(max = 4000)
     private String requestParams;
 
     /**
      * 请求接口
      */
-    @Length(max = 1000)
     @Column(nullable = false)
     private String requestUrl;
 

@@ -3,7 +3,6 @@ package com.flance.components.questionbank.domain.question.model.entity;
 import lombok.Data;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
-import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import java.util.List;
@@ -21,7 +20,6 @@ public class Question {
     private Long id;
 
     /** 题名 **/
-    @Length(max = 500)
     private String questionName;
 
     /**
@@ -33,7 +31,6 @@ public class Question {
     private String questionType;
 
     /** 题目内容 **/
-    @Length(max = 4000)
     private String questionContent;
 
     /**
@@ -68,7 +65,6 @@ public class Question {
     /**
      * 配置字段，可以配置一些属性，用于配置展示
      */
-    @Length(max = 4000)
     private String config;
 
 
