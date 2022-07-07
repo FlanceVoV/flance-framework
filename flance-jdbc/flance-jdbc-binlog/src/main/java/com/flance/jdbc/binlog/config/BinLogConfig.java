@@ -17,9 +17,15 @@ public class BinLogConfig {
 
     private long serverId;
 
+    private String schema;
+
     private String username;
 
     private String password;
+
+    private String listenerClass;
+
+    private String module;
 
     private List<String> tables;
 

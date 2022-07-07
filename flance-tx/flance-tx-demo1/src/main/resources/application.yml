@@ -15,6 +15,10 @@ flance:
   binlog:
     host: 127.0.0.1
     port: 3306
+    schema: flance_elearning
+    tables: sys_flance_api,flance_test
+    listener-class: com.flance.jdbc.binlog.listener.LogListener
+    module: multi
     username: root
     password: root
     server-id: 1
