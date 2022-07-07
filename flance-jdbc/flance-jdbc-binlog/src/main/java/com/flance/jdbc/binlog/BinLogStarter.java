@@ -29,12 +29,11 @@ public class BinLogStarter implements CommandLineRunner {
             BaseListener baseListener = this.start(null);
             tables.forEach(table -> baseListener.initTableColum(binLogConfig.getSchema(), table));
         } else {
-            tables.forEach(table -> {
-                ThreadUtils.execSupplierNow(() -> {
-                    BaseListener baseListener = start(table);
-                    baseListener.initTableColum(binLogConfig.getSchema(), table);
-                });
-            });
+            throw new RuntimeException("not support yet");
+//            tables.forEach(table -> {
+//                BaseListener baseListener = start(table);
+//                baseListener.initTableColum(binLogConfig.getSchema(), table);
+//            });
         }
     }
 

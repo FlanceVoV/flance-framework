@@ -18,7 +18,7 @@ flance:
     schema: flance_elearning
     tables: sys_flance_api,flance_test
     listener-class: com.flance.jdbc.binlog.listener.LogListener
-    module: multi
+    module: single
     username: root
     password: root
     server-id: 1
