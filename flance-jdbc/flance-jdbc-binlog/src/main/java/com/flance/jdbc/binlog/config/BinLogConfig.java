@@ -29,4 +29,6 @@ public class BinLogConfig {
 
     private List<String> tables;
 
+    private List<String> filters;
+
 }

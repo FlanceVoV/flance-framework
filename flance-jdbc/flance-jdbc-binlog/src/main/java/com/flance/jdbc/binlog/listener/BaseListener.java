@@ -32,6 +32,8 @@ import static com.github.shyiko.mysql.binlog.event.EventType.*;
 @Slf4j
 public abstract class BaseListener implements BinaryLogClient.EventListener {
 
+    private final List<IBinLogFilter> filters;
+
     protected final String listenSchema;
 
     protected String listenerTable;
@@ -46,11 +48,12 @@ public abstract class BaseListener implements BinaryLogClient.EventListener {
 
     public final static String MULTI_THREAD = "multi";
 
-    public BaseListener(String module, String listenSchema, String listenerTable, BinLogConfig binLogConfig) {
+    public BaseListener(String module, String listenSchema, String listenerTable, BinLogConfig binLogConfig, List<IBinLogFilter> filters) {
         this.listenSchema = listenSchema;
         this.listenerTable = listenerTable;
         this.binLogConfig = binLogConfig;
         this.module = module;
+        this.filters = filters;
         schemaTable = listenSchema + "." + listenerTable;
         log.info("完成初始化 监听 [{}] [{}]", listenSchema, listenerTable);
     }
@@ -141,7 +144,6 @@ public abstract class BaseListener implements BinaryLogClient.EventListener {
                     DeleteRowsEventData data = event.getData();
                     doDelete(eventType, data);
                 }
-                List<IBinLogFilter> filters = Lists.newArrayList(new ListenerLogFilter());
                 FilterHandler filterHandler = new FilterHandler(filters);
                 filterHandler.startFilter();
             } catch (Exception e) {

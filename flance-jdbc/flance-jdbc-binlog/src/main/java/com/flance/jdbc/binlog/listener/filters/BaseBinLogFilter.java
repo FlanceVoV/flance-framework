@@ -11,7 +11,7 @@ import java.util.List;
  * @author jhf
  */
 @Data
-public sealed abstract class BaseBinLogFilter implements IBinLogFilter permits ListenerLogFilter {
+public sealed abstract class BaseBinLogFilter implements IBinLogFilter permits ListenerLogFilter, ListenerLogFilter2 {
 
     protected List<IBinLogFilter> chain;
 
@@ -19,13 +19,13 @@ public sealed abstract class BaseBinLogFilter implements IBinLogFilter permits L
 
     @Override
     public boolean hasNext() {
-        return index < chain.size();
+        return index + 1 < chain.size();
     }
 
     @Override
     public IBinLogFilter getNext() {
         if (hasNext()) {
-            return chain.get(index);
+            return chain.get(index + 1);
         }
         return null;
     }

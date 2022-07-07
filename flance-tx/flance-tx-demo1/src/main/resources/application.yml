@@ -19,6 +19,9 @@ flance:
     tables: sys_flance_api,flance_test
     listener-class: com.flance.jdbc.binlog.listener.LogListener
     module: single
+    filters:
+      - com.flance.jdbc.binlog.listener.filters.ListenerLogFilter
+      - com.flance.jdbc.binlog.listener.filters.ListenerLogFilter2
     username: root
     password: root
     server-id: 1

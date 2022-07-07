@@ -3,8 +3,11 @@ package com.flance.jdbc.binlog;
 import com.flance.jdbc.binlog.config.BinLogConfig;
 import com.flance.jdbc.binlog.listener.BaseListener;
 import com.flance.jdbc.binlog.listener.LogListener;
+import com.flance.jdbc.binlog.listener.filters.BaseBinLogFilter;
+import com.flance.jdbc.binlog.listener.filters.IBinLogFilter;
 import com.flance.jdbc.binlog.utils.ThreadUtils;
 import com.github.shyiko.mysql.binlog.BinaryLogClient;
+import com.google.common.collect.Lists;
 import org.springframework.boot.CommandLineRunner;
 
 import javax.annotation.Resource;
@@ -25,8 +28,10 @@ public class BinLogStarter implements CommandLineRunner {
     @Override
     public void run(String... args) {
         List<String> tables = binLogConfig.getTables();
+        List<String> filterStr = binLogConfig.getFilters();
+        List<IBinLogFilter> filters = parseFilters(filterStr);
         if (null == binLogConfig.getModule() || binLogConfig.getModule().equals(BaseListener.SINGLE_THREAD)) {
-            BaseListener baseListener = this.start(null);
+            BaseListener baseListener = this.start(null, filters);
             tables.forEach(table -> baseListener.initTableColum(binLogConfig.getSchema(), table));
         } else {
             throw new RuntimeException("not support yet");
@@ -37,13 +42,13 @@ public class BinLogStarter implements CommandLineRunner {
         }
     }
 
-    private BaseListener start(String table) {
+    private BaseListener start(String table, List<IBinLogFilter> filters) {
         String listenerClassName = binLogConfig.getListenerClass();
         try {
             // 构建监听器
             BaseListener baseListener = (BaseListener) Class.forName(listenerClassName)
-                    .getDeclaredConstructor(String.class, String.class, String.class, BinLogConfig.class)
-                    .newInstance(binLogConfig.getModule(), binLogConfig.getSchema(), table, binLogConfig);
+                    .getDeclaredConstructor(String.class, String.class, String.class, BinLogConfig.class, List.class)
+                    .newInstance(binLogConfig.getModule(), binLogConfig.getSchema(), table, binLogConfig, filters);
 
             BinaryLogClient client = new BinaryLogClient(binLogConfig.getHost(),
                     binLogConfig.getPort(),
@@ -59,6 +64,20 @@ public class BinLogStarter implements CommandLineRunner {
             throw new RuntimeException("启动监听失败");
         }
 
+    }
+
+    private List<IBinLogFilter> parseFilters(List<String> filterClasses) {
+        List<IBinLogFilter> filters = Lists.newArrayList();
+        for (String filterName : filterClasses) {
+            try {
+                BaseBinLogFilter filter = (BaseBinLogFilter) Class.forName(filterName).getDeclaredConstructor().newInstance();
+                filter.setChain(filters);
+                filters.add(filter);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return filters;
     }
 
 }
