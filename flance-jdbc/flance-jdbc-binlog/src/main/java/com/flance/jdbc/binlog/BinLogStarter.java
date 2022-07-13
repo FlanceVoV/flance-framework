@@ -6,6 +6,7 @@ import com.flance.jdbc.binlog.listener.LogListener;
 import com.flance.jdbc.binlog.listener.filters.BaseBinLogFilter;
 import com.flance.jdbc.binlog.listener.filters.IBinLogFilter;
 import com.flance.jdbc.binlog.utils.ThreadUtils;
+import com.flance.web.utils.RedisUtils;
 import com.github.shyiko.mysql.binlog.BinaryLogClient;
 import com.google.common.collect.Lists;
 import org.springframework.boot.CommandLineRunner;
@@ -25,13 +26,16 @@ public class BinLogStarter implements CommandLineRunner {
     @Resource
     BinLogConfig binLogConfig;
 
+    @Resource
+    RedisUtils redisUtils;
+
     @Override
     public void run(String... args) {
         List<String> tables = binLogConfig.getTables();
         List<String> filterStr = binLogConfig.getFilters();
         List<IBinLogFilter> filters = parseFilters(filterStr);
         if (null == binLogConfig.getModule() || binLogConfig.getModule().equals(BaseListener.SINGLE_THREAD)) {
-            BaseListener baseListener = this.start(null, filters);
+            BaseListener baseListener = this.start(filters);
             tables.forEach(table -> baseListener.initTableColum(binLogConfig.getSchema(), table));
         } else {
             throw new RuntimeException("not support yet");
@@ -42,20 +46,22 @@ public class BinLogStarter implements CommandLineRunner {
         }
     }
 
-    private BaseListener start(String table, List<IBinLogFilter> filters) {
+    private BaseListener start(List<IBinLogFilter> filters) {
         String listenerClassName = binLogConfig.getListenerClass();
         try {
             // 构建监听器
             BaseListener baseListener = (BaseListener) Class.forName(listenerClassName)
-                    .getDeclaredConstructor(String.class, String.class, String.class, BinLogConfig.class, List.class)
-                    .newInstance(binLogConfig.getModule(), binLogConfig.getSchema(), table, binLogConfig, filters);
+                    .getDeclaredConstructor(BinLogConfig.class, List.class, RedisUtils.class)
+                    .newInstance(binLogConfig, filters, redisUtils);
 
             BinaryLogClient client = new BinaryLogClient(binLogConfig.getHost(),
                     binLogConfig.getPort(),
                     binLogConfig.getSchema(),
                     binLogConfig.getUsername(),
                     binLogConfig.getPassword());
+
             client.setServerId(binLogConfig.getServerId());
+            // client.setBinlogPosition();
             client.registerEventListener(baseListener);
             client.connect(1000);
             return baseListener;

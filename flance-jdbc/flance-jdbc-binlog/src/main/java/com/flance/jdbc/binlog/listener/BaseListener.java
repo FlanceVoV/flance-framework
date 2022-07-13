@@ -3,13 +3,12 @@ package com.flance.jdbc.binlog.listener;
 import com.flance.jdbc.binlog.config.BinLogConfig;
 import com.flance.jdbc.binlog.listener.filters.FilterHandler;
 import com.flance.jdbc.binlog.listener.filters.IBinLogFilter;
-import com.flance.jdbc.binlog.listener.filters.ListenerLogFilter;
 import com.flance.jdbc.binlog.model.BinLog;
-import com.flance.jdbc.binlog.model.BinLogColum;
+import com.flance.jdbc.binlog.model.BinLogColumn;
+import com.flance.web.utils.RedisUtils;
+import com.flance.web.utils.RequestUtil;
 import com.github.shyiko.mysql.binlog.BinaryLogClient;
 import com.github.shyiko.mysql.binlog.event.*;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serializable;
@@ -20,6 +19,7 @@ import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static com.github.shyiko.mysql.binlog.event.EventType.*;
 
@@ -44,16 +44,20 @@ public abstract class BaseListener implements BinaryLogClient.EventListener {
 
     protected final String module;
 
+    protected final RedisUtils redisUtils;
+
     public final static String SINGLE_THREAD = "single";
 
     public final static String MULTI_THREAD = "multi";
 
-    public BaseListener(String module, String listenSchema, String listenerTable, BinLogConfig binLogConfig, List<IBinLogFilter> filters) {
-        this.listenSchema = listenSchema;
-        this.listenerTable = listenerTable;
+    public BaseListener(BinLogConfig binLogConfig,
+                        List<IBinLogFilter> filters,
+                        RedisUtils redisUtils) {
+        this.listenSchema = binLogConfig.getSchema();
         this.binLogConfig = binLogConfig;
-        this.module = module;
+        this.module = binLogConfig.getModule();
         this.filters = filters;
+        this.redisUtils = redisUtils;
         schemaTable = listenSchema + "." + listenerTable;
         log.info("完成初始化 监听 [{}] [{}]", listenSchema, listenerTable);
     }
@@ -69,7 +73,7 @@ public abstract class BaseListener implements BinaryLogClient.EventListener {
             ps.setString(1, schema);
             ps.setString(2, tableName);
             rs = ps.executeQuery();
-            Map<String, BinLogColum> map = new HashMap<>(rs.getRow());
+            Map<String, BinLogColumn> map = new HashMap<>(rs.getRow());
             while (rs.next()) {
                 String db = rs.getString("TABLE_SCHEMA");
                 String table = rs.getString("TABLE_NAME");
@@ -77,7 +81,7 @@ public abstract class BaseListener implements BinaryLogClient.EventListener {
                 int idx = rs.getInt("ORDINAL_POSITION");
                 String dataType = rs.getString("DATA_TYPE");
                 if (column != null && idx >= 1) {
-                    map.put(column, new BinLogColum(idx - 1, db, table, column, dataType));
+                    map.put(column, new BinLogColumn(idx - 1, db, table, column, dataType));
                 }
             }
             String tableKey = schema + "." + tableName;
@@ -99,14 +103,21 @@ public abstract class BaseListener implements BinaryLogClient.EventListener {
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
+
         }
     }
 
     @Override
     public void onEvent(Event event) {
-        EventType eventType = event.getHeader().getEventType();
+        RequestUtil.setLogId(UUID.randomUUID().toString());
+        EventHeaderV4 header = event.getHeader();
+        EventType eventType = header.getEventType();
 
         try {
+            if (eventType == EventType.ROTATE) {
+                RotateEventData rotateEventData = event.getData();
+                String fileName = rotateEventData.getBinlogFilename();
+            }
             if (eventType == EventType.TABLE_MAP) {
                 TableMapEventData tableData = event.getData();
                 String db = tableData.getDatabase();
@@ -152,7 +163,7 @@ public abstract class BaseListener implements BinaryLogClient.EventListener {
                 TableColumCache.removeCurrent();
             }
         }
-
+        RequestUtil.remove();
     }
 
 

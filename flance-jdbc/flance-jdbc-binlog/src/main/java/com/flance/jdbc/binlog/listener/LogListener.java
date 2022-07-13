@@ -4,6 +4,7 @@ import com.flance.jdbc.binlog.config.BinLogConfig;
 import com.flance.jdbc.binlog.listener.filters.IBinLogFilter;
 import com.flance.jdbc.binlog.model.BinLog;
 import com.flance.web.utils.GsonUtils;
+import com.flance.web.utils.RedisUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -11,8 +12,8 @@ import java.util.List;
 @Slf4j
 public class LogListener extends BaseListener {
 
-    public LogListener(String module, String listenSchema, String listenerTable, BinLogConfig binLogConfig, List<IBinLogFilter> filters) {
-        super(module, listenSchema, listenerTable, binLogConfig, filters);
+    public LogListener(BinLogConfig binLogConfig, List<IBinLogFilter> filters, RedisUtils redisUtils) {
+        super(binLogConfig, filters, redisUtils);
     }
 
     @Override

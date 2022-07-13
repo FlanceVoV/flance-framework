@@ -27,12 +27,12 @@ public class BinLog {
 
     private Map<String, Serializable> after;
 
-    private Map<String, BinLogColum> colum;
+    private Map<String, BinLogColumn> column;
 
     /**
      * 新增或者删除操作数据格式化
      */
-    public static BinLog itemFromInsertOrDeleted(Serializable[] row, Map<String, BinLogColum> columMap, EventType eventType) {
+    public static BinLog itemFromInsertOrDeleted(Serializable[] row, Map<String, BinLogColumn> columMap, EventType eventType) {
         if (null == row || null == columMap) {
             return null;
         }
@@ -42,13 +42,13 @@ public class BinLog {
         // 初始化Item
         BinLog item = new BinLog();
         item.eventType = eventType;
-        item.colum = columMap;
+        item.column = columMap;
         item.before = Maps.newHashMap();
         item.after = Maps.newHashMap();
 
         Map<String, Serializable> beOrAf = Maps.newHashMap();
 
-        columMap.forEach((key, colum) -> beOrAf.put(key, row[colum.getIndex()]));
+        columMap.forEach((key, column) -> beOrAf.put(key, row[column.getIndex()]));
 
         // 写操作放after，删操作放before
         if (isWrite(eventType)) {
@@ -64,23 +64,23 @@ public class BinLog {
     /**
      * 更新操作数据格式化
      */
-    public static BinLog itemFromUpdate(Map.Entry<Serializable[], Serializable[]> mapEntry, Map<String, BinLogColum> columMap, EventType eventType) {
+    public static BinLog itemFromUpdate(Map.Entry<Serializable[], Serializable[]> mapEntry, Map<String, BinLogColumn> columMap, EventType eventType) {
         if (null == mapEntry || null == columMap) {
             return null;
         }
         // 初始化Item
         BinLog item = new BinLog();
         item.eventType = eventType;
-        item.colum = columMap;
+        item.column = columMap;
         item.before = Maps.newHashMap();
         item.after = Maps.newHashMap();
 
         Map<String, Serializable> be = Maps.newHashMap();
         Map<String, Serializable> af = Maps.newHashMap();
 
-        columMap.forEach((key, colum) -> {
-            be.put(key, mapEntry.getKey()[colum.getIndex()]);
-            af.put(key, mapEntry.getValue()[colum.getIndex()]);
+        columMap.forEach((key, column) -> {
+            be.put(key, mapEntry.getKey()[column.getIndex()]);
+            af.put(key, mapEntry.getValue()[column.getIndex()]);
         });
 
         item.before = be;

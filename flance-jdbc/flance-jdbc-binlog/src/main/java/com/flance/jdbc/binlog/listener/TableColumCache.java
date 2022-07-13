@@ -1,23 +1,23 @@
 package com.flance.jdbc.binlog.listener;
 
-import com.flance.jdbc.binlog.model.BinLogColum;
+import com.flance.jdbc.binlog.model.BinLogColumn;
 import com.google.common.collect.Maps;
 
 import java.util.Map;
 
 public class TableColumCache {
 
-    private static final Map<String, Map<String, BinLogColum>> TABLE_COLUM = Maps.newConcurrentMap();
+    private static final Map<String, Map<String, BinLogColumn>> TABLE_COLUM = Maps.newConcurrentMap();
 
     private static final Map<String, BaseListener> TABLE_LISTENER = Maps.newConcurrentMap();
 
     private static final ThreadLocal<String> CURRENT_LISTENER = new ThreadLocal<>();
 
-    public static void put(String tableName, Map<String, BinLogColum> columMap) {
+    public static void put(String tableName, Map<String, BinLogColumn> columMap) {
         TABLE_COLUM.put(tableName, columMap);
     }
 
-    public static Map<String, BinLogColum> get(String tableName) {
+    public static Map<String, BinLogColumn> get(String tableName) {
         return TABLE_COLUM.get(tableName);
     }
 

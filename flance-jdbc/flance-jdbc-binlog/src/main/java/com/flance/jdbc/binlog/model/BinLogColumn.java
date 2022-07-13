@@ -3,7 +3,7 @@ package com.flance.jdbc.binlog.model;
 import lombok.Data;
 
 @Data
-public class BinLogColum {
+public class BinLogColumn {
 
     private int index;
 
@@ -11,15 +11,15 @@ public class BinLogColum {
 
     private String table;
 
-    private String columName;
+    private String columnName;
 
     private String dataType;
 
-    public BinLogColum(int index, String schema, String table, String columName, String dataType) {
+    public BinLogColumn(int index, String schema, String table, String columnName, String dataType) {
         this.index = index;
         this.schema = schema;
         this.table = table;
-        this.columName = columName;
+        this.columnName = columnName;
         this.dataType = dataType;
     }
 }
