@@ -10,4 +10,6 @@ public interface BizConstant {
 
     String APP_KEY = "gateway:app";
 
+    String API_VERSION_DEFAULT = "1.0";
+
 }

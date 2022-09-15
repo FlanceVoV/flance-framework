@@ -12,9 +12,9 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
 
-
 /**
  * 全局动态路由配置
+ *
  * @author jhf
  */
 @Slf4j
@@ -41,9 +41,11 @@ public class GlobalRouteConfiguration implements ApplicationEventPublisherAware 
     /**
      * 刷新路由
      */
-    public synchronized Mono<ResponseEntity<Object>> refreshRouter() {
-        initServerConfig.clearRouter();
-        initServerConfig.initRouter();
+    public Mono<ResponseEntity<Object>> refreshRouter() {
+        synchronized (this) {
+            initServerConfig.clearRouter();
+            initServerConfig.initRouter();
+        }
         notifyChanged();
         return Mono.just(ResponseEntity.ok().build());
     }
@@ -51,18 +53,22 @@ public class GlobalRouteConfiguration implements ApplicationEventPublisherAware 
     /**
      * 刷新Api
      */
-    public synchronized Mono<ResponseEntity<Object>> refreshApi() {
-        initServerConfig.clearApi();
-        initServerConfig.initApi();
+    public Mono<ResponseEntity<Object>> refreshApi() {
+        synchronized (this) {
+            initServerConfig.clearApi();
+            initServerConfig.initApi();
+        }
         return Mono.just(ResponseEntity.ok().build());
     }
 
     /**
      * 刷新App
      */
-    public synchronized Mono<ResponseEntity<Object>> refreshApp() {
-        initServerConfig.clearApp();
-        initServerConfig.initApp();
+    public Mono<ResponseEntity<Object>> refreshApp() {
+        synchronized (this) {
+            initServerConfig.clearApp();
+            initServerConfig.initApp();
+        }
         return Mono.just(ResponseEntity.ok().build());
     }
 

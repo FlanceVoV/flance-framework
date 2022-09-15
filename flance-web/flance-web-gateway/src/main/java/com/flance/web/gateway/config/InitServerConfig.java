@@ -16,6 +16,7 @@ import org.springframework.cloud.gateway.filter.FilterDefinition;
 import org.springframework.cloud.gateway.handler.predicate.PredicateDefinition;
 import org.springframework.cloud.gateway.route.RouteDefinition;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.net.URI;
@@ -102,10 +103,14 @@ public class InitServerConfig {
         List<? extends RouteApiModel> apis = routeApiService.getAllApi();
         Gson gson = new Gson();
         apis.forEach(item -> {
-            if (null != redisUtils.get(BizConstant.API_KEY + ":" + item.getApiId())) {
+            String version = item.getApiVersion();
+            if (!StringUtils.hasLength(item.getApiVersion())) {
+                version = BizConstant.API_VERSION_DEFAULT;
+            }
+            if (null != redisUtils.get(BizConstant.API_KEY + ":" + item.getApiId() + ":" + version)) {
                 return;
             }
-            redisUtils.add(BizConstant.API_KEY + ":" + item.getApiId(), gson.toJson(item));
+            redisUtils.add(BizConstant.API_KEY + ":" + item.getApiId()  + ":" + version, gson.toJson(item));
         });
     }
 
