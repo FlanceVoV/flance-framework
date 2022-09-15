@@ -16,7 +16,7 @@ import java.util.List;
  */
 @Slf4j
 @Component
-@DependsOn(value = {"startLoaderBefore"})
+@DependsOn(value = {"startLoaderAware", "startLoaderBefore"})
 public class StartLoader {
 
     private static final List<String> START_HANDLERS = Lists.newArrayList();
