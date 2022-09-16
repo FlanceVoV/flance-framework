@@ -25,6 +25,7 @@
         <module>flance-web-router</module>
         <module>flance-web-wx</module>
         <module>flance-web-feign</module>
+        <module>flance-web-nacos</module>
     </modules>
 
 </project>

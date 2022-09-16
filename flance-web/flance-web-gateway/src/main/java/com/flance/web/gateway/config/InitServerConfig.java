@@ -12,6 +12,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.FilterDefinition;
 import org.springframework.cloud.gateway.handler.predicate.PredicateDefinition;
 import org.springframework.cloud.gateway.route.RouteDefinition;
@@ -39,6 +40,9 @@ public class InitServerConfig {
 
     @Resource
     private RedisUtils redisUtils;
+
+    @Value("${flance.gateway.force-refresh:true}")
+    private Boolean forceRefresh;
 
     /**
      * 清空app缓存
@@ -68,10 +72,12 @@ public class InitServerConfig {
      */
     public void initRouter() {
         if (null == routeService) {
+            log.error("网关启动异常-路由服务未注入");
             return;
         }
 
-        if (redisUtils.keys(BizConstant.ROUTER_KEY + ":*").size() > 0) {
+        if (redisUtils.keys(BizConstant.ROUTER_KEY + ":*").size() > 0 && !forceRefresh) {
+            log.info("网关启动-加载路由模块-未开启强制刷新");
             return;
         }
 
@@ -93,11 +99,13 @@ public class InitServerConfig {
      * 初始化api
      */
     public void initApi() {
-        if (null == routeService) {
+        if (null == routeApiService) {
+            log.error("网关启动异常-接口服务未注入");
             return;
         }
 
-        if (redisUtils.keys(BizConstant.API_KEY + ":*").size() > 0) {
+        if (redisUtils.keys(BizConstant.API_KEY + ":*").size() > 0 && !forceRefresh) {
+            log.info("网关启动-加载接口模块-未开启强制刷新");
             return;
         }
         List<? extends RouteApiModel> apis = routeApiService.getAllApi();
@@ -118,11 +126,13 @@ public class InitServerConfig {
      * 初始化app
      */
     public void initApp() {
-        if (null == routeService) {
+        if (null == appService) {
+            log.error("网关启动异常-应用服务未注入");
             return;
         }
 
-        if (redisUtils.keys(BizConstant.APP_KEY + ":*").size() > 0) {
+        if (redisUtils.keys(BizConstant.APP_KEY + ":*").size() > 0 && !forceRefresh) {
+            log.info("网关启动-加载应用模块-未开启强制刷新");
             return;
         }
         List<? extends AppModel> apps = appService.getApps();

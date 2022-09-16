@@ -67,6 +67,7 @@
         <flance-components-questionbank>1.0</flance-components-questionbank>
         <flance-components-kafka>1.0</flance-components-kafka>
         <flance-web-request>1.0</flance-web-request>
+        <flance-web-nacos.version>1.0</flance-web-nacos.version>
         <alibaba-transmittable.version>2.2.0</alibaba-transmittable.version>
         <cglib.version>3.1</cglib.version>
         <slf4j.version>1.7.5</slf4j.version>
@@ -213,6 +214,12 @@
                 <groupId>com.flance</groupId>
                 <artifactId>flance-web-common</artifactId>
                 <version>${flance-web-common.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.flance</groupId>
+                <artifactId>flance-web-nacos</artifactId>
+                <version>${flance-web-nacos.version}</version>
             </dependency>
 
             <dependency>
