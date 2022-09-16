@@ -1,11 +1,15 @@
 package com.flance.web.nacos;
 
 import com.alibaba.cloud.nacos.registry.NacosRegistration;
+import com.alibaba.nacos.api.exception.NacosException;
+import com.alibaba.nacos.api.naming.NamingFactory;
+import com.alibaba.nacos.api.naming.NamingService;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
@@ -56,8 +60,6 @@ public class NacosConfigs {
 
     private String ip;
 
-
-
     private Float weight;
 
     private String clusterName;
@@ -65,6 +67,10 @@ public class NacosConfigs {
     @Resource
     private NacosRegistration nacosRegistration;
 
+    @Bean
+    public NamingService namingService(NacosRegistration nacosRegistration) throws NacosException {
+        return NamingFactory.createNamingService(nacosRegistration.getHost());
+    }
 
     @Data
     static class ExConfig {
