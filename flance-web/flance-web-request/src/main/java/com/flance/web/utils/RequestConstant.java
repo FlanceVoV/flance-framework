@@ -14,6 +14,10 @@ public interface RequestConstant {
 
     String HEADER_TOKEN = "access_token";
 
+    String SYS_FEIGN_PASS = "sys:feign:pass:";
+
+    String SYS_FEIGN_USER = "sys:feign:user:";
+
     String HEADER_USER_ID = "user_id";
 
     String SYS_TOKEN_KEY = "sys:user:token:";

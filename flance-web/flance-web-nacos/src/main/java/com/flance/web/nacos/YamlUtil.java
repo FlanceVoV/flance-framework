@@ -21,6 +21,9 @@ public class YamlUtil {
             InputStream in = null;
             try {
                 in = YamlUtil.class.getClassLoader().getResourceAsStream(yml);
+                if (null == in) {
+                    continue;
+                }
                 properties.putAll(yaml.loadAs(in, HashMap.class));
             } catch (Exception e) {
                 log.error("系统配置文件加载失败[{}]", yaml, e);

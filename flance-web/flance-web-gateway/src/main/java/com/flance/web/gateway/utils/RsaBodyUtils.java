@@ -1,7 +1,7 @@
 package com.flance.web.gateway.utils;
 
 import com.flance.web.gateway.common.GatewayBodyEnum;
-import com.flance.web.gateway.decorator.RsaRequestDecorator;
+import com.flance.web.gateway.decorator.RsaRequestDecoratorV1;
 import com.flance.web.utils.AssertException;
 import com.flance.web.utils.AssertUtil;
 import com.flance.web.utils.RequestUtil;
@@ -99,7 +99,7 @@ public class RsaBodyUtils {
         CachedBodyOutputMessage outputMessage = new CachedBodyOutputMessage(exchange, headers);
         return bodyInserter.insert(outputMessage, new BodyInserterContext())
                 .then(Mono.defer(() -> {
-                    RsaRequestDecorator requestHandler = new RsaRequestDecorator(exchange.getRequest(), RequestUtil.getLogId(), outputMessage);
+                    RsaRequestDecoratorV1 requestHandler = new RsaRequestDecoratorV1(exchange.getRequest(), RequestUtil.getLogId(), outputMessage);
 //                        RsaResponseDecorator responseDecorator = new RsaResponseDecorator(exchange.getResponse(), appModel, RequestUtil.getLogId());
                     return chain.filter(exchange.mutate().request(requestHandler).build());
                 })).onErrorResume(e -> {

@@ -2,7 +2,6 @@ package com.flance.web.utils.config;
 
 import com.flance.web.utils.AssertException;
 import com.flance.web.utils.RequestUtil;
-import com.flance.web.utils.web.request.WebRequest;
 import com.flance.web.utils.web.response.WebResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -21,20 +20,14 @@ public class GlobalExceptionAdvice {
      * @return
      */
     @ResponseBody
-    @ExceptionHandler(value = Exception.class)
-    public WebResponse errorHandler(Exception ex) {
+    @ExceptionHandler(value = RuntimeException.class)
+    public WebResponse errorHandler(RuntimeException ex) {
         if (ex instanceof AssertException) {
             return errorHandler((AssertException)ex);
         }
-        if (ex instanceof HttpRequestMethodNotSupportedException) {
-            return errorHandler((HttpRequestMethodNotSupportedException)ex);
-        }
-        if (ex instanceof MethodArgumentNotValidException) {
-            return errorHandler((MethodArgumentNotValidException)ex);
-        }
-        log.error("log-id:{}-未知异常[{}]", RequestUtil.getLogId(), ex.toString());
+        log.error("log-id:{}-运行时异常[{}]", RequestUtil.getLogId(), ex.toString());
         ex.printStackTrace();
-        return WebResponse.getFailed("-1", "未知异常，请求失败[{" + RequestUtil.getLogId() + "}]");
+        return WebResponse.getFailed("-1", "运行时异常，[{" + ex.getMessage() + "}][{" + RequestUtil.getLogId() + "}]");
     }
 
     /**

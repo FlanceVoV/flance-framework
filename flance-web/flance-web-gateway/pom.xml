@@ -55,6 +55,17 @@
             <artifactId>flance-web-request</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.flance</groupId>
+            <artifactId>flance-web-feign</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-web</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
     </dependencies>
 
 </project>

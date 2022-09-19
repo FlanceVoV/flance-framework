@@ -2,6 +2,7 @@ package com.flance.web.gateway.filter;
 
 
 import com.flance.web.gateway.service.RouteApiService;
+import com.flance.web.utils.AssertException;
 import com.flance.web.utils.RequestConstant;
 import com.flance.web.utils.RequestUtil;
 import com.flance.web.utils.route.RouteApiModel;
@@ -69,21 +70,21 @@ public class GatewayApiDispatcherFilter implements GatewayFilter, Ordered {
         String version =  exchange.getRequest().getHeaders().getFirst(RequestConstant.HEADER_REQUEST_VERSION);
         String headerLogId = exchange.getRequest().getHeaders().getFirst(RequestConstant.HEADER_LOG_ID);
         RequestUtil.getLogId(headerLogId);
-        if (StringUtils.isEmpty(apiId)) {
+        if (!StringUtils.hasLength(apiId)) {
             apiId =  exchange.getRequest().getQueryParams().getFirst(RequestConstant.HEADER_REQUEST_ID);
         }
-        if (StringUtils.isEmpty(appId)) {
+        if (!StringUtils.hasLength(appId)) {
             appId =  exchange.getRequest().getQueryParams().getFirst(RequestConstant.HEADER_APP_ID);
         }
-        if (StringUtils.isEmpty(apiId)) {
+        if (!StringUtils.hasLength(apiId)) {
             log.error("请求接口编号为空，无法进行转发【appId:{}】【method:{}】【uri:{}】", appId, method, uri);
-            return Mono.error(new NotFoundException("请求接口编号为空"));
+            throw AssertException.getNormal("-1", "请求接口编号为空");
         }
         log.info("【appId:{}】请求接口【({}){}】", appId, method, uri);
         RouteApiModel routeApiModel = routeApiService.getOneByApiIdAndVersion(apiId, version);
         if (null == routeApiModel) {
             log.error("接口不存在，无法进行转发【appId:{}】【method:{}】【uri:{}】", appId, method, uri);
-            return Mono.error(new NotFoundException("接口不存在"));
+            throw AssertException.getNormal("-1", "接口不存在");
         }
         Route route = exchange.getAttribute(GATEWAY_ROUTE_ATTR);
         if (null != route) {

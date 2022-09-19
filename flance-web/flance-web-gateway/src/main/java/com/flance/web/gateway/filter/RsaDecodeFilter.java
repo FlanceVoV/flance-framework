@@ -1,6 +1,7 @@
 package com.flance.web.gateway.filter;
 
 import com.flance.web.gateway.common.GatewayBodyEnum;
+import com.flance.web.gateway.decorator.RsaRequestDecorator;
 import com.flance.web.gateway.service.AppService;
 import com.flance.web.gateway.utils.RsaBodyUtils;
 import com.flance.web.utils.RequestConstant;
@@ -55,9 +56,9 @@ public class RsaDecodeFilter implements GatewayFilter, Ordered {
 
         log.info("解密-开始 【app_id:{}】【api_id:{}】【method:{}】【uri:{}】", appId, requestId, method, uri);
         try {
-            Mono<Void> mono = RsaBodyUtils.readBody(exchange, chain, appModel, GatewayBodyEnum.RSA_DECODE);
+//            Mono<Void> mono = RsaBodyUtils.readBody(exchange, chain, appModel, GatewayBodyEnum.RSA_DECODE);
             log.info("解密-结束 【app_id:{}】【api_id:{}】【method:{}】【uri:{}】", appId, requestId, method, uri);
-            return mono;
+            return chain.filter(exchange.mutate().request(new RsaRequestDecorator(exchange, exchange.getRequest(), headerLogId, GatewayBodyEnum.RSA_DECODE, appModel)).build());
         } catch (Exception e) {
             e.printStackTrace();
             return Mono.error(new NotFoundException("解密失败【" + appId + "】:【" + appId + "】"));
