@@ -18,7 +18,7 @@ public class AssertException extends RuntimeException {
 
     }
 
-    public AssertException(String code, String msg) {
+    public AssertException(String msg, String code) {
         this.msg = msg;
         this.code = code;
     }

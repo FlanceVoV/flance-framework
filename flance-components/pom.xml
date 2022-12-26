@@ -14,7 +14,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>flance-components-fastdfs</module>
+<!--        <module>flance-components-fastdfs</module>-->
         <module>flance-components-activiti</module>
         <module>flance-components-form</module>
         <module>flance-components-questionbank</module>
