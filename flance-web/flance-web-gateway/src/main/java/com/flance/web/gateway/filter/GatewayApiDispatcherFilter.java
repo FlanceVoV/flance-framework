@@ -15,6 +15,7 @@ import org.springframework.cloud.gateway.route.Route;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.support.NotFoundException;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.Ordered;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
@@ -44,6 +45,7 @@ public class GatewayApiDispatcherFilter implements GatewayFilter, Ordered {
     @Resource
     RouteLocator routeLocator;
 
+    @Lazy
     @Resource
     RouteApiService routeApiService;
 
@@ -77,10 +79,10 @@ public class GatewayApiDispatcherFilter implements GatewayFilter, Ordered {
             appId =  exchange.getRequest().getQueryParams().getFirst(RequestConstant.HEADER_APP_ID);
         }
         if (!StringUtils.hasLength(apiId)) {
-            log.error("请求接口编号为空，无法进行转发【appId:{}】【method:{}】【uri:{}】", appId, method, uri);
+            log.error("请求接口编号为空，无法进行转发【apiId:{}】【appId:{}】【method:{}】【uri:{}】", apiId, appId, method, uri);
             throw AssertException.getNormal("-1", "请求接口编号为空");
         }
-        log.info("【appId:{}】请求接口【({}){}】", appId, method, uri);
+        log.info("【appId:{}】请求接口【apiId:{}】【({}){}】", appId, apiId, method, uri);
         RouteApiModel routeApiModel = routeApiService.getOneByApiIdAndVersion(apiId, version);
         if (null == routeApiModel) {
             log.error("接口不存在，无法进行转发【appId:{}】【method:{}】【uri:{}】", appId, method, uri);
