@@ -132,7 +132,9 @@ public class RsaBodyUtils {
         Gson gson = new GsonBuilder().disableHtmlEscaping().create();
         Long timestamp = System.currentTimeMillis();
         response.setTimestamp(timestamp);
-
+        response.setIsEncode(1);
+        response.setEncodeType("rsa");
+        response.setSignType("rsa");
         String data = gson.toJson(response.getData());
         // 原明文数据base64 byte
         byte[] dataBytes = Base64Utils.encode(data.getBytes(StandardCharsets.UTF_8));

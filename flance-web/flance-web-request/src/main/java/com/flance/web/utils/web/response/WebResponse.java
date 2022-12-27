@@ -32,17 +32,35 @@ public class WebResponse {
 
     private Long timestamp;
 
+    /**
+     * 相响应是否加密
+     */
+    private Integer isEncode;
+
+    /**
+     * 加密方式
+     */
+    private String encodeType;
+
+    /**
+     * 签名方式
+     */
+    private String signType;
+
     public WebResponse() {
 
     }
 
-    public WebResponse(Boolean success, String msg, String code, Object data, String sign, Long timestamp) {
+    public WebResponse(Boolean success, String msg, String code, Object data, String sign, Long timestamp, Integer isEncode, String encodeType, String signType) {
         this.success = success;
         this.msg = msg;
         this.code = code;
         this.data = data;
         this.sign = sign;
         this.timestamp = timestamp;
+        this.isEncode = isEncode;
+        this.encodeType = encodeType;
+        this.signType = signType;
     }
 
     public static WebResponse getSucceed(Object data, String msg) {
