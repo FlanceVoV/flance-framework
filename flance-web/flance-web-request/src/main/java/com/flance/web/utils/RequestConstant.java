@@ -8,6 +8,8 @@ public interface RequestConstant {
 
     String HEADER_LOG_ID = "log_id";
 
+    String HEADER_REQUEST_CHAIN = "request_chain";
+
     String HEADER_APP_ID = "app_id";
 
     String HEADER_USER_INFO = "user_info";

@@ -9,6 +9,7 @@ import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -29,6 +30,11 @@ public class GlobalGatewayFilter implements GlobalFilter, Ordered {
         String requestId =  exchange.getRequest().getHeaders().getFirst(RequestConstant.HEADER_REQUEST_ID);
         String headerLogId = exchange.getRequest().getHeaders().getFirst(RequestConstant.HEADER_LOG_ID);
         String setLogId = RequestUtil.getLogId(headerLogId);
+        String headerChain = exchange.getRequest().getHeaders().getFirst(RequestConstant.HEADER_REQUEST_CHAIN);
+        if (!StringUtils.hasLength(requestId)) {
+            requestId = uri;
+        }
+        String requestChain = null == headerChain ? requestId : headerChain.replaceAll("\\[", "").replaceAll("]", "");
         log.info("gateway-global-filter：请求路径[({}){}]，url标识[{}]", method, uri, requestId);
         final String token = exchange.getRequest().getHeaders().getFirst(RequestConstant.HEADER_TOKEN);
 
@@ -39,6 +45,7 @@ public class GlobalGatewayFilter implements GlobalFilter, Ordered {
                         header.set(RequestConstant.HEADER_TOKEN, token);
                     }
                     header.set(RequestConstant.HEADER_LOG_ID, setLogId);
+                    header.set(RequestConstant.HEADER_REQUEST_CHAIN, requestChain + " -> [gateway]");
                 }).build();
 
         return gatewayService.filter(exchange, chain);

@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
 import java.util.Objects;
 
-@Component
+@Component("txFeignInterceptor")
 public class FeignInterceptor implements RequestInterceptor {
 
     @Override
