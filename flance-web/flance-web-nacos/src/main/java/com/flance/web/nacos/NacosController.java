@@ -26,12 +26,17 @@ public class NacosController {
             namingService.deregisterInstance(nacosConfigs.getApplicationName(),
                     nacosConfigs.getIp(),
                     nacosConfigs.getPort());
-            System.exit(0);
+//            System.exit(0);
 
         } catch (Exception e) {
             e.printStackTrace();
             log.error("flance-nacos namingService error [{}]", e.getMessage());
         }
+    }
+
+    public void shutdown() {
+        log.warn("flance-nacos namingService shutdown");
+        System.exit(0);
     }
 
     public String nacosServerStatus() {
