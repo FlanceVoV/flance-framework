@@ -23,11 +23,7 @@ public class NacosController {
 
     public void offline() {
         try {
-            namingService.deregisterInstance(nacosConfigs.getApplicationName(),
-                    nacosConfigs.getIp(),
-                    nacosConfigs.getPort());
-//            System.exit(0);
-
+            namingService.shutDown();
         } catch (Exception e) {
             e.printStackTrace();
             log.error("flance-nacos namingService error [{}]", e.getMessage());

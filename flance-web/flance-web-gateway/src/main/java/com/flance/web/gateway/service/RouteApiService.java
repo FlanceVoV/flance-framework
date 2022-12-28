@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface RouteApiService {
 
-    List<? extends RouteApiModel> getAllApi();
+    List<? extends RouteApiModel> getAllApi(boolean async);
 
     /**
      * 根据apiId和版本号查询接口，如果版本号为空则返回最新的

@@ -14,7 +14,7 @@ public interface AppService {
      * 获取所有对接应用
      * @return  应用集合
      */
-    List<? extends AppModel> getApps();
+    List<? extends AppModel> getApps(boolean async);
 
     /**
      * 根据appId获取

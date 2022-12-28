@@ -17,7 +17,7 @@ public interface RouteService {
      * 获取所有动态路由
      * @return  返回路由列表
      */
-    List<? extends RouteModel> getRouteLists();
+    List<? extends RouteModel> getRouteLists(boolean async);
 
     /**
      * 根据路由id获取路由实例

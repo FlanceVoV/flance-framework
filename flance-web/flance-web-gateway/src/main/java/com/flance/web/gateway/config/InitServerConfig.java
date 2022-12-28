@@ -70,7 +70,7 @@ public class InitServerConfig {
     /**
      * 初始化路由
      */
-    public void initRouter() {
+    public void initRouter(boolean async) {
         if (null == routeService) {
             log.error("网关启动异常-路由服务未注入");
             return;
@@ -82,7 +82,7 @@ public class InitServerConfig {
         }
 
         // 获取所有动态路由
-        List<? extends RouteModel> routes = routeService.getRouteLists();
+        List<? extends RouteModel> routes = routeService.getRouteLists(async);
         Gson gson = new Gson();
         List<RouteDefinition> routeDefinitions = Lists.newArrayList();
         Optional.ofNullable(routes).orElse(Lists.newArrayList()).forEach(route -> {
@@ -98,7 +98,7 @@ public class InitServerConfig {
     /**
      * 初始化api
      */
-    public void initApi() {
+    public void initApi(boolean async) {
         if (null == routeApiService) {
             log.error("网关启动异常-接口服务未注入");
             return;
@@ -108,7 +108,7 @@ public class InitServerConfig {
             log.info("网关启动-加载接口模块-未开启强制刷新");
             return;
         }
-        List<? extends RouteApiModel> apis = routeApiService.getAllApi();
+        List<? extends RouteApiModel> apis = routeApiService.getAllApi(async);
         Gson gson = new Gson();
         apis.forEach(item -> {
             String version = item.getApiVersion();
@@ -125,7 +125,7 @@ public class InitServerConfig {
     /**
      * 初始化app
      */
-    public void initApp() {
+    public void initApp(boolean async) {
         if (null == appService) {
             log.error("网关启动异常-应用服务未注入");
             return;
@@ -135,7 +135,7 @@ public class InitServerConfig {
             log.info("网关启动-加载应用模块-未开启强制刷新");
             return;
         }
-        List<? extends AppModel> apps = appService.getApps();
+        List<? extends AppModel> apps = appService.getApps(async);
         Gson gson = new Gson();
         apps.forEach(item -> {
             if (null != redisUtils.get(BizConstant.APP_KEY + ":" + item.getAppId())) {

@@ -33,9 +33,9 @@ public class GlobalRouteConfiguration implements ApplicationEventPublisherAware 
 
     @PostConstruct
     public void getRouteLocator() {
-        initServerConfig.initApp();
-        initServerConfig.initRouter();
-        initServerConfig.initApi();
+        initServerConfig.initApp(false);
+        initServerConfig.initRouter(false);
+        initServerConfig.initApi(false);
     }
 
     /**
@@ -44,7 +44,7 @@ public class GlobalRouteConfiguration implements ApplicationEventPublisherAware 
     public Mono<ResponseEntity<Object>> refreshRouter() {
         synchronized (this) {
             initServerConfig.clearRouter();
-            initServerConfig.initRouter();
+            initServerConfig.initRouter(true);
         }
         notifyChanged();
         return Mono.just(ResponseEntity.ok().build());
@@ -56,7 +56,7 @@ public class GlobalRouteConfiguration implements ApplicationEventPublisherAware 
     public Mono<ResponseEntity<Object>> refreshApi() {
         synchronized (this) {
             initServerConfig.clearApi();
-            initServerConfig.initApi();
+            initServerConfig.initApi(true);
         }
         return Mono.just(ResponseEntity.ok().build());
     }
@@ -67,7 +67,7 @@ public class GlobalRouteConfiguration implements ApplicationEventPublisherAware 
     public Mono<ResponseEntity<Object>> refreshApp() {
         synchronized (this) {
             initServerConfig.clearApp();
-            initServerConfig.initApp();
+            initServerConfig.initApp(true);
         }
         return Mono.just(ResponseEntity.ok().build());
     }
