@@ -47,11 +47,16 @@ public class WebResponse {
      */
     private String signType;
 
+    /**
+     * debug信息
+     */
+    private String debug;
+
     public WebResponse() {
 
     }
 
-    public WebResponse(Boolean success, String msg, String code, Object data, String sign, Long timestamp, Integer isEncode, String encodeType, String signType) {
+    public WebResponse(Boolean success, String msg, String code, Object data, String sign, Long timestamp, Integer isEncode, String encodeType, String signType, String debug) {
         this.success = success;
         this.msg = msg;
         this.code = code;
@@ -61,6 +66,7 @@ public class WebResponse {
         this.isEncode = isEncode;
         this.encodeType = encodeType;
         this.signType = signType;
+        this.debug = debug;
     }
 
     public static WebResponse getSucceed(Object data, String msg) {
@@ -73,6 +79,14 @@ public class WebResponse {
 
     public static WebResponse getFailed(Object data, String code, String msg) {
         return WebResponse.builder().data(data).code(code).success(false).msg(msg).build();
+    }
+
+    public static WebResponse getFailedDebug(String code, String msg, String debug) {
+        return WebResponse.builder().code(code).success(false).msg(msg).debug(debug).build();
+    }
+
+    public static WebResponse getFailedDebug(Object data, String code, String msg, String debug) {
+        return WebResponse.builder().data(data).code(code).success(false).msg(msg).debug(debug).build();
     }
 
     public <T> T getResultData(Class<T> clazz) {

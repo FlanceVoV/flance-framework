@@ -27,7 +27,7 @@ public class GlobalExceptionAdvice {
         }
         log.error("log-id:{}-运行时异常[{}]", RequestUtil.getLogId(), ex.toString());
         ex.printStackTrace();
-        return WebResponse.getFailed("-1", "运行时异常，[{" + ex.getMessage() + "}][{" + RequestUtil.getLogId() + "}]");
+        return WebResponse.getFailedDebug("-1", "运行时异常", "运行时异常，[{" + ex.getMessage() + "}][{" + RequestUtil.getLogId() + "}]");
     }
 
     /**
