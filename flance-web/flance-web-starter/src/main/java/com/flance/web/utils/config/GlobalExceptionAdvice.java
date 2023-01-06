@@ -2,6 +2,8 @@ package com.flance.web.utils.config;
 
 import com.flance.web.utils.AssertException;
 import com.flance.web.utils.RequestUtil;
+import com.flance.web.utils.exception.AuthException;
+import com.flance.web.utils.exception.BizException;
 import com.flance.web.utils.web.response.WebResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -56,8 +58,23 @@ public class GlobalExceptionAdvice {
     @ResponseBody
     @ExceptionHandler(value = AssertException.class)
     public WebResponse errorHandler(AssertException ex) {
+        log.error("系统异常[{}]", ex.getMsg());
+        return ex.getResponse();
+    }
+
+    @ResponseBody
+    @ExceptionHandler(value = AuthException.class)
+    public WebResponse errorHandler(AuthException ex) {
+        log.error("权限异常[{}]", ex.getMsg());
+        return ex.getResponse();
+    }
+
+    @ResponseBody
+    @ExceptionHandler(value = BizException.class)
+    public WebResponse errorHandler(BizException ex) {
         log.error("业务异常[{}]", ex.getMsg());
         return ex.getResponse();
     }
+
 
 }
