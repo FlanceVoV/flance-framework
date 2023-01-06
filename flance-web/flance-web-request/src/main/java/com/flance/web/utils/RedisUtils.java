@@ -1,12 +1,13 @@
 package com.flance.web.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
+import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -14,6 +15,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author jhf
  */
+@Slf4j
 @Component
 public class RedisUtils {
 
@@ -257,6 +259,74 @@ public class RedisUtils {
 
     public void unlock(String key) {
         redisTemplate.delete(key);
+    }
+
+    /**
+     * 达到限流时，则等待，直到新的间隔。
+     *
+     * @param key
+     * @param limitCount
+     * @param limitSecond
+     */
+    public void limitWait(String key, int limitCount, int limitSecond) {
+        boolean ok;//放行标志
+        do {
+            ok = limit(key, limitCount, limitSecond);
+            log.info("放行标志={}", ok);
+            if (!ok) {
+                Long ttl = redisTemplate.getExpire(key, TimeUnit.MILLISECONDS);
+                if (null != ttl && ttl > 0) {
+                    try {
+                        Thread.sleep(ttl);
+                        log.info("sleeped:{}", ttl);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        } while (!ok);
+    }
+
+    /**
+     * 限流方法    true-放行；false-限流
+     *
+     * @param key
+     * @param limitCount
+     * @param limitSecond
+     * @return
+     */
+    public boolean limit(String key, int limitCount, int limitSecond) {
+        List<String> keys = Collections.singletonList(key);
+        String luaScript = buildLuaScript();
+        RedisScript<Number> redisScript = new DefaultRedisScript<>(luaScript, Number.class);
+        Number count = redisTemplate.execute(redisScript, keys, limitCount, limitSecond);
+        log.info("Access try count is {} for key = {}", count, key);
+        if (count != null && count.intValue() <= limitCount) {
+            return true;//放行
+        } else {
+            return false;//限流
+        }
+    }
+
+    /**
+     * 编写 redis Lua 限流脚本
+     */
+    public String buildLuaScript() {
+        StringBuilder lua = new StringBuilder();
+        lua.append("local c");
+        lua.append("\nc = redis.call('get',KEYS[1])");
+        // 实际调用次数超过阈值，则直接返回
+        lua.append("\nif c and tonumber(c) > tonumber(ARGV[1]) then");
+        lua.append("\nreturn c;");
+        lua.append("\nend");
+        // 执行计算器自加
+        lua.append("\nc = redis.call('incr',KEYS[1])");
+        lua.append("\nif tonumber(c) == 1 then");
+        // 从第一次调用开始限流，设置对应键值的过期
+        lua.append("\nredis.call('expire',KEYS[1],ARGV[2])");
+        lua.append("\nend");
+        lua.append("\nreturn c;");
+        return lua.toString();
     }
 
 }
