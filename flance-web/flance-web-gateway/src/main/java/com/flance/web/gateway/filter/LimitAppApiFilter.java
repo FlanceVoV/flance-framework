@@ -57,7 +57,7 @@ public class LimitAppApiFilter implements GatewayFilter, Ordered {
         boolean flag = false;
         AppApiLimitModel appApiLimitModel = routeApiService.getOneByAppIdAndApiId(appId, apiId);
         if (null == appApiLimitModel) {
-            log.warn("找不到api【{}】，请确认是否启用【method:{}】【uri:{}】【api_id:{}】", appId, method, uri, apiId);
+            log.warn("找不到 appApiLimitModel【{}】，请确认是否启用【method:{}】【uri:{}】【api_id:{}】", appId, method, uri, apiId);
         } else {
             String key = "limit_app_api_" + appId + "_" + apiId;
             if (null != appApiLimitModel.getLimitCount() && null != appApiLimitModel.getLimitSecond()) {
