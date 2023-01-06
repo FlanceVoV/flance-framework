@@ -22,14 +22,11 @@ public class GlobalExceptionAdvice {
      * @return
      */
     @ResponseBody
-    @ExceptionHandler(value = RuntimeException.class)
-    public WebResponse errorHandler(RuntimeException ex) {
-        if (ex instanceof AssertException) {
-            return errorHandler((AssertException)ex);
-        }
-        log.error("log-id:{}-运行时异常[{}]", RequestUtil.getLogId(), ex.toString());
+    @ExceptionHandler(value = Throwable.class)
+    public WebResponse errorHandler(Throwable ex) {
+        log.error("log-id:{}-未知异常[{}]", RequestUtil.getLogId(), ex.toString());
         ex.printStackTrace();
-        return WebResponse.getFailedDebug("-1", "运行时异常", "运行时异常，[{" + ex.getMessage() + "}][{" + RequestUtil.getLogId() + "}]");
+        return WebResponse.getFailedDebug("-1", "未知异常", "未知异常，[{" + ex.getMessage() + "}][{" + RequestUtil.getLogId() + "}]");
     }
 
     /**
@@ -75,6 +72,5 @@ public class GlobalExceptionAdvice {
         log.error("业务异常[{}]", ex.getMsg());
         return ex.getResponse();
     }
-
 
 }
