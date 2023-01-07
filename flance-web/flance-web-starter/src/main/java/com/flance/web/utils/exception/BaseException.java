@@ -30,15 +30,16 @@ public class BaseException extends RuntimeException {
     }
 
     public BaseException(String msg, String code) {
+        super(msg);
         this.msg = msg;
         this.code = code;
     }
 
-    public static AssertException getNormal(String msg, String code) {
-        return AssertException.builder()
-                .msg(msg)
-                .code(code)
-                .build();
+    public static BaseException getNormal(String msg, String code) {
+        BaseException baseException = new BaseException();
+        baseException.setCode(code);
+        baseException.setMsg(msg);
+        return baseException;
     }
 
     public WebResponse getResponse() {
