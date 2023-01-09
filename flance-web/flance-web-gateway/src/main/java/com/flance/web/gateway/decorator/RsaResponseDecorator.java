@@ -9,7 +9,9 @@ import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.netty.buffer.PooledByteBufAllocator;
+import lombok.extern.slf4j.Slf4j;
 import org.reactivestreams.Publisher;
+import org.springframework.cloud.gateway.support.NotFoundException;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.core.io.buffer.NettyDataBufferFactory;
@@ -24,6 +26,7 @@ import reactor.core.publisher.Mono;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+@Slf4j
 public class RsaResponseDecorator extends ServerHttpResponseDecorator {
 
     private final AppModel appModel;
@@ -67,12 +70,19 @@ public class RsaResponseDecorator extends ServerHttpResponseDecorator {
                 if (null != webResponse.getData()) {
                     switch (bodyType) {
                         case RSA_ENCODE:
+                            if (null == appModel) {
+                                Mono.error(new NotFoundException("加密模式appModel为null"));
+                            }
                             RsaBodyUtils.encodeBody(webResponse, appModel, logId);
                             break;
                         case RSA_DECODE:
+                            if (null == appModel) {
+                                Mono.error(new NotFoundException("解密模式appModel为null"));
+                            }
                             RsaBodyUtils.decodeResponseBody(webResponse, appModel, logId);
                             break;
                         default:
+                            log.info("入参 - [{}]", result);
                             break;
                     }
 

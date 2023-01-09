@@ -165,10 +165,10 @@ public class InitServerConfig {
             String[] filters = routeModel.getFilter().split(",");
             List<FilterDefinition> filterDefinitions = Lists.newArrayList();
 
-            for (int i = 0; i < filters.length; i++) {
+            for (String filter : filters) {
                 FilterDefinition filterDefinition = new FilterDefinition();
                 filterDefinition.setName("Global");
-                filterDefinition.addArg("filterName", filters[i]);
+                filterDefinition.addArg("filterName", filter);
                 filterDefinitions.add(filterDefinition);
             }
 

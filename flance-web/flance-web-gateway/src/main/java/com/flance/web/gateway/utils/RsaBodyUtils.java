@@ -100,7 +100,6 @@ public class RsaBodyUtils {
         return bodyInserter.insert(outputMessage, new BodyInserterContext())
                 .then(Mono.defer(() -> {
                     RsaRequestDecoratorV1 requestHandler = new RsaRequestDecoratorV1(exchange.getRequest(), RequestUtil.getLogId(), outputMessage);
-//                        RsaResponseDecorator responseDecorator = new RsaResponseDecorator(exchange.getResponse(), appModel, RequestUtil.getLogId());
                     return chain.filter(exchange.mutate().request(requestHandler).build());
                 })).onErrorResume(e -> {
                     e.printStackTrace();
@@ -108,7 +107,7 @@ public class RsaBodyUtils {
                 });
     }
 
-    private static Mono<Void> release(ServerWebExchange exchange, CachedBodyOutputMessage outputMessage, Throwable throwable) {
+    public static Mono<Void> release(ServerWebExchange exchange, CachedBodyOutputMessage outputMessage, Throwable throwable) {
         Field cached = ReflectionUtils.findField(outputMessage.getClass(), "cached");
         cached.setAccessible(true);
         try {

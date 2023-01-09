@@ -2,9 +2,13 @@ package com.flance.web.gateway.decorator;
 
 import com.flance.web.gateway.common.GatewayBodyEnum;
 import com.flance.web.gateway.utils.RsaBodyUtils;
+import com.flance.web.utils.RequestUtil;
 import com.flance.web.utils.route.AppModel;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.factory.rewrite.CachedBodyOutputMessage;
+import org.springframework.cloud.gateway.support.BodyInserterContext;
+import org.springframework.cloud.gateway.support.NotFoundException;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -34,41 +38,46 @@ public class RsaRequestDecorator extends ServerHttpRequestDecorator {
     private final ServerWebExchange exchange;
 
 
+
     public RsaRequestDecorator(ServerWebExchange exchange, ServerHttpRequest delegate, String logId, GatewayBodyEnum bodyType, AppModel appModel) {
         super(delegate);
         this.logId = logId;
         this.bodyType = bodyType;
         this.appModel = appModel;
         this.exchange = exchange;
-
         MediaType mediaType = exchange.getRequest().getHeaders().getContentType();
         // ModifyRequestBodyGatewayFilterFactory
         ServerRequest serverRequest = ServerRequest.create(exchange, HandlerStrategies.withDefaults().messageReaders());
-
-        Mono<String> modifyBody = serverRequest.bodyToMono(String.class)
-                .flatMap(body -> {
-                    log.info("【编码前数据:{}】", body);
-                    if (MediaType.APPLICATION_JSON.isCompatibleWith(mediaType)) {
-                        switch (bodyType) {
-                            case RSA_DECODE:
-                                return Mono.just(RsaBodyUtils.decodeBody(body, appModel.getAppRsaPubKey(), appModel.getSysRsaPriKey()));
-                            case RSA_ENCODE:
-                                return Mono.just(RsaBodyUtils.encodeRequestBody(body, appModel.getAppRsaPubKey(), appModel.getSysRsaPriKey()));
-                            default:
-                                return Mono.just(body);
+        Mono<String> modifyBody = serverRequest.bodyToMono(String.class);
+        modifyBody.flatMap(body -> {
+            log.info("【编码前数据:{}】", body);
+            if (MediaType.APPLICATION_JSON.isCompatibleWith(mediaType)) {
+                switch (bodyType) {
+                    case RSA_DECODE:
+                        if (null == appModel) {
+                            Mono.error(new NotFoundException("解密模式appModel为null"));
                         }
-                    }
-                    return Mono.just(body);
-                }).switchIfEmpty(Mono.defer(() -> {
-                    log.error("无法读取请求体，无法解密，可能解密filter顺序错误");
-                    return Mono.empty();
-                }));
+                        return Mono.just(RsaBodyUtils.decodeBody(body, appModel.getAppRsaPubKey(), appModel.getSysRsaPriKey()));
+                    case RSA_ENCODE:
+                        if (null == appModel) {
+                            Mono.error(new NotFoundException("加密模式appModel为null"));
+                        }
+                        return Mono.just(RsaBodyUtils.encodeRequestBody(body, appModel.getAppRsaPubKey(), appModel.getSysRsaPriKey()));
+                    default:
+                        return Mono.just(body);
+                }
+            }
+            return Mono.just(body);
+        }).switchIfEmpty(Mono.defer(() -> {
+            log.error("无法读取请求体，无法解密，可能解密filter顺序错误");
+            return Mono.empty();
+        }));
         BodyInserter<Mono<String>, ReactiveHttpOutputMessage> bodyInserter = BodyInserters.fromPublisher(modifyBody, String.class);
         HttpHeaders headers = new HttpHeaders();
         headers.putAll(exchange.getRequest().getHeaders());
         headers.remove(HttpHeaders.CONTENT_LENGTH);
         this.outputMessage = new CachedBodyOutputMessage(exchange, headers);
-
+        bodyInserter.insert(outputMessage, new BodyInserterContext());
         log.info("解密-结束");
     }
 

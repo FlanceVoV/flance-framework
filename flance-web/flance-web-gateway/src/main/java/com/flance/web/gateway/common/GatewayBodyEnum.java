@@ -4,6 +4,7 @@ public enum GatewayBodyEnum {
 
     RSA_ENCODE("rsa_encode"),
     RSA_DECODE("rsa_decode"),
+    NON_DECODE("non_decode"),
     ;
 
     private final String code;
