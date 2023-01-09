@@ -4,6 +4,7 @@ import com.flance.web.utils.AssertException;
 import com.flance.web.utils.RequestUtil;
 import com.flance.web.utils.exception.AuthException;
 import com.flance.web.utils.exception.BizException;
+import com.flance.web.utils.exception.ParamException;
 import com.flance.web.utils.web.response.WebResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -84,6 +85,13 @@ public class GlobalExceptionAdvice {
     @ExceptionHandler(value = BizException.class)
     public WebResponse errorHandler(BizException ex) {
         log.error("业务异常[{}]", ex.getMsg());
+        return ex.getResponse();
+    }
+
+    @ResponseBody
+    @ExceptionHandler(value = ParamException.class)
+    public WebResponse errorHandler(ParamException ex) {
+        log.error("参数异常[{}]", ex.getMsg());
         return ex.getResponse();
     }
 
