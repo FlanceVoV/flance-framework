@@ -6,6 +6,7 @@ import com.flance.web.utils.exception.AuthException;
 import com.flance.web.utils.exception.BizException;
 import com.flance.web.utils.web.response.WebResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -27,6 +28,19 @@ public class GlobalExceptionAdvice {
         log.error("log-id:{}-未知异常[{}]", RequestUtil.getLogId(), ex.toString());
         ex.printStackTrace();
         return WebResponse.getFailedDebug("-1", "未知异常", "未知异常，[{" + ex.getMessage() + "}][{" + RequestUtil.getLogId() + "}]");
+    }
+
+    /**
+     * 数据库异常
+     * @param ex
+     * @return
+     */
+    @ResponseBody
+    @ExceptionHandler(value = DataIntegrityViolationException.class)
+    public WebResponse errorHandler(DataIntegrityViolationException ex) {
+        log.error("数据库异常[{}]", ex.getMessage());
+        ex.printStackTrace();
+        return WebResponse.getFailedDebug("-1", "数据库异常", ex.getCause().getMessage());
     }
 
     /**
