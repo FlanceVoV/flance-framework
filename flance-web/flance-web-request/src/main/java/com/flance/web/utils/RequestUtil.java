@@ -28,7 +28,7 @@ public class RequestUtil {
     }
 
     public static void remove() {
-        log.debug("释放thread_local[{}]", REQUEST_ID.get());
+        log.info("释放thread_local[{}]", REQUEST_ID.get());
         if (null != REQUEST_ID.get()) {
             REQUEST_ID.remove();
         }

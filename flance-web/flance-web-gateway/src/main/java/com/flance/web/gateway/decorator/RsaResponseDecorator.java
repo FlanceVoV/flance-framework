@@ -2,6 +2,7 @@ package com.flance.web.gateway.decorator;
 
 import com.flance.web.gateway.common.GatewayBodyEnum;
 import com.flance.web.gateway.utils.RsaBodyUtils;
+import com.flance.web.utils.RequestUtil;
 import com.flance.web.utils.route.AppModel;
 import com.flance.web.utils.web.response.WebResponse;
 import com.google.common.base.Joiner;
@@ -49,6 +50,7 @@ public class RsaResponseDecorator extends ServerHttpResponseDecorator {
 
     @Override
     public Mono<Void> writeWith(Publisher<? extends DataBuffer> body) {
+        RequestUtil.setLogId(logId);
         NettyDataBufferFactory dataBufferFactory=new NettyDataBufferFactory(new PooledByteBufAllocator());
         PooledDataBuffer buffer = dataBufferFactory.allocateBuffer(4);
         Gson gson = new GsonBuilder().disableHtmlEscaping().create();
@@ -65,7 +67,7 @@ public class RsaResponseDecorator extends ServerHttpResponseDecorator {
                 });
                 String result = JOINER.join(sections);
                 WebResponse webResponse = gson.fromJson(result, WebResponse.class);
-
+                log.info("加密前 响应 - [{}]", result);
                 // 如果响应业务数据不为空 则加签/加密
                 if (null != webResponse.getData()) {
                     switch (bodyType) {
