@@ -28,6 +28,8 @@ public class ChainFilter  implements Filter {
             String name = environment.getProperty("spring.application.name");
             if (null != chain) {
                 chain = chain.replaceAll("\\[", "").replaceAll("]", "") + " -> [" + name + "]";
+            } else {
+                chain = "null";
             }
             log.info("请求链路追踪 ---- 【{}】【{}】", logId, chain + "");
         } catch (Exception e) {
