@@ -3,6 +3,7 @@ package com.flance.web.gateway.filter;
 import com.flance.web.gateway.common.GatewayBodyEnum;
 import com.flance.web.gateway.decorator.RsaResponseDecorator;
 import com.flance.web.gateway.service.AppService;
+import com.flance.web.utils.AssertException;
 import com.flance.web.utils.RequestConstant;
 import com.flance.web.utils.RequestUtil;
 import com.flance.web.utils.route.AppModel;
@@ -45,13 +46,13 @@ public class RsaEncodeFilter implements GatewayFilter, Ordered {
         RequestUtil.getLogId(headerLogId);
         if (StringUtils.isEmpty(appId)) {
             log.error("appId为空，无法进行参数加密【method:{}】【uri:{}】【api_id:{}】", method, uri, requestId);
-            return Mono.error(new NotFoundException("appId为空"));
+            throw AssertException.getNormal("-1", "appId为空");
         }
 
         AppModel appModel = appService.getAppByAppId(appId);
         if (null == appModel) {
             log.error("找不到app【{}】，请确认是否启用【method:{}】【uri:{}】【api_id:{}】", appId, method, uri, requestId);
-            return Mono.error(new NotFoundException("找不到app【" + appId + "】"));
+            throw AssertException.getNormal("-1", "找不到app【" + appId + "】");
         }
 
         ServerHttpResponse response = exchange.getResponse();

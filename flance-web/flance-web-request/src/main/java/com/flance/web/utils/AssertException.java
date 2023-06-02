@@ -54,7 +54,7 @@ public class AssertException extends RuntimeException {
 
     }
 
-    public static AssertException getNormal(String msg, String code) {
+    public static AssertException getNormal(String code, String msg) {
         return AssertException.builder()
                 .msg(msg)
                 .code(code)

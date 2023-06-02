@@ -2,6 +2,7 @@ package com.flance.web.gateway.filter;
 
 import com.flance.web.gateway.service.AppService;
 import com.flance.web.gateway.service.RouteApiService;
+import com.flance.web.utils.AssertException;
 import com.flance.web.utils.RequestConstant;
 import com.flance.web.utils.RequestUtil;
 import com.flance.web.utils.route.AppModel;
@@ -43,28 +44,28 @@ public class AppAuthFilter implements GatewayFilter, Ordered {
         RequestUtil.getLogId(headerLogId);
         if (StringUtils.isEmpty(appId)) {
             log.error("appId为空，无法进行权限校验【method:{}】【uri:{}】【api_id:{}】", method, uri, apiId);
-            return Mono.error(new NotFoundException("appId为空"));
+            throw AssertException.getNormal( "-1", "appId为空");
         }
 
         if (StringUtils.isEmpty(apiId)) {
             log.error("请求接口编号为空，无法进行权限校验【appId:{}】【method:{}】【uri:{}】", appId, method, uri);
-            return Mono.error(new NotFoundException("请求接口编号为空"));
+            throw AssertException.getNormal("-1", "请求接口编号为空");
         }
 
         AppModel appModel = appService.getAppByAppId(appId);
         if (null == appModel) {
             log.error("appId为空，无法进行权限校验【method:{}】【uri:{}】【api_id:{}】", method, uri, apiId);
-            return Mono.error(new NotFoundException("找不到app[" + appId + "]"));
+            throw AssertException.getNormal("-1", "找不到app[" + appId + "]");
         }
 
         if (null == appModel.getApiResources() || appModel.getApiResources().size() == 0) {
             log.error("没有配置权限【appId:{}】【method:{}】【uri:{}】【api_id:{}】", appId, method, uri, apiId);
-            return Mono.error(new NotFoundException("没有配置权限[" + appId + "][" + apiId + "]"));
+            throw AssertException.getNormal("-1", "没有配置权限[" + appId + "][" + apiId + "]");
         }
 
         if (!appModel.getApiResources().contains(apiId)) {
             log.error("没有权限访问【appId:{}】【method:{}】【uri:{}】【api_id:{}】", appId, method, uri, apiId);
-            return Mono.error(new NotFoundException("没有权限[" + appId + "][" + apiId + "]"));
+            throw AssertException.getNormal("-1", "没有权限[" + appId + "][" + apiId + "]");
         }
 
         return chain.filter(exchange);

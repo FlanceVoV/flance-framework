@@ -4,6 +4,7 @@ import com.flance.web.gateway.common.GatewayBodyEnum;
 import com.flance.web.gateway.decorator.RsaRequestDecorator;
 import com.flance.web.gateway.service.AppService;
 import com.flance.web.gateway.utils.RsaBodyUtils;
+import com.flance.web.utils.AssertException;
 import com.flance.web.utils.RequestConstant;
 import com.flance.web.utils.RequestUtil;
 import com.flance.web.utils.route.AppModel;
@@ -45,13 +46,13 @@ public class RsaDecodeFilter implements GatewayFilter, Ordered {
         RequestUtil.getLogId(headerLogId);
         if (StringUtils.isEmpty(appId)) {
             log.error("appId为空，无法进行解密【method:{}】【uri:{}】【api_id:{}】", method, uri, requestId);
-            return Mono.error(new NotFoundException("appId为空"));
+            throw AssertException.getNormal("-1", "appId为空");
         }
 
         AppModel appModel = appService.getAppByAppId(appId);
         if (null == appModel) {
             log.error("找不到app【{}】，请确认是否启用【method:{}】【uri:{}】【api_id:{}】", appId, method, uri, requestId);
-            return Mono.error(new NotFoundException("找不到app【" + appId + "】"));
+            throw AssertException.getNormal("-1", "找不到app【" + appId + "】");
         }
 
         log.info("解密-开始 【app_id:{}】【api_id:{}】【method:{}】【uri:{}】", appId, requestId, method, uri);
@@ -62,7 +63,7 @@ public class RsaDecodeFilter implements GatewayFilter, Ordered {
 //            return chain.filter(exchange.mutate().request(new RsaRequestDecorator(exchange, exchange.getRequest(), headerLogId, GatewayBodyEnum.RSA_DECODE, appModel)).build());
         } catch (Exception e) {
             e.printStackTrace();
-            return Mono.error(new NotFoundException("解密失败【" + appId + "】:【" + appId + "】"));
+            throw AssertException.getNormal("-1", "解密失败【" + appId + "】:【" + appId + "】");
         }
 
     }
