@@ -44,7 +44,7 @@ public class GatewayExceptionHandler extends DefaultErrorWebExceptionHandler {
     public Mono<Void> handle(ServerWebExchange exchange, Throwable throwable) {
         WebResponse webResponse;
         ServerHttpResponse response = exchange.getResponse();
-
+        throwable.printStackTrace();
         if (throwable instanceof AssertException ae) {
             webResponse = ae.getResponse();
             return getAssertException(webResponse, response);
