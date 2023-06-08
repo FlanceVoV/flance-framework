@@ -1,0 +1,24 @@
+server:
+  port: 8181
+spring:
+  application:
+    name: demo3
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://47.99.42.18:32414/calculate?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&autoReconnect=true
+    username: root
+    password: FnhlVs1D~uZ1S96-
+
+flance:
+  tx:
+    enabled: true
+    enable-datasource-proxy: true
+    server-module: netty
+    tx-server-ip: 127.0.0.1
+    tx-server-port: 8899
+    tx-server-re-try-times: 5
+    client:
+      enabled: true
+      netty-client-id: flance-tx-demo1
+      netty-client-ip: 127.0.0.1
+      netty-client-port: 8181

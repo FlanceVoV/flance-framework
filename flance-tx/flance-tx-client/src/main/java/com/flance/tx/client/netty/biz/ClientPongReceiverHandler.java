@@ -14,6 +14,13 @@ public class ClientPongReceiverHandler implements IBizHandler<NettyRequest, Nett
     @Override
     public NettyRequest doBizHandler(NettyResponse response, Channel channel) {
         log.info("get pong success");
-        return null;
+        NettyRequest request = new NettyRequest();
+        request.setHandlerId("clientStatusHandler");
+        request.setRoomId(response.getRoomId());
+        request.setData("客户端信息json");
+        request.setIsHeartBeat(false);
+        request.setMessageId(response.getMessageId());
+        request.setServerData(response.getServerData());
+        return request;
     }
 }
