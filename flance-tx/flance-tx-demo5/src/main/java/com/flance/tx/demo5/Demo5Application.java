@@ -12,6 +12,7 @@ import com.flance.tx.netty.data.NettyRequest;
 import com.flance.tx.netty.data.NettyResponse;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -23,20 +24,21 @@ import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 @ComponentScan(basePackages = {"com.flance.*"}, excludeFilters = {@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {NettyConfiguration.class})})
 @SpringBootApplication
 public class Demo5Application {
 
-    public static void main(String[] args) throws Exception {
-
+    public static void main(String[] args) {
+        log.info(" roomId ============= [room1] client id ============== [demo5]");
         SpringApplication.run(Demo5Application.class, args);
     }
 
 
     @Bean
-    public Object test(ApplicationContext applicationContext) throws Exception {
-        String clientId = "设备二";
-        String roomId = "房间一";
+    public Channel getChannel(ApplicationContext applicationContext) throws Exception {
+        String clientId = "demo5";
+        String roomId = "room1";
         CTNettyClient client = new CTNettyClient("127.0.0.1", 8899, applicationContext);
         client.start();
         Channel heartChannel = client.getChannel();
@@ -53,22 +55,7 @@ public class Demo5Application {
         clientCallbackService.awaitThread(15, TimeUnit.SECONDS);
         NettyResponse data = clientCallbackService.getData();
         System.out.println(data);
-
-        Thread.sleep(2000);
-
-        NettyRequest talkReq = new NettyRequest();
-        talkReq.setMessageId(UUID.randomUUID().toString());
-        talkReq.setRoomId(roomId);
-        talkReq.setClientId(clientId);
-        talkReq.setHandlerId("talkHandler");
-
-        TalkVo talkVo = new TalkVo();
-        talkVo.setFrom("设备二");
-        talkVo.setTo("设备一");
-        talkVo.setMsg("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-        talkReq.setData(GsonUtils.toJSONString(talkVo));
-        heartChannel.writeAndFlush(DataUtils.getStr(talkReq).getBytes(StandardCharsets.UTF_8)).addListener(ChannelFutureListener.CLOSE_ON_FAILURE);
-        return null;
+        return heartChannel;
     }
 
 

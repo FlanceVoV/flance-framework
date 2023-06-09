@@ -10,6 +10,7 @@ import com.flance.tx.netty.data.NettyRequest;
 import com.flance.tx.netty.data.NettyResponse;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -21,20 +22,21 @@ import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 @ComponentScan(basePackages = {"com.flance.*"}, excludeFilters = {@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {NettyConfiguration.class})})
 @SpringBootApplication
 public class Demo3Application {
 
     public static void main(String[] args) throws Exception {
-
+        log.info(" roomId ============= [room1] client id ============== [demo3]");
         SpringApplication.run(Demo3Application.class, args);
     }
 
 
     @Bean
-    public Object test(ApplicationContext applicationContext) throws Exception {
-        String roomId = "房间一";
-        String clientId = "设备一";
+    public Channel test(ApplicationContext applicationContext) throws Exception {
+        String roomId = "room1";
+        String clientId = "demo3";
         CTNettyClient client = new CTNettyClient("127.0.0.1", 8899, applicationContext);
         client.start();
         Channel heartChannel = client.getChannel();
@@ -51,7 +53,7 @@ public class Demo3Application {
         clientCallbackService.awaitThread(15, TimeUnit.SECONDS);
         NettyResponse data = clientCallbackService.getData();
         System.out.println(data);
-        return null;
+        return heartChannel;
     }
 
 }
