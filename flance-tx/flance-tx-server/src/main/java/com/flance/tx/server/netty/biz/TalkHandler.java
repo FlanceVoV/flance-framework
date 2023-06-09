@@ -42,6 +42,13 @@ public class TalkHandler implements IBizHandler<NettyResponse, NettyRequest> {
         response.setClientId(nettyRequest.getClientId());
         response.setData(GsonUtils.toJSONString(talkVo));
         targetChannel.writeAndFlush(DataUtils.getStr(response).getBytes(StandardCharsets.UTF_8)).addListener(ChannelFutureListener.CLOSE_ON_FAILURE);
+
+        response = new NettyResponse();
+        response.setSuccess(true);
+        response.setTimestamp(System.currentTimeMillis());
+        response.setMessageId(nettyRequest.getMessageId());
+        response.setClientId(nettyRequest.getClientId());
+        response.setRoomId(nettyRequest.getRoomId());
         return response;
     }
 }
