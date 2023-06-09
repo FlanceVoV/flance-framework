@@ -30,7 +30,11 @@ public class ServerStartConnectHandler implements IBizHandler<NettyResponse, Net
         response.setRoomId(request.getRoomId());
 
         Map<String, Channel> channelMap = Maps.newConcurrentMap();
-        channelMap.put(request.getServerData().getId(), channel);
+        String channelId = request.getRoomId();
+        if (null != request.getServerData() && null != request.getServerData().getId()) {
+            channelId = request.getServerData().getId();
+        }
+        channelMap.put(channelId, channel);
         ConnectionRoom connectionRoom = new ConnectionRoom(request.getRoomId(), request.getRoomId(), channelMap);
         RoomContainer.createRoom(request.getRoomId(), connectionRoom);
 
