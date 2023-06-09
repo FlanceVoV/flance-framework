@@ -37,16 +37,9 @@ public class Demo3Application {
         Channel heartChannel = client.getChannel();
         NettyRequest request = new NettyRequest();
         request.setMessageId(UUID.randomUUID().toString());
-        request.setIsHeartBeat(true);
         request.setHandlerId("serverStartConnectHandler");
         request.setData("心跳检查");
         request.setRoomId(roomId);
-        ServerData clientData = new ServerData();
-        clientData.setId(roomId);
-        clientData.setIp("127.0.0.1");
-        clientData.setPort(8080);
-        clientData.setApplicationId("flance-tx-demo1");
-        request.setServerData(clientData);
         heartChannel.writeAndFlush(DataUtils.getStr(request).getBytes(StandardCharsets.UTF_8)).addListener(ChannelFutureListener.CLOSE_ON_FAILURE);
         final ClientCallbackService clientCallbackService = new ClientCallbackService();
         CurrentNettyData.putCallback2DataMap(request.getMessageId(), heartChannel, clientCallbackService);

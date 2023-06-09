@@ -10,13 +10,17 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 public class DataUtils {
 
+    public static final String START = "$_";
+
+    public static final String END = "_$";
+
     public static <T> String getStr(T request) {
         try {
             String json = GsonUtils.toJSONString(request);
             byte[] bytes = json.getBytes(StandardCharsets.UTF_8);
             String msg = Base64Utils.encode(bytes);
             String strLength = String.format("%010d", msg.length());
-            return strLength + msg;
+            return START + strLength + msg + END;
         } catch (Exception e) {
             e.printStackTrace();
         }

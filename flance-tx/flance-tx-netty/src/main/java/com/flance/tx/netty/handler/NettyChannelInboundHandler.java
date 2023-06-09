@@ -46,10 +46,8 @@ public abstract class NettyChannelInboundHandler<T, R> extends SimpleChannelInbo
         try {
             receive = (String) msg;
             log.debug("读取到报文 - 原文:{}", msg);
-            //小于64位不处理
             if (receive.length() < len) {
                 log.info("报文小于10位");
-//                ctx.close();
                 return;
             }
             String length = receive.substring(0, 10);
@@ -64,7 +62,6 @@ public abstract class NettyChannelInboundHandler<T, R> extends SimpleChannelInbo
             log.debug("业务报文长度[{}]", receive.getBytes(StandardCharsets.UTF_8).length - len);
             if (receive.getBytes(StandardCharsets.UTF_8).length - len < Integer.parseInt(length)) {
                 log.warn("报文长度不够");
-//                ctx.close();
                 return;
             }
 
@@ -74,7 +71,7 @@ public abstract class NettyChannelInboundHandler<T, R> extends SimpleChannelInbo
             System.arraycopy(msgBytes, 10, tempMsg, 0, tempMsg.length);
 
             String receiveMsg = new String(tempMsg, StandardCharsets.UTF_8);
-            log.debug("业务报文 - 原文:{}", receiveMsg);
+            log.info("业务报文 - 原文:{}", receiveMsg);
             this.message = iReceiveHandler.handler(receiveMsg, ctx.channel());
             this.respMessage = iReceiveHandler.getOrigin(receiveMsg, ctx.channel());
             if (null != this.message) {
@@ -82,6 +79,7 @@ public abstract class NettyChannelInboundHandler<T, R> extends SimpleChannelInbo
             }
         } catch (Exception e) {
             log.error("报文解析异常，报文内容为:" + msg, e);
+            ctx.close();
         }
 
     }

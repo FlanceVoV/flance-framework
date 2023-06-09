@@ -1,5 +1,6 @@
 package com.flance.tx.netty.handler;
 
+import com.flance.tx.netty.data.DataUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageCodec;
@@ -17,6 +18,13 @@ public class MsgByteToMessageCodec extends ByteToMessageCodec<Object> {
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf buf, List<Object> out) throws Exception {
 
+        byte[] start = new byte[2];
+        buf.readBytes(start);
+        String mark = new String(start, StandardCharsets.UTF_8);
+        if (!mark.equals(DataUtils.START)) {
+            return;
+        }
+
         //记下readerIndex
         buf.markReaderIndex();
 
@@ -25,11 +33,17 @@ public class MsgByteToMessageCodec extends ByteToMessageCodec<Object> {
             return;
         }
 
+        if (buf.readableBytes() >= 10485760) {
+            ctx.close();
+            log.info("错误：报文超出限制{}", buf.readableBytes());
+            return;
+        }
+
         //获取前10位表示报文长度的字符串
         byte[] dataLengthBytes = new byte[10];
-        //转为整型
-        int length = byte2int24(dataLengthBytes, 0) + 10;
-        if (buf.readableBytes() <= length) {
+        buf.readBytes(dataLengthBytes);
+        String length = new String(dataLengthBytes, StandardCharsets.UTF_8);
+        if (buf.readableBytes() <= toInt(length)) {
             //总长度小于数据长度则不处理
             buf.resetReaderIndex();
             return;
@@ -43,6 +57,12 @@ public class MsgByteToMessageCodec extends ByteToMessageCodec<Object> {
 
         //msg=报文前十位长度+报文内容
         String msg = new String(data, StandardCharsets.UTF_8);
+        if (msg.startsWith(DataUtils.START)) {
+            msg = msg.substring(2);
+        }
+        if (msg.endsWith(DataUtils.END)) {
+            msg = msg.substring(0, msg.length() - 2);
+        }
         out.add(msg);
 //        ctx.writeAndFlush(out);
     }
@@ -100,6 +120,5 @@ public class MsgByteToMessageCodec extends ByteToMessageCodec<Object> {
         }
 
     }
-
 
 }

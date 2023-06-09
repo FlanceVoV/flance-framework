@@ -66,7 +66,11 @@ public class BizHandlerProxyAdvice implements MethodInterceptor {
             RoomContainer.createRoom(roomId, connectionRoom);
         } else {
             ConnectionRoom connectionRoom = (ConnectionRoom) RoomContainer.getRoom(request.getRoomId());
-            if (null == connectionRoom.getChannelById(request.getServerData().getId())) {
+            String channelId = request.getRoomId();
+            if (null != request.getServerData() && null != request.getServerData().getId()) {
+                channelId = request.getServerData().getId();
+            }
+            if (null == connectionRoom.getChannelById(channelId)) {
                 connectionRoom.addChannel(request.getServerData().getId(), channel);
             }
         }
@@ -86,7 +90,11 @@ public class BizHandlerProxyAdvice implements MethodInterceptor {
             RoomContainer.createRoom(roomId, connectionRoom);
         } else {
             ConnectionRoom connectionRoom = (ConnectionRoom) RoomContainer.getRoom(response.getRoomId());
-            if (null == connectionRoom.getChannelById(response.getServerData().getId())) {
+            String channelId = response.getRoomId();
+            if (null != response.getServerData() && null != response.getServerData().getId()) {
+                channelId = response.getServerData().getId();
+            }
+            if (null == connectionRoom.getChannelById(channelId)) {
                 connectionRoom.addChannel(response.getServerData().getId(), channel);
             }
         }

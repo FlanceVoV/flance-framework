@@ -18,7 +18,6 @@ public class ClientPongReceiverHandler implements IBizHandler<NettyRequest, Nett
         request.setHandlerId("clientStatusHandler");
         request.setRoomId(response.getRoomId());
         request.setData("客户端信息json");
-        request.setIsHeartBeat(false);
         request.setMessageId(response.getMessageId());
         request.setServerData(response.getServerData());
         return request;
