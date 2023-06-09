@@ -40,11 +40,6 @@ public class ServerStartConnectHandler implements IBizHandler<NettyResponse, Net
 
         new Thread(() -> {
             while (true) {
-                try {
-                    Thread.sleep(2000);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
                 Channel clientChannel = connectionRoom.getChannelById(request.getRoomId());
                 if (clientChannel.isActive() && clientChannel.isOpen()) {
                     clientChannel.writeAndFlush(DataUtils.getStr(response).getBytes(StandardCharsets.UTF_8)).addListener(ChannelFutureListener.CLOSE_ON_FAILURE);

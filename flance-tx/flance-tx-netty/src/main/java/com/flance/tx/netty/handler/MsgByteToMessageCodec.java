@@ -16,37 +16,35 @@ public class MsgByteToMessageCodec extends ByteToMessageCodec<Object> {
      */
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf buf, List<Object> out) throws Exception {
+
+        //记下readerIndex
+        buf.markReaderIndex();
+
         int msgLength = 10;
         if (buf.readableBytes() < msgLength) {// 不足长度10(开始10位代表整个报文长度位)，无法获取长度
             return;
         }
-        //记下readerIndex
-        buf.markReaderIndex();
 
         //获取前10位表示报文长度的字符串
-        String lenstr = getMsgLength(buf, msgLength);
+        byte[] dataLengthBytes = new byte[10];
         //转为整型
-        int length = toInt(lenstr);
-        if (length <= 0) {
-            ctx.close();
-            return;
-        }
-
-        //判断报文长度是否到达报文前十位指定的长度
-        if (buf.readableBytes() < length) {
-            //重置到上一次调用markReaderIndex()的readerIndex位置
+        int length = byte2int24(dataLengthBytes, 0) + 10;
+        if (buf.readableBytes() <= length) {
+            //总长度小于数据长度则不处理
             buf.resetReaderIndex();
             return;
         }
 
+        //重置
+        buf.resetReaderIndex();
+
         //报文内容(不包含前十位，前十位在前面已经被读取)
         byte[] data = getBytes(buf);
-        String content = new String(data, StandardCharsets.UTF_8);
 
         //msg=报文前十位长度+报文内容
-        String msg = lenstr + content;
+        String msg = new String(data, StandardCharsets.UTF_8);
         out.add(msg);
-        ctx.writeAndFlush(out);
+//        ctx.writeAndFlush(out);
     }
 
     @Override
@@ -70,16 +68,12 @@ public class MsgByteToMessageCodec extends ByteToMessageCodec<Object> {
         return data;
     }
 
-    /**
-     * 读取ByteBuf字节内容
-     *
-     * @param buf
-     * @return
-     */
-    private byte[] getBytes2(ByteBuf buf) {
-        byte[] data = new byte[buf.readableBytes()];//数据大小
-        buf.getBytes(0, data);
-        return data;
+
+    private int byte2int24(byte[] bytes, int pos) {
+        int size = (int) (bytes[pos] & 0xff);
+        size |= ((((int) bytes[pos + 1]) & 0xff) << 8);
+        size |= ((((int) bytes[pos + 2]) & 0xff) << 16);
+        return size;
     }
 
     /**
