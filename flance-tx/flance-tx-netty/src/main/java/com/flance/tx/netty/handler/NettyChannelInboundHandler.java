@@ -49,7 +49,7 @@ public abstract class NettyChannelInboundHandler<T, R> extends SimpleChannelInbo
             //小于64位不处理
             if (receive.length() < len) {
                 log.info("报文小于10位");
-                ctx.close();
+//                ctx.close();
                 return;
             }
             String length = receive.substring(0, 10);
@@ -64,7 +64,7 @@ public abstract class NettyChannelInboundHandler<T, R> extends SimpleChannelInbo
             log.debug("业务报文长度[{}]", receive.getBytes(StandardCharsets.UTF_8).length - len);
             if (receive.getBytes(StandardCharsets.UTF_8).length - len < Integer.parseInt(length)) {
                 log.warn("报文长度不够");
-                ctx.close();
+//                ctx.close();
                 return;
             }
 
