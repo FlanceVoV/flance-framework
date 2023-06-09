@@ -26,6 +26,7 @@ public class ServerPingReceiverHandler implements IBizHandler<NettyResponse, Net
         response.setHandlerId("clientPongReceiverHandler");
         response.setServerData(ServerUtil.getServerData());
         response.setRoomId(request.getRoomId());
+        response.setClientId(request.getClientId());
         return response;
     }
 

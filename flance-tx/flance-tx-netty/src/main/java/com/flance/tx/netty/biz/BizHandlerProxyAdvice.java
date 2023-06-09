@@ -58,8 +58,8 @@ public class BizHandlerProxyAdvice implements MethodInterceptor {
             String roomName = "ping room -" + roomId;
             Map<String, Channel> channelMap = Maps.newConcurrentMap();
             String channelId = request.getRoomId();
-            if (null != request.getServerData() && null != request.getServerData().getId()) {
-                channelId = request.getServerData().getId();
+            if (null != request.getClientId()) {
+                channelId = request.getClientId();
             }
             channelMap.put(channelId, channel);
             ConnectionRoom connectionRoom = new ConnectionRoom(roomId, roomName, channelMap);
@@ -67,11 +67,11 @@ public class BizHandlerProxyAdvice implements MethodInterceptor {
         } else {
             ConnectionRoom connectionRoom = (ConnectionRoom) RoomContainer.getRoom(request.getRoomId());
             String channelId = request.getRoomId();
-            if (null != request.getServerData() && null != request.getServerData().getId()) {
-                channelId = request.getServerData().getId();
+            if (null != request.getClientId()) {
+                channelId = request.getClientId();
             }
             if (null == connectionRoom.getChannelById(channelId)) {
-                connectionRoom.addChannel(request.getServerData().getId(), channel);
+                connectionRoom.addChannel(request.getClientId(), channel);
             }
         }
     }
@@ -82,8 +82,8 @@ public class BizHandlerProxyAdvice implements MethodInterceptor {
             String roomName = "pong room -" + roomId;
             Map<String, Channel> channelMap = Maps.newConcurrentMap();
             String channelId = response.getRoomId();
-            if (null != response.getServerData() && null != response.getServerData().getId()) {
-                channelId = response.getServerData().getId();
+            if (null != response.getClientId()) {
+                channelId = response.getClientId();
             }
             channelMap.put(channelId, channel);
             ConnectionRoom connectionRoom = new ConnectionRoom(roomId, roomName, channelMap);
@@ -91,11 +91,11 @@ public class BizHandlerProxyAdvice implements MethodInterceptor {
         } else {
             ConnectionRoom connectionRoom = (ConnectionRoom) RoomContainer.getRoom(response.getRoomId());
             String channelId = response.getRoomId();
-            if (null != response.getServerData() && null != response.getServerData().getId()) {
-                channelId = response.getServerData().getId();
+            if (null != response.getClientId()) {
+                channelId = response.getClientId();
             }
             if (null == connectionRoom.getChannelById(channelId)) {
-                connectionRoom.addChannel(response.getServerData().getId(), channel);
+                connectionRoom.addChannel(response.getClientId(), channel);
             }
         }
     }

@@ -51,7 +51,7 @@ public class ServerStartTxHandler implements IBizHandler<NettyResponse, NettyReq
         result.setServerData(ServerUtil.getServerData());
         result.setIsHeartBeat(false);
         result.setMessageId(request.getMessageId());
-
+        request.setClientId(request.getClientId());
         Connection connection = null;
 
         try {

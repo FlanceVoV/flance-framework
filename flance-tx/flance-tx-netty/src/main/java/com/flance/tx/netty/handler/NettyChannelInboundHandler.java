@@ -87,6 +87,7 @@ public abstract class NettyChannelInboundHandler<T, R> extends SimpleChannelInbo
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         log.info("链接异常");
+        cause.printStackTrace();
         super.exceptionCaught(ctx, cause);
     }
 

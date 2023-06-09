@@ -24,7 +24,7 @@ public class CTSimpleNettyHandler extends NettyChannelInboundHandler<NettyReques
         if (null != callbackService) {
             callbackService.receiveMessage(respMessage);
         }
-        if (null != msg) {
+        if (null != message) {
             String writeMsg = DataUtils.getStr(super.message);
             writeTo(ctx, writeMsg);
         }

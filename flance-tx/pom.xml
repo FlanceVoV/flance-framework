@@ -17,6 +17,7 @@
         <module>flance-tx-demo2</module>
         <module>flance-tx-feign</module>
         <module>flance-tx-demo3</module>
+        <module>flance-tx-demo5</module>
     </modules>
     <parent>
         <artifactId>flance-parent</artifactId>

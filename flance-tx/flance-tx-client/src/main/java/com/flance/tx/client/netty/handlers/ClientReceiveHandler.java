@@ -43,7 +43,7 @@ public class ClientReceiveHandler implements IReceiveHandler<NettyRequest, Netty
     public NettyResponse getOrigin(String msg, Channel channel) {
         try {
             String string = new String(Base64Utils.decode(msg), StandardCharsets.UTF_8);
-            log.info("解析服务端响应[{}]", string);
+//            log.info("解析服务端响应[{}]", string);
             return GsonUtils.fromString(string, NettyResponse.class);
         } catch (Exception e) {
             e.printStackTrace();

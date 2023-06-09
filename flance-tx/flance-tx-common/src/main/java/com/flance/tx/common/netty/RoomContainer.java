@@ -2,9 +2,13 @@ package com.flance.tx.common.netty;
 
 import com.alibaba.ttl.TransmittableThreadLocal;
 import com.google.common.collect.Maps;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFutureListener;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * 事务房间容器
@@ -64,6 +68,23 @@ public class RoomContainer {
             if (System.currentTimeMillis() - createTime.getTime() >= timeOut) {
                 value.destroy();
             }
+        });
+    }
+
+    public static void connectionHeart() {
+        CURRENT_ROOM.forEach((key, value) -> {
+            Map<String, Channel> channels = value.getChannels();
+            channels.forEach((k, v) -> {
+                NettyResponse response = new NettyResponse();
+                response.setMessageId(UUID.randomUUID().toString());
+                response.setHandlerId("clientPongReceiverHandler");
+                response.setRoomId(key);
+                if (v.isActive() && v.isOpen()) {
+                    v.writeAndFlush(DataUtils.getStr(response).getBytes(StandardCharsets.UTF_8)).addListener(ChannelFutureListener.CLOSE_ON_FAILURE);
+                } else {
+                    v.close();
+                }
+            });
         });
     }
 

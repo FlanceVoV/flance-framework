@@ -1,4 +1,4 @@
-package com.flance.tx.netty.data;
+package com.flance.tx.common.netty;
 
 import lombok.Data;
 
@@ -8,8 +8,6 @@ public class NettyData {
     protected String messageId;
 
     protected String roomId;
-
-    protected String clientId;
 
     protected String handlerId;
 
