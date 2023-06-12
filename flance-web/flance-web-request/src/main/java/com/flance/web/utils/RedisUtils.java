@@ -1,5 +1,6 @@
 package com.flance.web.utils;
 
+import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
@@ -21,6 +22,9 @@ public class RedisUtils {
 
     @Resource
     RedisTemplate<String, String> redisTemplate;
+
+    private static final String SETNX_SCRIPT = "return redis.call('setnx',KEYS[1], ARGV[1])";
+
 
     /**
      * 左进
@@ -212,6 +216,29 @@ public class RedisUtils {
     public Set<String> keys(String key) {
         Set<String> keys = redisTemplate.keys(key);
         return null == keys ? new HashSet<>() : keys;
+    }
+
+    public Boolean setNx(String key, long time) {
+        //自定义脚本
+        DefaultRedisScript<List> script = new DefaultRedisScript<>(SETNX_SCRIPT, List.class);
+        //执行脚本,传入参数,由于value没啥用,这里随便写死的"1"
+        List<Long> rst = redisTemplate.execute(script, Collections.singletonList(key), "1");
+        if (null == rst) {
+            rst = Lists.newArrayList();
+        }
+        //返回1,表示设置成功,拿到锁
+        if(rst.size() > 0 && rst.get(0) == 1){
+            log.info(key+"成功拿到锁");
+            //设置过期时间
+            setExp(key, time);
+            log.info(key+"已成功设置过期时间:"+time +" 秒");
+            return true;
+        }else{
+            Long cacheExp = redisTemplate.getExpire(key);
+            long expire = cacheExp == null ? 0 : cacheExp;
+            log.info(key+"未拿到到锁,还有"+expire+"释放");
+            return false;
+        }
     }
 
     /**
