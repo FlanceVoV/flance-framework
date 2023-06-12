@@ -48,6 +48,16 @@ public class RedisUtils {
     }
 
     /**
+     * 左出
+     *
+     * @param key 队列key
+     * @return 返回值
+     */
+    public List<String> popLeft(String key, long count) {
+        return redisTemplate.opsForList().leftPop(key, count);
+    }
+
+    /**
      * 左进
      *
      * @param key   队列key
@@ -66,6 +76,10 @@ public class RedisUtils {
      */
     public String popRight(String key) {
         return redisTemplate.opsForList().rightPop(key);
+    }
+
+    public List<String> popRight(String key, long count) {
+        return redisTemplate.opsForList().rightPop(key, count);
     }
 
     /**
