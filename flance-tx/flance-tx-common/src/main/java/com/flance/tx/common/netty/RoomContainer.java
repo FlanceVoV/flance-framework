@@ -58,6 +58,10 @@ public class RoomContainer {
         IS_ROOM_CREATOR.remove();
     }
 
+    public static Map<String, Room> getRooms() {
+        return CURRENT_ROOM;
+    }
+
 
     /**
      * 扫描超时任务，对连接进行关闭
