@@ -39,7 +39,6 @@ public class MsgByteToMessageCodec extends ByteToMessageCodec<Object> {
             return;
         }
 
-
         //获取前10位表示报文长度的字符串
         byte[] dataLengthBytes = new byte[10];
         buf.readBytes(dataLengthBytes);

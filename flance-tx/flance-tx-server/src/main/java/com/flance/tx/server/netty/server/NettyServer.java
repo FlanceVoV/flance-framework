@@ -3,6 +3,7 @@ package com.flance.tx.server.netty.server;
 import com.flance.tx.server.netty.handlers.CTSimpleNettyServerHandler;
 import com.flance.tx.netty.handler.MsgByteToMessageCodec;
 import com.flance.tx.server.netty.configs.NettyServerConfig;
+import com.flance.tx.server.netty.handlers.RtspServerHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -10,6 +11,8 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.rtsp.RtspDecoder;
+import io.netty.handler.codec.rtsp.RtspEncoder;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import lombok.extern.slf4j.Slf4j;
@@ -50,6 +53,10 @@ public class NettyServer {
                             socketChannel.pipeline().addLast(new StringEncoder());
                             socketChannel.pipeline().addLast(new StringDecoder());
                             socketChannel.pipeline().addLast(new CTSimpleNettyServerHandler(dataSource));
+                            socketChannel.pipeline().addLast(new RtspDecoder());
+                            socketChannel.pipeline().addLast(new RtspEncoder());
+                            socketChannel.pipeline().addLast(new RtspServerHandler());
+
                         }
                     });
             future = sb.bind(nettyServerConfig.getNettyServerPort()).sync();

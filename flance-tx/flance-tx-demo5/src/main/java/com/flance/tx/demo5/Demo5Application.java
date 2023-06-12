@@ -44,7 +44,7 @@ public class Demo5Application {
     public Channel getChannel(ApplicationContext applicationContext) throws Exception {
         String clientId = "demo5";
         String roomId = "room1";
-        CTNettyClient client = new CTNettyClient("127.0.0.1", 8899, applicationContext);
+        CTNettyClient client = new CTNettyClient("47.99.42.18", 8899, applicationContext);
         client.start();
         Channel heartChannel = client.getChannel();
         NettyRequest request = new NettyRequest();
