@@ -18,15 +18,15 @@ public class MsgByteToMessageCodec extends ByteToMessageCodec<Object> {
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf buf, List<Object> out) throws Exception {
 
+        //记下readerIndex
+        buf.markReaderIndex();
+
         byte[] start = new byte[2];
         buf.readBytes(start);
         String mark = new String(start, StandardCharsets.UTF_8);
         if (!mark.equals(DataUtils.START)) {
             return;
         }
-
-        //记下readerIndex
-        buf.markReaderIndex();
 
         int msgLength = 10;
         if (buf.readableBytes() < msgLength) {// 不足长度10(开始10位代表整个报文长度位)，无法获取长度
@@ -39,11 +39,12 @@ public class MsgByteToMessageCodec extends ByteToMessageCodec<Object> {
             return;
         }
 
+
         //获取前10位表示报文长度的字符串
         byte[] dataLengthBytes = new byte[10];
         buf.readBytes(dataLengthBytes);
         String length = new String(dataLengthBytes, StandardCharsets.UTF_8);
-        if (buf.readableBytes() <= toInt(length)) {
+        if (buf.readableBytes() < toInt(length)) {
             //总长度小于数据长度则不处理
             buf.resetReaderIndex();
             return;
@@ -53,18 +54,19 @@ public class MsgByteToMessageCodec extends ByteToMessageCodec<Object> {
         buf.resetReaderIndex();
 
         //报文内容(不包含前十位，前十位在前面已经被读取)
-        byte[] data = getBytes(buf);
+        byte[] data = getBytes(buf, toInt(length) + 10 + 2);
 
         //msg=报文前十位长度+报文内容
         String msg = new String(data, StandardCharsets.UTF_8);
         if (msg.startsWith(DataUtils.START)) {
             msg = msg.substring(2);
         }
-        if (msg.endsWith(DataUtils.END)) {
-            msg = msg.substring(0, msg.length() - 2);
-        }
+//        if (msg.endsWith(DataUtils.END)) {
+//            msg = msg.substring(0, msg.length() - 2);
+//        }
         out.add(msg);
-//        ctx.writeAndFlush(out);
+        buf.retain();
+        buf.release();
     }
 
     @Override
@@ -80,10 +82,9 @@ public class MsgByteToMessageCodec extends ByteToMessageCodec<Object> {
      * @param buf
      * @return
      */
-    private byte[] getBytes(ByteBuf buf) {
-        int readablebytes = buf.readableBytes();
-        ByteBuf tempBuf = buf.readBytes(readablebytes);
-        byte[] data = new byte[readablebytes];//数据大小
+    private byte[] getBytes(ByteBuf buf, int length) {
+        ByteBuf tempBuf = buf.readBytes(length);
+        byte[] data = new byte[length];//数据大小
         tempBuf.getBytes(0, data);
         return data;
     }

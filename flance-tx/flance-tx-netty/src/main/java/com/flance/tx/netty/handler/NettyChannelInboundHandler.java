@@ -71,7 +71,8 @@ public abstract class NettyChannelInboundHandler<T, R> extends SimpleChannelInbo
             System.arraycopy(msgBytes, 10, tempMsg, 0, tempMsg.length);
 
             String receiveMsg = new String(tempMsg, StandardCharsets.UTF_8);
-            log.info("业务报文 - 原文:{}", receiveMsg);
+            log.info("业务报文 - 原文:{}", receiveMsg.length());
+            log.debug("业务报文 - 原文:{}", receiveMsg);
             this.message = iReceiveHandler.handler(receiveMsg, ctx.channel());
             this.respMessage = iReceiveHandler.getOrigin(receiveMsg, ctx.channel());
             if (null != this.message) {

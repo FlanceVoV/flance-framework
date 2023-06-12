@@ -18,7 +18,7 @@ public class ServerReceiveHandler implements IReceiveHandler<NettyResponse, Nett
     @Override
     public NettyResponse handler(String msg, Channel channel) {
         NettyResponse response;
-        log.debug("收到的报文内容为[{}]", msg);
+        log.debug("收到的报文[{}]", msg.length());
         try {
             NettyRequest request = getOrigin(msg, channel);
             if (null != request.getHandlerId()) {
@@ -43,9 +43,9 @@ public class ServerReceiveHandler implements IReceiveHandler<NettyResponse, Nett
     public NettyRequest getOrigin(String msg, Channel channel) {
         try {
             String string = new String(Base64Utils.decode(msg), StandardCharsets.UTF_8);
-//            log.info("带解码原文：[{}]", string);
             return GsonUtils.fromString(string, NettyRequest.class);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException("接收客户端请求异常！即将断开");
         }
     }

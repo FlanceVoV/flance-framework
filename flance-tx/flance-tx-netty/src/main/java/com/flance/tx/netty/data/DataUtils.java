@@ -20,7 +20,7 @@ public class DataUtils {
             byte[] bytes = json.getBytes(StandardCharsets.UTF_8);
             String msg = Base64Utils.encode(bytes);
             String strLength = String.format("%010d", msg.length());
-            return START + strLength + msg + END;
+            return START + strLength + msg;
         } catch (Exception e) {
             e.printStackTrace();
         }
