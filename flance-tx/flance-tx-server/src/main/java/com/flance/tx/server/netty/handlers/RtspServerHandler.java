@@ -11,6 +11,6 @@ public class RtspServerHandler extends SimpleChannelInboundHandler<FullHttpReque
 
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, FullHttpRequest fullHttpRequest) throws Exception {
-        System.out.println(fullHttpRequest);
+        log.info("fullRequest [{}]", fullHttpRequest);
     }
 }

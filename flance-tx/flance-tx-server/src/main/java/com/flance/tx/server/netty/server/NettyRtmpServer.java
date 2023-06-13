@@ -1,8 +1,9 @@
 package com.flance.tx.server.netty.server;
 
-import com.flance.tx.server.netty.handlers.CTSimpleNettyServerHandler;
 import com.flance.tx.netty.handler.MsgByteToMessageCodec;
+import com.flance.tx.server.netty.configs.NettyRtmpServerConfig;
 import com.flance.tx.server.netty.configs.NettyServerConfig;
+import com.flance.tx.server.netty.handlers.CTSimpleNettyServerHandler;
 import com.flance.tx.server.netty.handlers.RtspServerHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
@@ -19,17 +20,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import javax.sql.DataSource;
 
 @Slf4j
 @Component
-public class NettyServer {
+public class NettyRtmpServer {
+
 
     @Resource
-    DataSource dataSource;
-
-    @Resource
-    NettyServerConfig nettyServerConfig;
+    NettyRtmpServerConfig nettyRtmpServerConfig;
 
     private final NioEventLoopGroup boss = new NioEventLoopGroup();
     private final NioEventLoopGroup worker = new NioEventLoopGroup();
@@ -38,7 +36,7 @@ public class NettyServer {
 
     public ChannelFuture lister() {
 
-        log.info("开启 TC-NETTY-SERVER 服务监听[{}] - [{}] - [{}]", nettyServerConfig.getNettyServerId(), nettyServerConfig.getNettyServerIp(), nettyServerConfig.getNettyServerPort());
+        log.info("开启 TC-NETTY-RTMP-SERVER 服务监听[{}] - [{}] - [{}]", nettyRtmpServerConfig.getRtmpServerId(), nettyRtmpServerConfig.getRtmpServerIp(), nettyRtmpServerConfig.getRtmpServerPort());
 
         ChannelFuture future;
 
@@ -49,13 +47,12 @@ public class NettyServer {
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
-                            socketChannel.pipeline().addLast(new MsgByteToMessageCodec());
-                            socketChannel.pipeline().addLast(new StringEncoder());
-                            socketChannel.pipeline().addLast(new StringDecoder());
-                            socketChannel.pipeline().addLast(new CTSimpleNettyServerHandler(dataSource));
+                            socketChannel.pipeline().addLast(new RtspDecoder());
+                            socketChannel.pipeline().addLast(new RtspEncoder());
+                            socketChannel.pipeline().addLast(new RtspServerHandler());
                         }
                     });
-            future = sb.bind(nettyServerConfig.getNettyServerPort()).sync();
+            future = sb.bind(nettyRtmpServerConfig.getRtmpServerPort()).sync();
             channel = future.channel();
         } catch (Exception e) {
             e.printStackTrace();
@@ -73,5 +70,6 @@ public class NettyServer {
         worker.shutdownGracefully();
         boss.shutdownGracefully();
     }
+
 
 }
