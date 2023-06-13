@@ -1,10 +1,13 @@
 package com.flance.tx.server.netty.handlers;
 
+import com.flance.tx.common.utils.SpringUtil;
+import com.flance.tx.netty.biz.IBizHandler;
 import com.flance.tx.netty.data.DataUtils;
 import com.flance.tx.netty.data.NettyRequest;
 import com.flance.tx.netty.data.NettyResponse;
 import com.flance.tx.netty.handler.IReceiveHandler;
 import com.flance.tx.netty.handler.NettyChannelInboundHandler;
+import com.flance.tx.server.netty.biz.wesocket.WebSocketUrlHandler;
 import com.flance.web.utils.AssertException;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -31,9 +34,12 @@ public class WsHandler extends NettyChannelInboundHandler<NettyResponse, NettyRe
     @Override
     public void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
         log.info("收到消息：[{}]", msg);
-        if (msg instanceof FullHttpRequest) {
+        if (msg instanceof FullHttpRequest req) {
             //以http请求形式接入，但是走的是websocket
-            handleHttpRequest(ctx, (FullHttpRequest) msg);
+            QueryStringDecoder decoder = new QueryStringDecoder(req.uri());
+            String path = decoder.path();
+            String uri = decoder.uri();
+            handleHttpRequest(ctx, (FullHttpRequest) msg, uri, path);
         }
         if (msg instanceof WebSocketFrame) {
             handleWebSocketRequest(ctx, (WebSocketFrame) msg);
@@ -52,7 +58,7 @@ public class WsHandler extends NettyChannelInboundHandler<NettyResponse, NettyRe
     /**
      * 唯一的一次http请求，用于创建websocket
      * */
-    private void handleHttpRequest(ChannelHandlerContext ctx, FullHttpRequest req) {
+    private void handleHttpRequest(ChannelHandlerContext ctx, FullHttpRequest req, String uri, String path) {
         // 要求Upgrade为websocket，过滤掉get/Post
         if (!req.decoderResult().isSuccess() || (!"websocket".equals(req.headers().get("Upgrade")))) {
             // 若不是websocket方式，则创建BAD_REQUEST的req，返回给客户端
@@ -65,6 +71,8 @@ public class WsHandler extends NettyChannelInboundHandler<NettyResponse, NettyRe
             WebSocketServerHandshakerFactory.sendUnsupportedVersionResponse(ctx.channel());
         } else {
             handshaker.handshake(ctx.channel(), req);
+            WebSocketUrlHandler socketUrlHandler = SpringUtil.getBean(path, WebSocketUrlHandler.class);
+            socketUrlHandler.doHandler(ctx.channel(), uri);
         }
     }
 
