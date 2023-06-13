@@ -7,6 +7,7 @@ import com.flance.tx.common.utils.Base64Utils;
 import com.flance.tx.common.utils.GsonUtils;
 import com.flance.tx.common.utils.SpringUtil;
 import com.flance.tx.netty.handler.IReceiveHandler;
+import com.flance.web.utils.AssertException;
 import io.netty.channel.Channel;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,6 +28,8 @@ public class ClientReceiveHandler implements IReceiveHandler<NettyRequest, Netty
             } else {
                 newRequest = null;
             }
+        } catch (AssertException e) {
+            throw e;
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("接收服务响应失败！即将断开连接");
@@ -45,6 +48,8 @@ public class ClientReceiveHandler implements IReceiveHandler<NettyRequest, Netty
             String string = new String(Base64Utils.decode(msg), StandardCharsets.UTF_8);
 //            log.info("解析服务端响应[{}]", string);
             return GsonUtils.fromString(string, NettyResponse.class);
+        } catch (AssertException e) {
+            throw e;
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("接收服务响应失败！即将断开连接");

@@ -22,7 +22,7 @@ public class RoomContainer {
 
     private static final TransmittableThreadLocal<Boolean> IS_ROOM_CREATOR = new TransmittableThreadLocal<>();
 
-    public static void createRoom(String roomId, Room room) {
+    public synchronized static void createRoom(String roomId, Room room) {
         CURRENT_ROOM.put(roomId, room);
     }
 
@@ -75,9 +75,12 @@ public class RoomContainer {
         });
     }
 
-    public static void connectionHeart() {
+    public synchronized static void connectionHeart() {
         CURRENT_ROOM.forEach((key, value) -> {
             Map<String, Channel> channels = value.getChannels();
+            if (channels.size() == 0) {
+                CURRENT_ROOM.remove(key);
+            }
             channels.forEach((k, v) -> {
                 NettyResponse response = new NettyResponse();
                 response.setMessageId(UUID.randomUUID().toString());
@@ -87,6 +90,7 @@ public class RoomContainer {
                     v.writeAndFlush(DataUtils.getStr(response).getBytes(StandardCharsets.UTF_8)).addListener(ChannelFutureListener.CLOSE_ON_FAILURE);
                 } else {
                     v.close();
+                    channels.remove(k);
                 }
             });
         });

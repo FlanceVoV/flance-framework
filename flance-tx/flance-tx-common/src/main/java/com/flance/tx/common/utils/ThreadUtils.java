@@ -1,5 +1,6 @@
 package com.flance.tx.common.utils;
 
+import cn.hutool.core.thread.GlobalThreadPool;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
 
@@ -33,7 +34,9 @@ public class ThreadUtils {
      * @param executeFunction    无参无返回函数接口
      */
     public static void execSupplierNow(ThreadExecuteFunction executeFunction) {
-        THREAD_POOL_TASK_SCHEDULER.execute(executeFunction::execute);
+        GlobalThreadPool.execute(executeFunction::execute);
+//        new Thread(executeFunction::execute).start();
+//        THREAD_POOL_TASK_SCHEDULER.execute(executeFunction::execute);
     }
 
     public static void sleep(long millis) {

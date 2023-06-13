@@ -18,7 +18,7 @@ public class CTSimpleNettyHandler extends NettyChannelInboundHandler<NettyReques
     }
 
     @Override
-    public void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
+    public void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
         super.channelRead0(ctx, msg);
         ClientCallbackService callbackService = CurrentNettyData.removeCallback(respMessage.getMessageId(), ctx.channel());
         if (null != callbackService) {

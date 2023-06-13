@@ -9,6 +9,8 @@ public interface TxConstants {
 
     String FLANCE_TX_RTMP_PREFIX = "flance.tx.rtmp";
 
+    String FLANCE_TX_WS_PREFIX = "flance.tx.ws";
+
     String FLANCE_TX_SERVER_PREFIX = "flance.tx.server";
 
     String FLANCE_TX_CLIENT_PREFIX = "flance.tx.client";

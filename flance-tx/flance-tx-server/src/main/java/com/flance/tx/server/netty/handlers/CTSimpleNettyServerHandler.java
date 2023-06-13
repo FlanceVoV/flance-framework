@@ -24,7 +24,7 @@ public class CTSimpleNettyServerHandler extends NettyChannelInboundHandler<Netty
 
 
     @Override
-    public void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
+    public void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
         super.channelRead0(ctx, msg);
         if (null != message) {
             String writeMsg = DataUtils.getStr(super.message);

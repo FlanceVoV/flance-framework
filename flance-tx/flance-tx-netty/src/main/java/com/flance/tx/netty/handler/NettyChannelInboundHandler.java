@@ -2,6 +2,7 @@ package com.flance.tx.netty.handler;
 
 import com.flance.tx.common.utils.GsonUtils;
 import com.flance.tx.common.utils.StringUtils;
+import com.flance.web.utils.AssertException;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -10,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.nio.charset.StandardCharsets;
 
 @Slf4j
-public abstract class NettyChannelInboundHandler<T, R> extends SimpleChannelInboundHandler<String> {
+public abstract class NettyChannelInboundHandler<T, R> extends SimpleChannelInboundHandler<Object> {
 
     private final IReceiveHandler<T, R> iReceiveHandler;
 
@@ -40,7 +41,7 @@ public abstract class NettyChannelInboundHandler<T, R> extends SimpleChannelInbo
     }
 
     @Override
-    public void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
+    public void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
         int len = 10;
         String receive = "";
         try {
@@ -48,21 +49,25 @@ public abstract class NettyChannelInboundHandler<T, R> extends SimpleChannelInbo
             log.debug("读取到报文 - 原文:{}", msg);
             if (receive.length() < len) {
                 log.info("报文小于10位");
-                return;
+                throw AssertException.getNormal("-1", "报文小于10位");
+            }
+            if (receive.startsWith("$_")) {
+                receive = receive.replaceFirst("\\$_", "");
             }
             String length = receive.substring(0, 10);
             //非数字不处理
             log.debug("报文前十位[{}]", length);
             if (!StringUtils.isNumeric(length)) {
                 log.error("报文前十位非数字[{}]", length);
-                return;
+                throw AssertException.getNormal("-1", "报文前十位非数字[" + length + "]");
             }
             //报文长度小于前四位指定的长度 不处理
-            log.debug("数据报文长度[{}]", receive.getBytes(StandardCharsets.UTF_8).length);
-            log.debug("业务报文长度[{}]", receive.getBytes(StandardCharsets.UTF_8).length - len);
-            if (receive.getBytes(StandardCharsets.UTF_8).length - len < Integer.parseInt(length)) {
-                log.warn("报文长度不够");
-                return;
+            int dataLen = receive.getBytes(StandardCharsets.UTF_8).length;
+            log.debug("数据报文长度[{}]", dataLen);
+            log.debug("业务报文长度[{}]", length);
+            if (dataLen - len != Integer.parseInt(length)) {
+                log.warn("报文长度匹配");
+                throw AssertException.getNormal("-1", "报文长度不匹配header[" + Integer.parseInt(length) + "] data[" + dataLen + "]");
             }
 
             byte[] msgBytes = receive.getBytes(StandardCharsets.UTF_8);
@@ -78,9 +83,12 @@ public abstract class NettyChannelInboundHandler<T, R> extends SimpleChannelInbo
             if (null != this.message) {
                 log.debug("业务报名 - 解码[{}]", GsonUtils.toJSONString(this.message));
             }
+        } catch (AssertException e) {
+            throw e;
         } catch (Exception e) {
             log.error("报文解析异常，报文内容为:" + msg, e);
             ctx.close();
+            e.printStackTrace();
         }
 
     }
