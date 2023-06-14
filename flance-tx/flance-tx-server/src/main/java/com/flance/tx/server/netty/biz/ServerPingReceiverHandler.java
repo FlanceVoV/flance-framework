@@ -7,13 +7,13 @@ import com.flance.tx.server.netty.configs.NettyServerConfig;
 import com.flance.tx.server.netty.utils.ServerUtil;
 import io.netty.channel.Channel;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 
 
 @Slf4j
-@Component("serverPingReceiverHandler")
 public class ServerPingReceiverHandler implements IBizHandler<NettyResponse, NettyRequest> {
 
     @Override

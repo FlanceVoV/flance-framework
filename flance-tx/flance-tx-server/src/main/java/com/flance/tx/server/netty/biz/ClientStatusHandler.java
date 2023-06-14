@@ -6,10 +6,10 @@ import com.flance.tx.netty.data.NettyRequest;
 import com.flance.tx.netty.data.NettyResponse;
 import io.netty.channel.Channel;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.stereotype.Component;
 
 @Slf4j
-@Component("clientStatusHandler")
 public class ClientStatusHandler implements IBizHandler<NettyResponse, NettyRequest> {
 
     @Override

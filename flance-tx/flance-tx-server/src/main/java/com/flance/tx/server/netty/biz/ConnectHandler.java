@@ -8,6 +8,7 @@ import com.flance.tx.netty.data.NettyRequest;
 import com.flance.tx.netty.data.NettyResponse;
 import com.google.common.collect.Maps;
 import io.netty.channel.Channel;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -15,7 +16,6 @@ import java.util.Map;
 /**
  * roomId - 客户端编号
  */
-@Component("connectHandler")
 public class ConnectHandler implements IBizHandler<NettyResponse, NettyRequest> {
 
     @Override
