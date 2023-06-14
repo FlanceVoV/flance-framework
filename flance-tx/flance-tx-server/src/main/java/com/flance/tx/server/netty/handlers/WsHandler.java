@@ -71,8 +71,15 @@ public class WsHandler extends NettyChannelInboundHandler<NettyResponse, NettyRe
             WebSocketServerHandshakerFactory.sendUnsupportedVersionResponse(ctx.channel());
         } else {
             handshaker.handshake(ctx.channel(), req);
-            WebSocketUrlHandler socketUrlHandler = SpringUtil.getBean(path, WebSocketUrlHandler.class);
-            socketUrlHandler.doHandler(ctx.channel(), uri);
+            try {
+                WebSocketUrlHandler socketUrlHandler = SpringUtil.getBean(path, WebSocketUrlHandler.class);
+                socketUrlHandler.doHandler(ctx.channel(), uri);
+            } catch (Exception e) {
+                e.printStackTrace();
+                log.error("获取handler失败[{}]", path);
+                ctx.close();
+            }
+
         }
     }
 
