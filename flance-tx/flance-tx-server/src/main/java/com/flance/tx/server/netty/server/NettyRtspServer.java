@@ -1,6 +1,6 @@
 package com.flance.tx.server.netty.server;
 
-import com.flance.tx.server.netty.configs.NettyRtmpServerConfig;
+import com.flance.tx.server.netty.configs.NettyRtspServerConfig;
 import com.flance.tx.server.netty.handlers.RtspServerHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
@@ -18,11 +18,11 @@ import javax.annotation.Resource;
 
 @Slf4j
 @Component
-public class NettyRtmpServer {
+public class NettyRtspServer {
 
 
     @Resource
-    NettyRtmpServerConfig nettyRtmpServerConfig;
+    NettyRtspServerConfig nettyRtspServerConfig;
 
     private final NioEventLoopGroup boss = new NioEventLoopGroup();
     private final NioEventLoopGroup worker = new NioEventLoopGroup();
@@ -31,7 +31,7 @@ public class NettyRtmpServer {
 
     public ChannelFuture lister() {
 
-        log.info("开启 TC-NETTY-RTMP-SERVER 服务监听[{}] - [{}] - [{}]", nettyRtmpServerConfig.getRtmpServerId(), nettyRtmpServerConfig.getRtmpServerIp(), nettyRtmpServerConfig.getRtmpServerPort());
+        log.info("开启 TC-NETTY-RTSP-SERVER 服务监听[{}] - [{}] - [{}]", nettyRtspServerConfig.getRtspServerId(), nettyRtspServerConfig.getRtspServerIp(), nettyRtspServerConfig.getRtspServerPort());
 
         ChannelFuture future;
 
@@ -47,7 +47,7 @@ public class NettyRtmpServer {
                             socketChannel.pipeline().addLast(new RtspServerHandler());
                         }
                     });
-            future = sb.bind(nettyRtmpServerConfig.getRtmpServerPort()).sync();
+            future = sb.bind(nettyRtspServerConfig.getRtspServerPort()).sync();
             channel = future.channel();
         } catch (Exception e) {
             e.printStackTrace();

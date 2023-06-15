@@ -1,8 +1,8 @@
 package com.flance.tx.server.netty;
 
-import com.flance.tx.server.netty.configs.NettyRtmpServerConfig;
+import com.flance.tx.server.netty.configs.NettyRtspServerConfig;
 import com.flance.tx.server.netty.configs.NettyWebsocketServerConfig;
-import com.flance.tx.server.netty.server.NettyRtmpServer;
+import com.flance.tx.server.netty.server.NettyRtspServer;
 import com.flance.tx.server.netty.server.NettyServer;
 import com.flance.tx.server.netty.server.NettyWebsocketServer;
 import io.netty.channel.ChannelFuture;
@@ -16,13 +16,13 @@ public class NettyServerStartApp implements CommandLineRunner {
     protected NettyServer nettyServer;
 
     @Resource
-    protected NettyRtmpServer nettyRtmpServer;
+    protected NettyRtspServer nettyRtmpServer;
 
     @Resource
     protected NettyWebsocketServer nettyWebsocketServer;
 
     @Resource
-    protected NettyRtmpServerConfig rtmpServerConfig;
+    protected NettyRtspServerConfig rtmpServerConfig;
 
     @Resource
     private NettyWebsocketServerConfig websocketServerConfig;
@@ -30,7 +30,7 @@ public class NettyServerStartApp implements CommandLineRunner {
     @Override
     public void run(String... args) {
         startNettyServer();
-        startNettyRtmpServer();
+        startNettyRtspServer();
         setNettyWebsocketServer();
     }
 
@@ -46,12 +46,12 @@ public class NettyServerStartApp implements CommandLineRunner {
         channelFuture.channel().closeFuture().channel();
     }
 
-    private void startNettyRtmpServer() {
+    private void startNettyRtspServer() {
         if (null == rtmpServerConfig || !rtmpServerConfig.isEnable()) {
             return;
         }
         if (null == nettyRtmpServer) {
-            throw new RuntimeException("无法注入RtmpServer");
+            throw new RuntimeException("无法注入RtspServer");
         }
         ChannelFuture channelFuture = nettyRtmpServer.lister();
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {

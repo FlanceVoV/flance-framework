@@ -7,7 +7,7 @@ public interface TxConstants {
      */
     String FLANCE_TX_PREFIX = "flance.tx";
 
-    String FLANCE_TX_RTMP_PREFIX = "flance.tx.rtmp";
+    String FLANCE_TX_RTSP_PREFIX = "flance.tx.rtsp";
 
     String FLANCE_TX_WS_PREFIX = "flance.tx.ws";
 

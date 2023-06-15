@@ -7,6 +7,7 @@ import com.flance.tx.netty.data.NettyRequest;
 import com.flance.tx.netty.data.NettyResponse;
 import com.flance.tx.netty.handler.IReceiveHandler;
 import com.flance.tx.netty.handler.NettyChannelInboundHandler;
+import com.flance.tx.server.netty.biz.wesocket.WebSocketReleaseHandler;
 import com.flance.tx.server.netty.biz.wesocket.WebSocketUrlHandler;
 import com.flance.web.utils.AssertException;
 import io.netty.buffer.ByteBuf;
@@ -114,6 +115,11 @@ public class WsHandler extends NettyChannelInboundHandler<NettyResponse, NettyRe
         // 关闭
         if (frame instanceof CloseWebSocketFrame) {
             handshaker.close(ctx.channel(), (CloseWebSocketFrame) frame.retain());
+            try {
+                WebSocketReleaseHandler releaseHandler = SpringUtil.getBean("webSocketReleaseHandler", WebSocketReleaseHandler.class);
+                releaseHandler.release();
+            } catch (Exception ignore) {
+            }
             return;
         }
 

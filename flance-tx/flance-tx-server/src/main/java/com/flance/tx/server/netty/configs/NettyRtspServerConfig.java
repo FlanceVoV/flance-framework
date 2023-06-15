@@ -5,20 +5,20 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 import static com.flance.tx.common.TxConstants.FLANCE_TX_PREFIX;
-import static com.flance.tx.common.TxConstants.FLANCE_TX_RTMP_PREFIX;
+import static com.flance.tx.common.TxConstants.FLANCE_TX_RTSP_PREFIX;
 
 @Data
 @Component
-@ConfigurationProperties(prefix = FLANCE_TX_RTMP_PREFIX)
-public class NettyRtmpServerConfig {
+@ConfigurationProperties(prefix = FLANCE_TX_RTSP_PREFIX)
+public class NettyRtspServerConfig {
 
     private boolean enable;
 
-    private String rtmpServerId;
+    private String rtspServerId;
 
-    private String rtmpServerIp;
+    private String rtspServerIp;
 
-    private int rtmpServerPort;
+    private int rtspServerPort;
 
     private String loadBalanceServerIp;
 
