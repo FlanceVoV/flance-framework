@@ -75,6 +75,11 @@ public class WsHandler extends NettyChannelInboundHandler<NettyResponse, NettyRe
             try {
                 WebSocketUrlHandler socketUrlHandler = SpringUtil.getBean(path, WebSocketUrlHandler.class);
                 socketUrlHandler.doHandler(ctx.channel(), uri);
+            } catch (AssertException e) {
+                e.printStackTrace();
+                log.error("执行handler失败[{}]", path);
+                ctx.writeAndFlush(new TextWebSocketFrame("{\"success\":false, \"msg\":\"" + e.getMsg() + "\"}"));
+                ctx.close();
             } catch (Exception e) {
                 e.printStackTrace();
                 log.error("获取handler失败[{}]", path);
