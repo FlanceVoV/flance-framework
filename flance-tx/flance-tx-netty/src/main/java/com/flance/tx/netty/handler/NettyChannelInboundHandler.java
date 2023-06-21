@@ -1,5 +1,6 @@
 package com.flance.tx.netty.handler;
 
+import com.flance.tx.common.netty.RoomContainer;
 import com.flance.tx.common.utils.GsonUtils;
 import com.flance.tx.common.utils.StringUtils;
 import com.flance.web.utils.AssertException;
@@ -84,10 +85,13 @@ public abstract class NettyChannelInboundHandler<T, R> extends SimpleChannelInbo
                 log.debug("业务报名 - 解码[{}]", GsonUtils.toJSONString(this.message));
             }
         } catch (AssertException e) {
+            ctx.close();
+            RoomContainer.release();
             throw e;
         } catch (Exception e) {
             log.error("报文解析异常，报文内容为:" + msg, e);
             ctx.close();
+            RoomContainer.release();
             e.printStackTrace();
         }
 

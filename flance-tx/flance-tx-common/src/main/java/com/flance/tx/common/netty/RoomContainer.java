@@ -75,12 +75,33 @@ public class RoomContainer {
         });
     }
 
+    public synchronized static void release() {
+        CURRENT_ROOM.forEach((k, v) -> {
+            Map<String, Channel> channels = v.getChannels();
+            channels.forEach((k1, v1) -> {
+                if (v1 != null) {
+                    if (!v1.isActive() && !v1.isOpen()) {
+                        try {
+                            v1.flush();
+                        } catch (Exception ignore) {}
+                        try {
+                            v1.close();
+                        } catch (Exception ignore) {}
+                        channels.remove(k);
+                    }
+                } else {
+                    channels.remove(k);
+                }
+            });
+            if (channels.size() == 0) {
+                CURRENT_ROOM.remove(k);
+            }
+        });
+    }
+
     public synchronized static void connectionHeart() {
         CURRENT_ROOM.forEach((key, value) -> {
             Map<String, Channel> channels = value.getChannels();
-            if (channels.size() == 0) {
-                CURRENT_ROOM.remove(key);
-            }
             channels.forEach((k, v) -> {
                 NettyResponse response = new NettyResponse();
                 response.setMessageId(UUID.randomUUID().toString());
@@ -93,6 +114,9 @@ public class RoomContainer {
                     channels.remove(k);
                 }
             });
+            if (channels.size() == 0) {
+                CURRENT_ROOM.remove(key);
+            }
         });
     }
 
