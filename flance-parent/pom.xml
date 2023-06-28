@@ -9,8 +9,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>16</source>
-                    <target>16</target>
+                    <source>17</source>
+                    <target>17</target>
                 </configuration>
             </plugin>
         </plugins>
@@ -433,5 +433,16 @@
         </dependencies>
     </dependencyManagement>
 
+
+    <distributionManagement>
+        <repository>
+            <id>xp-nexus</id>
+            <url>http://47.114.44.106:8081/repository/maven-releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>xp-nexus</id>
+            <url>http://47.114.44.106:8081/repository/maven-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 
 </project>
