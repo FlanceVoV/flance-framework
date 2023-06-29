@@ -15,10 +15,11 @@ public class AssertException extends RuntimeException {
     private String code;
 
     public AssertException() {
-
+        super();
     }
 
     public AssertException(String msg, String code) {
+        super(msg);
         this.msg = msg;
         this.code = code;
     }
