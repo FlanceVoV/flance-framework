@@ -18,6 +18,10 @@ public class RedisStream {
     @Resource
     RedisTemplate<String, String> redisTemplate;
 
+    public long groups(String key) {
+        return redisTemplate.opsForStream().groups(key).stream().count();
+    }
+
     /**
      * 创建消费组
      * @param key
