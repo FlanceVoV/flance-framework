@@ -71,6 +71,9 @@ public class GlobalExceptionAdvice {
     @ExceptionHandler(value = AssertException.class)
     public WebResponse errorHandler(AssertException ex) {
         log.error("系统异常[{}]", ex.getMsg());
+        if (ex.getCause() instanceof AssertException) {
+            return ((AssertException) ex.getCause()).getResponse();
+        }
         return ex.getResponse();
     }
 
