@@ -48,7 +48,7 @@
         <commons-lang.version>3.1</commons-lang.version>
         <activiti.version>7.1.0.M6</activiti.version>
         <netty-all.version>4.1.77.Final</netty-all.version>
-        <mybatis-plus.version>3.4.3.4</mybatis-plus.version>
+        <mybatis-plus.version>3.5.2</mybatis-plus.version>
         <jsqlparser.version>4.3</jsqlparser.version>
         <flance-jdbc-jpa.version>1.0</flance-jdbc-jpa.version>
         <flance-web-common.version>1.0</flance-web-common.version>
