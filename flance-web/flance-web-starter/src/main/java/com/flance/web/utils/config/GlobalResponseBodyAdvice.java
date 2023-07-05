@@ -78,7 +78,13 @@ public class GlobalResponseBodyAdvice implements ResponseBodyAdvice<Object> {
             }
 
         }
-        log.info("接口响应：" + GsonUtils.toJSONString(result));
+        String resultStr = GsonUtils.toJSONString(result);
+        if (resultStr.length() < 1000) {
+            log.info("接口响应：" + resultStr);
+        } else {
+            log.info("接口响应：" + resultStr.substring(0, 1000) + "...");
+            log.debug("接口响应：" + resultStr);
+        }
         return result;
     }
 
