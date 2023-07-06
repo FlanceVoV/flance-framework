@@ -1,7 +1,9 @@
 package com.flance.tx.server.netty;
 
 import com.flance.tx.server.netty.configs.NettyRtspServerConfig;
+import com.flance.tx.server.netty.configs.NettyTCPServerConfig;
 import com.flance.tx.server.netty.configs.NettyWebsocketServerConfig;
+import com.flance.tx.server.netty.server.NettyNormalTCPServer;
 import com.flance.tx.server.netty.server.NettyRtspServer;
 import com.flance.tx.server.netty.server.NettyServer;
 import com.flance.tx.server.netty.server.NettyWebsocketServer;
@@ -19,6 +21,9 @@ public class NettyServerStartApp implements CommandLineRunner {
     protected NettyRtspServer nettyRtmpServer;
 
     @Resource
+    private NettyNormalTCPServer nettyNormalTCPServer;
+
+    @Resource
     protected NettyWebsocketServer nettyWebsocketServer;
 
     @Resource
@@ -27,11 +32,15 @@ public class NettyServerStartApp implements CommandLineRunner {
     @Resource
     private NettyWebsocketServerConfig websocketServerConfig;
 
+    @Resource
+    private NettyTCPServerConfig nettyTCPServerConfig;
+
     @Override
     public void run(String... args) {
         startNettyServer();
         startNettyRtspServer();
         setNettyWebsocketServer();
+        setNettyTcpServer();
     }
 
 
@@ -70,6 +79,20 @@ public class NettyServerStartApp implements CommandLineRunner {
         ChannelFuture channelFuture = nettyWebsocketServer.lister();
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             nettyWebsocketServer.destroy();
+        }));
+        channelFuture.channel().closeFuture().channel();
+    }
+
+    private void setNettyTcpServer() {
+        if (null == nettyTCPServerConfig || !nettyTCPServerConfig.isEnable()) {
+            return;
+        }
+        if (null == nettyNormalTCPServer) {
+            throw new RuntimeException("无法注入TCPServer");
+        }
+        ChannelFuture channelFuture = nettyNormalTCPServer.lister();
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            nettyNormalTCPServer.destroy();
         }));
         channelFuture.channel().closeFuture().channel();
     }
