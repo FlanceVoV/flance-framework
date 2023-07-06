@@ -5,6 +5,8 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.extern.slf4j.Slf4j;
 
+import java.nio.charset.StandardCharsets;
+
 @Slf4j
 public class TCPHandler extends ChannelInboundHandlerAdapter {
 
@@ -17,8 +19,9 @@ public class TCPHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        String body = (String) msg;
-        log.info("接收到tcp消息：[{}]", msg);
+        byte[] arr = (byte[]) msg;
+        String body = new String(arr, StandardCharsets.UTF_8);
+        log.info("接收到tcp消息：[{}]", body);
         String resp = tcpReceiveHandler.handler(body, ctx.channel());
         log.info("处理完成：[{}]", resp);
         if (null != resp) {
