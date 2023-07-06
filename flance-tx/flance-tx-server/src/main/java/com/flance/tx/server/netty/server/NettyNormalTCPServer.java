@@ -57,8 +57,8 @@ public class NettyNormalTCPServer {
                         @Override
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
                             socketChannel.pipeline().addLast(new CustomByteToMsgCode(customProtocol));
-                            socketChannel.pipeline().addLast(new ByteArrayEncoder());
-                            socketChannel.pipeline().addLast(new ByteArrayDecoder());
+                            socketChannel.pipeline().addLast(new StringEncoder());
+                            socketChannel.pipeline().addLast(new StringDecoder());
                             socketChannel.pipeline().addLast(new TCPHandler(iTcpReceiveHandler));
                         }
                     });
