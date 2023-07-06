@@ -1,5 +1,7 @@
 package com.flance.tx.server.netty.server;
 
+import com.flance.tx.netty.handler.CustomByteToMsgCode;
+import com.flance.tx.netty.handler.CustomProtocol;
 import com.flance.tx.netty.handler.ITcpReceiveHandler;
 import com.flance.tx.netty.handler.MsgByteToMessageCodec;
 import com.flance.tx.server.netty.configs.NettyTCPServerConfig;
@@ -32,6 +34,9 @@ public class NettyNormalTCPServer {
     @Resource
     ITcpReceiveHandler iTcpReceiveHandler;
 
+    @Resource
+    CustomProtocol customProtocol;
+
 
     private final NioEventLoopGroup boss = new NioEventLoopGroup();
     private final NioEventLoopGroup worker = new NioEventLoopGroup();
@@ -51,7 +56,7 @@ public class NettyNormalTCPServer {
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
-                            socketChannel.pipeline().addLast(new LineBasedFrameDecoder(1024));
+                            socketChannel.pipeline().addLast(new CustomByteToMsgCode(customProtocol));
                             socketChannel.pipeline().addLast(new ByteArrayEncoder());
                             socketChannel.pipeline().addLast(new ByteArrayDecoder());
                             socketChannel.pipeline().addLast(new TCPHandler(iTcpReceiveHandler));
