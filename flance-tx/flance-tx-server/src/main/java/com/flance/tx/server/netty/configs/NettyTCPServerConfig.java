@@ -13,6 +13,8 @@ public class NettyTCPServerConfig {
 
     private boolean enable;
 
+    private String customEnd;
+
     private String tcpServerId;
 
     private String tcpServerIp;

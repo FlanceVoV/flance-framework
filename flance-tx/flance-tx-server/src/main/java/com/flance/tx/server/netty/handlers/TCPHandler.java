@@ -19,8 +19,12 @@ public class TCPHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        byte[] arr = (byte[]) msg;
-        String body = new String(arr, StandardCharsets.UTF_8);
+        String body;
+        if (msg instanceof byte[] arr) {
+            body = new String(arr, StandardCharsets.UTF_8);
+        } else {
+            body = (String) msg;
+        }
         log.info("接收到tcp消息：[{}]", body);
         String resp = tcpReceiveHandler.handler(body, ctx.channel());
         log.info("处理完成：[{}]", resp);
