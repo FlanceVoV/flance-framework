@@ -4,6 +4,8 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 import static com.flance.tx.common.TxConstants.FLANCE_TX_TCP_PREFIX;
 
 @Data
@@ -13,7 +15,7 @@ public class NettyTCPServerConfig {
 
     private boolean enable;
 
-    private String customEnd;
+    private List<String> customEnds;
 
     private String tcpServerId;
 
