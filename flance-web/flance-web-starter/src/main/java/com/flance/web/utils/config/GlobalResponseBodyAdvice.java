@@ -25,7 +25,7 @@ import java.util.Map;
 @ControllerAdvice
 public class GlobalResponseBodyAdvice implements ResponseBodyAdvice<Object> {
 
-    @Value("${flance.response.advice::#{null}}")
+    @Value("${flance.response.advice:#{null}}")
     private List<String> ignoreUrl;
 
     @Override
