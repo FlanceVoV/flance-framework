@@ -91,6 +91,9 @@ public class GlobalResponseBodyAdvice implements ResponseBodyAdvice<Object> {
 
 
     private boolean ignore(String url) {
+        if (null == ignoreUrl) {
+            return false;
+        }
         return UrlMatchUtil.matchUrl(url, ignoreUrl);
     }
 
