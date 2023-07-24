@@ -18,6 +18,7 @@ import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
@@ -25,8 +26,8 @@ import java.util.Map;
 @ControllerAdvice
 public class GlobalResponseBodyAdvice implements ResponseBodyAdvice<Object> {
 
-    @Value("${flance.response.advice:#{null}}")
-    private List<String> ignoreUrl;
+    @Resource
+    private GlobalResponseBodyAdviceConfig globalResponseBodyAdviceConfig;
 
     @Override
     public boolean supports(MethodParameter methodParameter, Class<? extends HttpMessageConverter<?>> clazz) {
@@ -45,7 +46,7 @@ public class GlobalResponseBodyAdvice implements ResponseBodyAdvice<Object> {
         }
         response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
         if (body instanceof WebResponse ||
-                ignore(request.getURI().toString())) {
+                ignore(request.getURI().getPath())) {
             result = body;
         } else if (body instanceof String) {
             ObjectMapper mapper = new ObjectMapper();
@@ -91,10 +92,10 @@ public class GlobalResponseBodyAdvice implements ResponseBodyAdvice<Object> {
 
 
     private boolean ignore(String url) {
-        if (null == ignoreUrl) {
+        if (null == globalResponseBodyAdviceConfig || null == globalResponseBodyAdviceConfig.getIgnoreUrls() || globalResponseBodyAdviceConfig.getIgnoreUrls().size() == 0) {
             return false;
         }
-        return UrlMatchUtil.matchUrl(url, ignoreUrl);
+        return UrlMatchUtil.matchUrl(url, globalResponseBodyAdviceConfig.getIgnoreUrls());
     }
 
 }
