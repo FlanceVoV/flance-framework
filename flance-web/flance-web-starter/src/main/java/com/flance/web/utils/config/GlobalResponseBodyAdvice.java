@@ -6,6 +6,7 @@ import com.flance.web.utils.GsonUtils;
 import com.flance.web.utils.UrlMatchUtil;
 import com.flance.web.utils.exception.BaseException;
 import com.flance.web.utils.web.response.WebResponse;
+import com.google.common.collect.Lists;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,6 +26,9 @@ import java.util.Map;
 @Slf4j
 @ControllerAdvice
 public class GlobalResponseBodyAdvice implements ResponseBodyAdvice<Object> {
+
+    @Resource
+    private Knife4jConfig knife4jConfig;
 
     @Resource
     private GlobalResponseBodyAdviceConfig globalResponseBodyAdviceConfig;
@@ -92,6 +96,13 @@ public class GlobalResponseBodyAdvice implements ResponseBodyAdvice<Object> {
 
 
     private boolean ignore(String url) {
+        if (null != knife4jConfig) {
+            String basePath = knife4jConfig.getServletContext() == null ? "/" : knife4jConfig.getServletContext();
+            List<String> apiDoc = Lists.newArrayList(basePath + "/swagger-resources", basePath + "/swagger-resources/*", basePath + "/" + knife4jConfig.getVersion() + "/*", basePath + "/v3/*");
+            if (UrlMatchUtil.matchUrl(url, apiDoc)) {
+                return true;
+            }
+        }
         if (null == globalResponseBodyAdviceConfig || null == globalResponseBodyAdviceConfig.getIgnoreUrls() || globalResponseBodyAdviceConfig.getIgnoreUrls().size() == 0) {
             return false;
         }
