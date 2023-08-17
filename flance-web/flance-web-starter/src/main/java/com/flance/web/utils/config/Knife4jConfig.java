@@ -6,7 +6,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import org.springframework.stereotype.Component;
 
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 
 @Data

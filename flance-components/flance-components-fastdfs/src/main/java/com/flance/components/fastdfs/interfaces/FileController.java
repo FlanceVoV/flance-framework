@@ -9,8 +9,8 @@ import com.flance.components.fastdfs.infrastructure.utils.FastDfsClient;
 import com.flance.web.utils.web.response.WebResponse;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * fastdfs文件服务接口

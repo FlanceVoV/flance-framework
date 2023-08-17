@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.SmartLifecycle;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,12 +47,12 @@ public class Lifecycle implements SmartLifecycle {
         log.info("flance-nacos加载器-注册表-本机权重[{}]", nacosConfigs.getWeight());
         log.info("flance-nacos加载器-注册表-本服务集群名称[{}]", nacosConfigs.getClusterName());
 
-        List<Instance> list = nacosController.getAllInstance();
-        list.forEach(instance -> log.info("flance-nacos加载器-本服务所有实例-[[{}]-[{}]-[{}:{}]]",
-                instance.getServiceName(),
-                instance.getWeight(),
-                instance.getIp(),
-                instance.getPort()));
+//        List<Instance> list = nacosController.getAllInstance();
+//        list.forEach(instance -> log.info("flance-nacos加载器-本服务所有实例-[[{}]-[{}]-[{}:{}]]",
+//                instance.getServiceName(),
+//                instance.getWeight(),
+//                instance.getIp(),
+//                instance.getPort()));
 
         log.info("flance-nacos加载器-内置api-服务下线-[NacosController.offline]");
         log.info("flance-nacos加载器-内置api-nacos服务状态-[NacosController.nacosServerStatus]");

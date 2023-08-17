@@ -13,7 +13,7 @@ import org.springframework.security.jwt.crypto.sign.SignatureVerifier;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.security.interfaces.RSAPublicKey;
 import java.util.Map;
 

@@ -1,2 +1,2 @@
-org.springframework.boot.env.EnvironmentPostProcessor=\
-com.flance.web.utils.config.Knife4jConfigAccept
+#org.springframework.boot.env.EnvironmentPostProcessor=\
+#com.flance.web.utils.config.Knife4jConfigAccept

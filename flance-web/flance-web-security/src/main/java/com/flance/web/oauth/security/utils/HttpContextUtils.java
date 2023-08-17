@@ -2,8 +2,8 @@ package com.flance.web.oauth.security.utils;
 
 import com.google.common.collect.Maps;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;

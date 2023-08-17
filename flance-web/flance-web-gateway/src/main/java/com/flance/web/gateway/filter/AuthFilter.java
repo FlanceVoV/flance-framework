@@ -22,7 +22,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.UUID;

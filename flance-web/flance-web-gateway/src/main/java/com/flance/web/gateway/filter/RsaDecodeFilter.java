@@ -18,7 +18,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * rsa解密filter

@@ -28,10 +28,10 @@
     <modules>
 <!--        <module>flance-components-fastdfs</module>-->
         <module>flance-components-activiti</module>
-        <module>flance-components-form</module>
-        <module>flance-components-questionbank</module>
+<!--        <module>flance-components-form</module>-->
+<!--        <module>flance-components-questionbank</module>-->
         <module>flance-components-es</module>
-        <module>flance-components-logs</module>
+<!--        <module>flance-components-logs</module>-->
 <!--        <module>flance-components-minio</module>-->
         <module>flance-components-kafka</module>
         <module>flance-components-oss</module>

@@ -13,8 +13,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.Resource;
 import java.util.List;
 
 
@@ -35,7 +35,7 @@ public class NacosConfigs {
     @Value("${spring.cloud.nacos.discovery.namespace}")
     private String nacosDiscoveryNamespace;
 
-    @Value("${spring.cloud.nacos.discovery.server-addr}")
+    @Value("${spring.cloud.nacos.server-addr}")
     private String nacosDiscoveryServerAddress;
 
     @Value("${spring.cloud.nacos.discovery.group}")
@@ -44,7 +44,7 @@ public class NacosConfigs {
     @Value("${spring.cloud.nacos.config.namespace}")
     private String nacosConfigNamespace;
 
-    @Value("${spring.cloud.nacos.config.server-addr}")
+    @Value("${spring.cloud.nacos.server-addr}")
     private String nacosConfigServerAddress;
 
     @Value("${server.servlet.context-path:/}")

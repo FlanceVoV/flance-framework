@@ -10,7 +10,7 @@ import com.flance.tx.server.netty.server.NettyWebsocketServer;
 import io.netty.channel.ChannelFuture;
 import org.springframework.boot.CommandLineRunner;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 public class NettyServerStartApp implements CommandLineRunner {
 

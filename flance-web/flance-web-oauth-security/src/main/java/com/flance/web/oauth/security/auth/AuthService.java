@@ -20,7 +20,7 @@ import org.springframework.util.AntPathMatcher;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.List;

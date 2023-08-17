@@ -19,7 +19,7 @@ import org.springframework.cloud.gateway.route.RouteDefinition;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;

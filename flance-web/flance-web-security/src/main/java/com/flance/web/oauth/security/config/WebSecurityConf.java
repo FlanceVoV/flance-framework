@@ -13,7 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * 继承security适配器，配置登录拦截、登录成功失败及登出的处理器、注入密码生成策略bean

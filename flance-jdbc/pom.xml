@@ -26,12 +26,12 @@
     <packaging>pom</packaging>
     <version>1.0</version>
     <modules>
-        <module>flance-jdbc-jpa</module>
-        <module>flance-jdbc-jpa-web</module>
+<!--        <module>flance-jdbc-jpa</module>-->
+<!--        <module>flance-jdbc-jpa-web</module>-->
         <module>flance-jdbc-mybatis</module>
         <module>flance-jdbc-mybatis-web</module>
 <!--        <module>flance-jdbc-jpa-simple</module>-->
-        <module>flance-jdbc-jpa-simple-token</module>
+<!--        <module>flance-jdbc-jpa-simple-token</module>-->
         <module>flance-jdbc-binlog</module>
         <!--        <module>flance-jdbc-mysql-antlr</module>-->
     </modules>

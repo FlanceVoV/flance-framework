@@ -9,8 +9,8 @@ import org.springframework.security.web.session.SessionInformationExpiredEvent;
 import org.springframework.security.web.session.SessionInformationExpiredStrategy;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
-import javax.servlet.ServletException;
+import jakarta.annotation.Resource;
+import jakarta.servlet.ServletException;
 import java.io.IOException;
 
 /**

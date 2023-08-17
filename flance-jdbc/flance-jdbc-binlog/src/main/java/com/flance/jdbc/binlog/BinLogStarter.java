@@ -11,7 +11,7 @@ import com.github.shyiko.mysql.binlog.BinaryLogClient;
 import com.google.common.collect.Lists;
 import org.springframework.boot.CommandLineRunner;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 

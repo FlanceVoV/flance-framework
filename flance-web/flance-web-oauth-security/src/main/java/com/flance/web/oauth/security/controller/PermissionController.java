@@ -6,7 +6,7 @@ import com.flance.web.utils.web.request.WebRequest;
 import com.flance.web.utils.web.response.WebResponse;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * 权限认证

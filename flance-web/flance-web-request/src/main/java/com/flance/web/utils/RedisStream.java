@@ -1,6 +1,7 @@
 package com.flance.web.utils;
 
 import com.google.common.collect.Maps;
+import jakarta.annotation.Resource;
 import org.springframework.data.redis.connection.stream.MapRecord;
 import org.springframework.data.redis.connection.stream.RecordId;
 import org.springframework.data.redis.connection.stream.StreamInfo;
@@ -8,7 +9,6 @@ import org.springframework.data.redis.connection.stream.StreamOffset;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 

@@ -2,8 +2,8 @@ package com.flance.web.common.utils;
 
 import com.google.gson.Gson;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import java.net.URLDecoder;
 
 /**
