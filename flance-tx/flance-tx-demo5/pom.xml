@@ -5,7 +5,7 @@
     <parent>
         <artifactId>flance-tx</artifactId>
         <groupId>com.flance</groupId>
-        <version>1.0</version>
+        <version>2.0-springboot3.0.2</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -26,7 +26,7 @@
         <dependency>
             <groupId>com.flance</groupId>
             <artifactId>flance-tx-starter</artifactId>
-            <version>1.0</version>
+            <version>2.0-springboot3.0.2</version>
             <exclusions>
                 <exclusion>
                     <groupId>com.flance</groupId>

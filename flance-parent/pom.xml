@@ -3,18 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>17</source>
-                    <target>17</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -25,7 +14,7 @@
 
     <groupId>com.flance</groupId>
     <artifactId>flance-parent</artifactId>
-    <version>1.0</version>
+    <version>2.0-springboot3.0.2</version>
     <packaging>pom</packaging>
 
     <properties>
@@ -50,36 +39,36 @@
         <netty-all.version>4.1.77.Final</netty-all.version>
         <mybatis-plus.version>3.5.3.1</mybatis-plus.version>
         <jsqlparser.version>4.3</jsqlparser.version>
-        <flance-jdbc-jpa.version>1.0</flance-jdbc-jpa.version>
-        <flance-web-common.version>1.0</flance-web-common.version>
-        <flance-jdbc-jpa-web.version>1.0</flance-jdbc-jpa-web.version>
-        <flance-jdbc-binlog.version>1.0</flance-jdbc-binlog.version>
-        <flance-jdbc-jpa-simple.version>1.0</flance-jdbc-jpa-simple.version>
-        <flance-jdbc-mybatis.version>1.0</flance-jdbc-mybatis.version>
-        <flance-jdbc-mybatis-web.version>1.0</flance-jdbc-mybatis-web.version>
-        <flance-web-auth.version>1.0</flance-web-auth.version>
-        <flance-web-gateway.version>1.0</flance-web-gateway.version>
-        <flance-web-security.version>1.0</flance-web-security.version>
-        <flance-web-security-common.version>1.0</flance-web-security-common.version>
-        <flance-web-oauth-security.version>1.0</flance-web-oauth-security.version>
-        <flance-web-starter.version>1.0</flance-web-starter.version>
-        <flance-web-feign.version>1.0</flance-web-feign.version>
-        <flance-tx-config.version>1.0</flance-tx-config.version>
-        <flance-tx-client.version>1.0</flance-tx-client.version>
-        <flance-tx-core.version>1.0</flance-tx-core.version>
-        <flance-tx-datasource.version>1.0</flance-tx-datasource.version>
-        <flance-tx-netty.version>1.0</flance-tx-netty.version>
-        <flance-tx-server.version>1.0</flance-tx-server.version>
-        <flance-tx-feign.version>1.0</flance-tx-feign.version>
-        <flance-tx-common.version>1.0</flance-tx-common.version>
-        <flance-tx-tcserver.version>1.0</flance-tx-tcserver.version>
-        <flance-tx-starter.version>1.0</flance-tx-starter.version>
-        <flance-components-fastdfs.version>1.0</flance-components-fastdfs.version>
-        <flance-components-form.version>1.0</flance-components-form.version>
-        <flance-components-questionbank>1.0</flance-components-questionbank>
-        <flance-components-kafka>1.0</flance-components-kafka>
-        <flance-web-request>1.0</flance-web-request>
-        <flance-web-nacos.version>1.0</flance-web-nacos.version>
+        <flance-jdbc-jpa.version>2.0-springboot3.0.2</flance-jdbc-jpa.version>
+        <flance-web-common.version>2.0-springboot3.0.2</flance-web-common.version>
+        <flance-jdbc-jpa-web.version>2.0-springboot3.0.2</flance-jdbc-jpa-web.version>
+        <flance-jdbc-binlog.version>2.0-springboot3.0.2</flance-jdbc-binlog.version>
+        <flance-jdbc-jpa-simple.version>2.0-springboot3.0.2</flance-jdbc-jpa-simple.version>
+        <flance-jdbc-mybatis.version>2.0-springboot3.0.2</flance-jdbc-mybatis.version>
+        <flance-jdbc-mybatis-web.version>2.0-springboot3.0.2</flance-jdbc-mybatis-web.version>
+        <flance-web-auth.version>2.0-springboot3.0.2</flance-web-auth.version>
+        <flance-web-gateway.version>2.0-springboot3.0.2</flance-web-gateway.version>
+        <flance-web-security.version>2.0-springboot3.0.2</flance-web-security.version>
+        <flance-web-security-common.version>2.0-springboot3.0.2</flance-web-security-common.version>
+        <flance-web-oauth-security.version>2.0-springboot3.0.2</flance-web-oauth-security.version>
+        <flance-web-starter.version>2.0-springboot3.0.2</flance-web-starter.version>
+        <flance-web-feign.version>2.0-springboot3.0.2</flance-web-feign.version>
+        <flance-tx-config.version>2.0-springboot3.0.2</flance-tx-config.version>
+        <flance-tx-client.version>2.0-springboot3.0.2</flance-tx-client.version>
+        <flance-tx-core.version>2.0-springboot3.0.2</flance-tx-core.version>
+        <flance-tx-datasource.version>2.0-springboot3.0.2</flance-tx-datasource.version>
+        <flance-tx-netty.version>2.0-springboot3.0.2</flance-tx-netty.version>
+        <flance-tx-server.version>2.0-springboot3.0.2</flance-tx-server.version>
+        <flance-tx-feign.version>2.0-springboot3.0.2</flance-tx-feign.version>
+        <flance-tx-common.version>2.0-springboot3.0.2</flance-tx-common.version>
+        <flance-tx-tcserver.version>2.0-springboot3.0.2</flance-tx-tcserver.version>
+        <flance-tx-starter.version>2.0-springboot3.0.2</flance-tx-starter.version>
+        <flance-components-fastdfs.version>2.0-springboot3.0.2</flance-components-fastdfs.version>
+        <flance-components-form.version>2.0-springboot3.0.2</flance-components-form.version>
+        <flance-components-questionbank>2.0-springboot3.0.2</flance-components-questionbank>
+        <flance-components-kafka>2.0-springboot3.0.2</flance-components-kafka>
+        <flance-web-request>2.0-springboot3.0.2</flance-web-request>
+        <flance-web-nacos.version>2.0-springboot3.0</flance-web-nacos.version>
         <alibaba-transmittable.version>2.2.0</alibaba-transmittable.version>
         <cglib.version>3.1</cglib.version>
         <slf4j.version>2.0.6</slf4j.version>
@@ -442,15 +431,15 @@
     </dependencyManagement>
 
 
-<!--    <distributionManagement>-->
-<!--        <repository>-->
-<!--            <id>xp-nexus</id>-->
-<!--            <url>http://47.114.44.106:8081/repository/maven-releases/</url>-->
-<!--        </repository>-->
-<!--        <snapshotRepository>-->
-<!--            <id>xp-nexus</id>-->
-<!--            <url>http://47.114.44.106:8081/repository/maven-snapshots/</url>-->
-<!--        </snapshotRepository>-->
-<!--    </distributionManagement>-->
+    <distributionManagement>
+        <repository>
+            <id>xp-nexus</id>
+            <url>http://47.114.44.106:8081/repository/maven-releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>xp-nexus</id>
+            <url>http://47.114.44.106:8081/repository/maven-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 
 </project>
