@@ -34,6 +34,10 @@ public class FeignInterceptor implements RequestInterceptor {
             while (headerNames.hasMoreElements()) {
                 String name = headerNames.nextElement();
                 String values = request.getHeader(name);
+                // 跳过content-length，不然可能会报too many bites written问题
+                if ("content-length".equalsIgnoreCase(name)) {
+                    continue;
+                }
                 requestTemplate.header(name, values);
             }
         }
