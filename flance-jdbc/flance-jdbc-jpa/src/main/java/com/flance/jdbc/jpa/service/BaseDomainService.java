@@ -290,6 +290,9 @@ public abstract class BaseDomainService<PO, DTO, VO, DO, ID extends Serializable
                 Path path = root;
 
                 String[] keys = StringUtils.split(key, ".");
+                if (keys == null) {
+                    keys = new String[]{key};
+                }
                 String[] keyArr = keys;
                 int keyLength = keys.length;
                 Object setValue = value;
@@ -323,6 +326,9 @@ public abstract class BaseDomainService<PO, DTO, VO, DO, ID extends Serializable
         return (root, criteriaQuery, criteriaBuilder) -> {
             Path path = root;
             String[] keys = StringUtils.split(propertyName, ".");
+            if (keys == null) {
+                keys = new String[]{propertyName};
+            }
             String[] keyArr = keys;
             int keyLength = keys.length;
             Object setValue = propertyValue;

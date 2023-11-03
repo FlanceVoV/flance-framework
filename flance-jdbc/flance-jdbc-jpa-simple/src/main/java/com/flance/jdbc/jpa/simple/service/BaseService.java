@@ -1,18 +1,13 @@
-package com.flance.jdbc.jpa.simple.service;
+package com.lz.instructure.framework.core;
 
 import com.alibaba.fastjson.JSONObject;
-import com.flance.jdbc.jpa.simple.common.jdbc.Operator;
-import com.flance.jdbc.jpa.simple.common.jdbc.QueryLocal;
-import com.flance.jdbc.jpa.simple.common.jdbc.QueryUtils;
-import com.flance.jdbc.jpa.simple.common.jdbc.UpdateUtils;
-import com.flance.jdbc.jpa.simple.common.request.PageResponse;
-import com.flance.jdbc.jpa.simple.dao.BaseRepository;
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Table;
+import com.lz.instructure.framework.core.request.PageResponse;
+import com.lz.instructure.framework.jdbc.Operator;
+import com.lz.instructure.framework.jdbc.QueryLocal;
+import com.lz.instructure.framework.jdbc.QueryUtils;
+import com.lz.instructure.framework.jdbc.UpdateUtils;
+import com.lz.instructure.framework.jdbc.ext.BaseRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +16,12 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
+
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Table;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -302,6 +303,9 @@ public abstract class BaseService<T, ID extends Serializable> implements IServic
                     key = key.split("_")[1];
                 }
                 String[] keys = StringUtils.split(key, ".");
+                if (keys == null) {
+                    keys = new String[]{key};
+                }
                 String[] keyArr = keys;
                 int keyLength = keys.length;
                 Object setValue = value;
@@ -335,6 +339,9 @@ public abstract class BaseService<T, ID extends Serializable> implements IServic
         return (root, criteriaQuery, criteriaBuilder) -> {
             Path path = root;
             String[] keys = StringUtils.split(propertyName, ".");
+            if (keys == null) {
+                keys = new String[]{propertyName};
+            }
             String[] keyArr = keys;
             int keyLength = keys.length;
             Object setValue = propertyValue;
