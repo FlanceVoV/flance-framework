@@ -62,9 +62,13 @@ public class GlobalExceptionAdvice {
     @ResponseBody
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     public WebResponse errorHandler(MethodArgumentNotValidException ex) {
-        log.error("参数校验异常[{}]", ex.getMessage());
         ex.printStackTrace();
-        return WebResponse.getFailed("-1", "参数校验异常[{" + ex.getMessage() + "}]");
+        log.error("参数校验异常[{}]", ex.getMessage());
+        if (null == ex.getBindingResult().getFieldError()) {
+            return WebResponse.getFailed("-1", "参数校验异常[{" + ex.getMessage() + "}]");
+        }
+        String message = ex.getBindingResult().getFieldError().getDefaultMessage();
+        return WebResponse.getFailed("-1", "参数校验异常[{" + message + "}]");
     }
 
     @ResponseBody
