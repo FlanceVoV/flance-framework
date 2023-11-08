@@ -1,6 +1,7 @@
 package com.flance.web.gateway.filter;
 
 import com.flance.web.gateway.service.GatewayService;
+import com.flance.web.utils.RedisUtils;
 import com.flance.web.utils.RequestConstant;
 import com.flance.web.utils.RequestUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,9 @@ public class GlobalGatewayFilter implements GlobalFilter, Ordered {
     @Resource
     GatewayService gatewayService;
 
+    @Resource
+    RedisUtils redisUtils;
+
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         String uri = exchange.getRequest().getURI().getPath();
@@ -30,6 +34,7 @@ public class GlobalGatewayFilter implements GlobalFilter, Ordered {
         String requestId =  exchange.getRequest().getHeaders().getFirst(RequestConstant.HEADER_REQUEST_ID);
         String headerLogId = exchange.getRequest().getHeaders().getFirst(RequestConstant.HEADER_LOG_ID);
         String setLogId = RequestUtil.getLogId(headerLogId);
+        String appId = exchange.getRequest().getHeaders().getFirst(RequestConstant.HEADER_APP_ID);
         String headerChain = exchange.getRequest().getHeaders().getFirst(RequestConstant.HEADER_REQUEST_CHAIN);
         if (!StringUtils.hasLength(requestId)) {
             requestId = uri;
@@ -42,7 +47,11 @@ public class GlobalGatewayFilter implements GlobalFilter, Ordered {
         exchange.getRequest().mutate()
                 .headers(header -> {
                     if (null != token) {
+                        String userInfo = redisUtils.get(RequestConstant.SYS_TOKEN_KEY + appId + ":" + token);
                         header.set(RequestConstant.HEADER_TOKEN, token);
+                        if (null != userInfo) {
+                            header.set(RequestConstant.HEADER_USER_INFO, userInfo);
+                        }
                     }
                     header.set(RequestConstant.HEADER_LOG_ID, setLogId);
                     header.set(RequestConstant.HEADER_REQUEST_CHAIN, requestChain + " -> [gateway]");
