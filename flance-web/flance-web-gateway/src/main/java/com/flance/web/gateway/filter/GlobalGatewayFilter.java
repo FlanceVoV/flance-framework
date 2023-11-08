@@ -47,10 +47,12 @@ public class GlobalGatewayFilter implements GlobalFilter, Ordered {
         exchange.getRequest().mutate()
                 .headers(header -> {
                     if (null != token) {
-                        String userInfo = redisUtils.get(RequestConstant.SYS_TOKEN_KEY + appId + ":" + token);
+                        String tokenKey = RequestConstant.SYS_TOKEN_KEY + appId + ":" + token;
+                        String userInfo = redisUtils.get(tokenKey);
                         header.set(RequestConstant.HEADER_TOKEN, token);
                         if (null != userInfo) {
                             header.set(RequestConstant.HEADER_USER_INFO, userInfo);
+                            redisUtils.setExp(tokenKey, 7200L);
                         }
                     }
                     header.set(RequestConstant.HEADER_LOG_ID, setLogId);
