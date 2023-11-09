@@ -28,6 +28,7 @@ public class GsonUtils {
         Gson gson = new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd HH:mm:ss")
                 .registerTypeAdapter(LocalDateTime.class, new LocalDataTypeAdapter())
+                .registerTypeAdapter(new TypeToken<Map>(){}.getType(), new MapTypeAdapter())
                 .disableHtmlEscaping().create();
         return gson.toJson(obj);
     }
