@@ -26,9 +26,9 @@ public class GsonUtils {
      */
     public static String toJSONString(Object obj) {
         Gson gson = new GsonBuilder()
+                .setNumberToNumberStrategy(ToNumberPolicy.LAZILY_PARSED_NUMBER)
                 .setDateFormat("yyyy-MM-dd HH:mm:ss")
                 .registerTypeAdapter(LocalDateTime.class, new LocalDataTypeAdapter())
-                .registerTypeAdapter(new TypeToken<Map>(){}.getType(), new MapTypeAdapter())
                 .disableHtmlEscaping().create();
         return gson.toJson(obj);
     }
