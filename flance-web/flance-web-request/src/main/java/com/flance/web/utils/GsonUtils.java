@@ -39,6 +39,7 @@ public class GsonUtils {
     public static String toJSONStringWithNull(Object obj) {
         Gson gson = new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd HH:mm:ss")
+                .setNumberToNumberStrategy(ToNumberPolicy.LAZILY_PARSED_NUMBER)
                 .registerTypeAdapter(LocalDateTime.class, new LocalDataTypeAdapter())
                 .serializeNulls().disableHtmlEscaping().create();
         return gson.toJson(obj);
@@ -47,6 +48,7 @@ public class GsonUtils {
     public static <T> T fromString(String str, Class<T> clazz) {
         Gson gson = new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd HH:mm:ss")
+                .setNumberToNumberStrategy(ToNumberPolicy.LAZILY_PARSED_NUMBER)
                 .registerTypeAdapter(LocalDateTime.class, new LocalDataTypeAdapter())
                 .registerTypeAdapter(new TypeToken<Map>(){}.getType(), new MapTypeAdapter())
                 .disableHtmlEscaping().create();
@@ -57,6 +59,7 @@ public class GsonUtils {
     public static <T> T fromStringParse(String str, Class<T> clazz) {
         Gson gson = new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd HH:mm:ss")
+                .setNumberToNumberStrategy(ToNumberPolicy.LAZILY_PARSED_NUMBER)
                 .registerTypeAdapter(LocalDateTime.class, new LocalDataTypeAdapter())
                 .registerTypeAdapter(new TypeToken<Map>(){}.getType(), new MapTypeAdapter())
                 .disableHtmlEscaping().setFieldNamingStrategy(getLineToHump()).create();
@@ -66,6 +69,7 @@ public class GsonUtils {
     public static <T> Collection<T> fromStringArray(String str, Class<T> clazz) {
         Gson gson = new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd HH:mm:ss")
+                .setNumberToNumberStrategy(ToNumberPolicy.LAZILY_PARSED_NUMBER)
                 .registerTypeAdapter(LocalDateTime.class, new LocalDataTypeAdapter())
                 .registerTypeAdapter(new TypeToken<Map>(){}.getType(), new MapTypeAdapter())
                 .disableHtmlEscaping().create();
