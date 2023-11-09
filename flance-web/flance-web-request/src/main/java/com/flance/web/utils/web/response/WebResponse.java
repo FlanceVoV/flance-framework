@@ -1,5 +1,7 @@
 package com.flance.web.utils.web.response;
 
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import com.flance.web.utils.GsonUtils;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
@@ -95,7 +97,7 @@ public class WebResponse {
             return null;
         }
         try {
-            return GsonUtils.fromString(GsonUtils.toJSONString(data), clazz);
+            return JSONObject.parseObject(GsonUtils.toJSONString(data), clazz);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -107,7 +109,7 @@ public class WebResponse {
             return null;
         }
         try {
-            return (List<T> ) GsonUtils.fromStringArray(GsonUtils.toJSONString(data), clazz);
+            return JSONArray.parseArray(JSONArray.toJSONString(data), clazz);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
