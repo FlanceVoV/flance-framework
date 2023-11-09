@@ -1,5 +1,6 @@
 package com.flance.web.utils.web.response;
 
+import com.flance.web.utils.GsonUtils;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -94,8 +95,7 @@ public class WebResponse {
             return null;
         }
         try {
-            Gson gson = new Gson();
-            return gson.fromJson(gson.toJson(data), clazz);
+            return GsonUtils.fromString(data.toString(), clazz);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -107,11 +107,7 @@ public class WebResponse {
             return null;
         }
         try {
-            Gson gson = new Gson();
-            List<T> list = Lists.newArrayList();
-            JsonArray jsonArray = JsonParser.parseString(gson.toJson(data)).getAsJsonArray();
-            jsonArray.forEach(ele -> list.add(gson.fromJson(ele, clazz)));
-            return list;
+            return (List<T> ) GsonUtils.fromStringArray(data.toString(), clazz);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
