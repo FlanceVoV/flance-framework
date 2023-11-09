@@ -1,5 +1,6 @@
 package com.flance.web.gateway.filter;
 
+import com.flance.web.feign.FeignUser;
 import com.flance.web.gateway.service.GatewayService;
 import com.flance.web.utils.RedisUtils;
 import com.flance.web.utils.RequestConstant;
@@ -46,6 +47,8 @@ public class GlobalGatewayFilter implements GlobalFilter, Ordered {
         // 设置下游传递参数
         exchange.getRequest().mutate()
                 .headers(header -> {
+                    header.remove(FeignUser.HEADER_FEIGN_USER);
+                    header.remove(FeignUser.HEADER_FEIGN_PASS);
                     if (null != token) {
                         String tokenKey = RequestConstant.SYS_TOKEN_KEY + appId + ":" + token;
                         String userInfo = redisUtils.get(tokenKey);
