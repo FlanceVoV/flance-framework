@@ -95,7 +95,7 @@ public class WebResponse {
             return null;
         }
         try {
-            return GsonUtils.fromString(data.toString(), clazz);
+            return GsonUtils.fromString(GsonUtils.toJSONString(data), clazz);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -107,7 +107,7 @@ public class WebResponse {
             return null;
         }
         try {
-            return (List<T> ) GsonUtils.fromStringArray(data.toString(), clazz);
+            return (List<T> ) GsonUtils.fromStringArray(GsonUtils.toJSONString(data), clazz);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
