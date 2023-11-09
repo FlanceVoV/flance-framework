@@ -1,5 +1,6 @@
 package com.flance.web.gateway.filter;
 
+import cn.hutool.core.codec.Base64Encoder;
 import com.flance.web.feign.FeignUser;
 import com.flance.web.gateway.service.GatewayService;
 import com.flance.web.utils.RedisUtils;
@@ -54,7 +55,7 @@ public class GlobalGatewayFilter implements GlobalFilter, Ordered {
                         String userInfo = redisUtils.get(tokenKey);
                         header.set(RequestConstant.HEADER_TOKEN, token);
                         if (null != userInfo) {
-                            header.set(RequestConstant.HEADER_USER_INFO, userInfo);
+                            header.set(RequestConstant.HEADER_USER_INFO, Base64Encoder.encode(userInfo));
                             redisUtils.setExp(tokenKey, 7200L);
                         }
                     }
