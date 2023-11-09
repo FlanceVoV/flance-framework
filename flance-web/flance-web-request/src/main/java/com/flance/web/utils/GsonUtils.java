@@ -1,5 +1,6 @@
 package com.flance.web.utils;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.google.common.collect.Lists;
 import com.google.gson.*;
 import com.google.gson.internal.LinkedTreeMap;
@@ -25,12 +26,7 @@ public class GsonUtils {
      * gson 对象转 json 不处理html 不返回空值字段
      */
     public static String toJSONString(Object obj) {
-        Gson gson = new GsonBuilder()
-                .setNumberToNumberStrategy(ToNumberPolicy.LAZILY_PARSED_NUMBER)
-                .setDateFormat("yyyy-MM-dd HH:mm:ss")
-                .registerTypeAdapter(LocalDateTime.class, new LocalDataTypeAdapter())
-                .disableHtmlEscaping().create();
-        return gson.toJson(obj);
+        return JSONObject.toJSONString(obj);
     }
 
     /**
@@ -46,13 +42,7 @@ public class GsonUtils {
     }
 
     public static <T> T fromString(String str, Class<T> clazz) {
-        Gson gson = new GsonBuilder()
-                .setDateFormat("yyyy-MM-dd HH:mm:ss")
-                .setNumberToNumberStrategy(ToNumberPolicy.LAZILY_PARSED_NUMBER)
-                .registerTypeAdapter(LocalDateTime.class, new LocalDataTypeAdapter())
-                .registerTypeAdapter(new TypeToken<Map>(){}.getType(), new MapTypeAdapter())
-                .disableHtmlEscaping().create();
-        return gson.fromJson(str, clazz);
+        return JSONObject.parseObject(str, clazz);
     }
 
 
