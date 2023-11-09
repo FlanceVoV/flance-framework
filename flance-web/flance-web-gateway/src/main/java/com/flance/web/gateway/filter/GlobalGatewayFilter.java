@@ -17,6 +17,8 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Resource;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 @Slf4j
@@ -55,7 +57,7 @@ public class GlobalGatewayFilter implements GlobalFilter, Ordered {
                         String userInfo = redisUtils.get(tokenKey);
                         header.set(RequestConstant.HEADER_TOKEN, token);
                         if (null != userInfo) {
-                            header.set(RequestConstant.HEADER_USER_INFO, Base64Encoder.encode(userInfo));
+                            header.set(RequestConstant.HEADER_USER_INFO, URLEncoder.encode(userInfo, StandardCharsets.UTF_8));
                             redisUtils.setExp(tokenKey, 7200L);
                         }
                     }
