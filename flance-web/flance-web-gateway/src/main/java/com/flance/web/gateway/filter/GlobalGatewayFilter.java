@@ -52,6 +52,7 @@ public class GlobalGatewayFilter implements GlobalFilter, Ordered {
                 .headers(header -> {
                     header.remove(FeignUser.HEADER_FEIGN_USER);
                     header.remove(FeignUser.HEADER_FEIGN_PASS);
+                    header.remove(RequestConstant.HEADER_USER_INFO);
                     if (null != token) {
                         String tokenKey = RequestConstant.SYS_TOKEN_KEY + appId + ":" + token;
                         String userInfo = redisUtils.get(tokenKey);
