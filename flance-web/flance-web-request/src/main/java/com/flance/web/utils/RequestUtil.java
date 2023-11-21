@@ -9,7 +9,7 @@ import java.util.UUID;
 @Slf4j
 public class RequestUtil {
 
-    private static final TransmittableThreadLocal<String> REQUEST_ID = new TransmittableThreadLocal<>();
+    private static final ThreadLocal<String> REQUEST_ID = new ThreadLocal<>();
 
     public static String getLogId() {
         return REQUEST_ID.get();
