@@ -68,7 +68,7 @@ public class AppAuthFilter implements GatewayFilter, Ordered {
             throw AssertException.getNormal("-1", "没有权限[" + appId + "][" + apiId + "]");
         }
 
-        return chain.filter(exchange);
+        return chain.filter(exchange).doFinally(obj -> RequestUtil.remove());
     }
 
 

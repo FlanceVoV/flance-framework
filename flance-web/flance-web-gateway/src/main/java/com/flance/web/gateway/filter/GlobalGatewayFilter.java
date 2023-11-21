@@ -72,7 +72,7 @@ public class GlobalGatewayFilter implements GlobalFilter, Ordered {
                     header.set(RequestConstant.HEADER_REQUEST_CHAIN, requestChain + " -> [gateway]");
                 }).build();
 
-        return gatewayService.filter(exchange, chain);
+        return gatewayService.filter(exchange, chain).doFinally(obj -> RequestUtil.remove());
     }
 
     @Override

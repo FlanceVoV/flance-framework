@@ -31,7 +31,8 @@ public class NonDecodeLogFilter implements GatewayFilter, Ordered {
         RequestUtil.getLogId(headerLogId);
         Mono<Void> mono = RsaBodyUtils.readBody(exchange, chain, null, GatewayBodyEnum.NON_DECODE);
         log.info("入参-解析 【app_id:{}】【api_id:{}】【method:{}】【uri:{}】", appId, requestId, method, uri);
-        return mono;    }
+        return mono.doFinally(obj -> RequestUtil.remove());
+    }
 
     @Override
     public int getOrder() {

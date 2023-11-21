@@ -80,7 +80,7 @@ public class LimitApiFilter implements GatewayFilter, Ordered {
             log.info("接口[{}]未开启限流", apiModel.getApiId());
         }
 
-        return chain.filter(exchange);
+        return chain.filter(exchange).doFinally(obj -> RequestUtil.remove());
     }
 
 

@@ -81,7 +81,7 @@ public class LimitRouterFilter implements GatewayFilter, Ordered {
             log.info("服务[{}]未开启限流", routeModel.getRouteId());
         }
 
-        return chain.filter(exchange);
+        return chain.filter(exchange).doFinally(obj -> RequestUtil.remove());
     }
 
 

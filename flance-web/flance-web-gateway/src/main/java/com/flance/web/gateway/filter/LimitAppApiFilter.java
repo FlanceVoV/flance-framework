@@ -66,7 +66,7 @@ public class LimitAppApiFilter implements GatewayFilter, Ordered {
         if (flag) {
             return Mono.error(new NotFoundException("接口被限流了！"));
         }
-        return chain.filter(exchange);
+        return chain.filter(exchange).doFinally(obj -> RequestUtil.remove());
     }
 
     @Override

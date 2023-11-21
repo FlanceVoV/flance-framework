@@ -59,7 +59,7 @@ public class RsaDecodeFilter implements GatewayFilter, Ordered {
         try {
             Mono<Void> mono = RsaBodyUtils.readBody(exchange, chain, appModel, GatewayBodyEnum.RSA_DECODE);
             log.info("解密-结束 【app_id:{}】【api_id:{}】【method:{}】【uri:{}】", appId, requestId, method, uri);
-            return mono;
+            return mono.doFinally(obj -> RequestUtil.remove());
 //            return chain.filter(exchange.mutate().request(new RsaRequestDecorator(exchange, exchange.getRequest(), headerLogId, GatewayBodyEnum.RSA_DECODE, appModel)).build());
         } catch (Exception e) {
             e.printStackTrace();

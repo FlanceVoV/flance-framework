@@ -96,7 +96,7 @@ public class GatewayApiDispatcherFilter implements GatewayFilter, Ordered {
             return filteringWebHandler.handle(exchange.mutate().request(request).build());
 //            return chain.filter(exchange.mutate().request(request).build());
         }
-        return chain.filter(exchange);
+        return chain.filter(exchange).doFinally(obj -> RequestUtil.remove());
     }
 
     private ServerHttpRequest changeRoute(ServerWebExchange exchange, RouteApiModel routeApiModel) {
