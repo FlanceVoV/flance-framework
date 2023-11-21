@@ -40,6 +40,8 @@ public class GlobalGatewayFilter implements GlobalFilter, Ordered {
         String setLogId = RequestUtil.getLogId(headerLogId);
         String appId = exchange.getRequest().getHeaders().getFirst(RequestConstant.HEADER_APP_ID);
         String headerChain = exchange.getRequest().getHeaders().getFirst(RequestConstant.HEADER_REQUEST_CHAIN);
+        String logId = UUID.randomUUID().toString();
+        RequestUtil.setLogId(logId);
         if (!StringUtils.hasLength(requestId)) {
             requestId = uri;
         }
@@ -57,6 +59,7 @@ public class GlobalGatewayFilter implements GlobalFilter, Ordered {
                         String tokenKey = RequestConstant.SYS_TOKEN_KEY + appId + ":" + token;
                         String userInfo = redisUtils.get(tokenKey);
                         header.set(RequestConstant.HEADER_TOKEN, token);
+                        header.set(RequestConstant.HEADER_LOG_ID, logId);
                         if (null != userInfo) {
                             header.set(RequestConstant.HEADER_USER_INFO, URLEncoder.encode(userInfo, StandardCharsets.UTF_8));
                             redisUtils.setExp(tokenKey, 7200L);
