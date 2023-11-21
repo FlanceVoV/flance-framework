@@ -22,8 +22,8 @@ public class RequestUtil {
         }
         if (null == logId) {
             logId = UUID.randomUUID().toString();
-            setLogId(logId);
         }
+        setLogId(logId);
         return logId;
     }
 
