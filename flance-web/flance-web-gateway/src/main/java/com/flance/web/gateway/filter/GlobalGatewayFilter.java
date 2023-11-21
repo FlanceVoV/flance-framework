@@ -58,11 +58,11 @@ public class GlobalGatewayFilter implements GlobalFilter, Ordered {
                     header.remove(FeignUser.HEADER_FEIGN_USER);
                     header.remove(FeignUser.HEADER_FEIGN_PASS);
                     header.remove(RequestConstant.HEADER_USER_INFO);
+                    header.set(RequestConstant.HEADER_LOG_ID, logId);
                     if (null != token) {
                         String tokenKey = RequestConstant.SYS_TOKEN_KEY + appId + ":" + token;
                         String userInfo = redisUtils.get(tokenKey);
                         header.set(RequestConstant.HEADER_TOKEN, token);
-                        header.set(RequestConstant.HEADER_LOG_ID, logId);
                         if (null != userInfo) {
                             header.set(RequestConstant.HEADER_USER_INFO, URLEncoder.encode(userInfo, StandardCharsets.UTF_8));
                             redisUtils.setExp(tokenKey, 7200L);
