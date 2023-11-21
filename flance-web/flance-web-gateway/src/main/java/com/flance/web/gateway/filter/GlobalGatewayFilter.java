@@ -68,7 +68,6 @@ public class GlobalGatewayFilter implements GlobalFilter, Ordered {
                             redisUtils.setExp(tokenKey, 7200L);
                         }
                     }
-                    header.set(RequestConstant.HEADER_LOG_ID, setLogId);
                     header.set(RequestConstant.HEADER_REQUEST_CHAIN, requestChain + " -> [gateway]");
                 }).build();
 
